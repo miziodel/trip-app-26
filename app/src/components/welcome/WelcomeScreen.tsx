@@ -1,8 +1,8 @@
 import React, { useRef } from 'react';
-import { FolderOpen, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { FolderOpen, ShieldCheck, Sparkles } from 'lucide-react';
 import type { ViaggioData } from '../../types/viaggio';
 import { useViaggioStore } from '../../store/store';
-import defaultViaggioData from '../../../../viaggio-2026.json';
+import { mockViaggioData } from '../../data/mockViaggio';
 
 
 export const WelcomeScreen: React.FC = () => {
@@ -40,13 +40,13 @@ export const WelcomeScreen: React.FC = () => {
     reader.readAsText(file);
   };
 
-  const handleLoadDefault = async () => {
+  const handleLoadDemo = async () => {
     try {
       if (navigator.storage && navigator.storage.persist) {
         await navigator.storage.persist();
       }
-      await setViaggioData(defaultViaggioData as unknown as ViaggioData);
-      showToast('Database integrato caricato in IndexedDB! 📂');
+      await setViaggioData(mockViaggioData);
+      showToast('Database Demo Inizializzato! ✨');
     } catch (err) {
       console.error(err);
       showToast('Errore durante il caricamento ❌');
@@ -103,11 +103,11 @@ export const WelcomeScreen: React.FC = () => {
 
         <button
           type="button"
-          onClick={handleLoadDefault}
+          onClick={handleLoadDemo}
           className="w-full bg-slate-900 hover:bg-slate-800 text-slate-300 font-semibold py-3 px-6 rounded-2xl border border-slate-800 shadow-md transition-all active:scale-95 text-xs flex items-center justify-center space-x-2"
         >
-          <CheckCircle2 className="w-4 h-4 text-sky-400" />
-          <span>Carica Database Integrato (viaggio-2026.json)</span>
+          <Sparkles className="w-4 h-4 text-sky-400" />
+          <span>Inizia con Database Demo vuoto</span>
         </button>
       </div>
     </div>
