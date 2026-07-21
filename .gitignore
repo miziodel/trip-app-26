@@ -1,0 +1,6 @@
+.DS_Store
+database-app-viaggio-2026-v4.md
+viaggio-2026.json
+**/viaggio-2026.json
+node_modules
+dist
