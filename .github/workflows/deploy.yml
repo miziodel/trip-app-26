@@ -36,7 +36,7 @@ jobs:
       - name: Install & Build
         run: |
           cd app
-          npm ci
+          npm install
           npm run build
 
       - name: Upload artifact
