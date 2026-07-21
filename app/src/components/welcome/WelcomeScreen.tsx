@@ -1,9 +1,7 @@
 import React, { useRef } from 'react';
-import { FolderOpen, ShieldCheck, Sparkles } from 'lucide-react';
+import { FolderOpen, ShieldCheck } from 'lucide-react';
 import type { ViaggioData } from '../../types/viaggio';
 import { useViaggioStore } from '../../store/store';
-import { mockViaggioData } from '../../data/mockViaggio';
-
 
 export const WelcomeScreen: React.FC = () => {
   const setViaggioData = useViaggioStore((state) => state.setViaggioData);
@@ -38,19 +36,6 @@ export const WelcomeScreen: React.FC = () => {
       }
     };
     reader.readAsText(file);
-  };
-
-  const handleLoadDemo = async () => {
-    try {
-      if (navigator.storage && navigator.storage.persist) {
-        await navigator.storage.persist();
-      }
-      await setViaggioData(mockViaggioData);
-      showToast('Database Demo Inizializzato! ✨');
-    } catch (err) {
-      console.error(err);
-      showToast('Errore durante il caricamento ❌');
-    }
   };
 
   return (
@@ -99,15 +84,6 @@ export const WelcomeScreen: React.FC = () => {
         >
           <FolderOpen className="w-5 h-5" />
           <span>📂 Carica Database Viaggio (.json)</span>
-        </button>
-
-        <button
-          type="button"
-          onClick={handleLoadDemo}
-          className="w-full bg-slate-900 hover:bg-slate-800 text-slate-300 font-semibold py-3 px-6 rounded-2xl border border-slate-800 shadow-md transition-all active:scale-95 text-xs flex items-center justify-center space-x-2"
-        >
-          <Sparkles className="w-4 h-4 text-sky-400" />
-          <span>Inizia con Database Demo vuoto</span>
         </button>
       </div>
     </div>
