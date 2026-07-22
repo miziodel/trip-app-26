@@ -1,0 +1,97 @@
+{
+  "meta": {
+    "titolo": "Viaggio Demo Giappone & Corea 2026",
+    "versione": "4.0-sample",
+    "passeggeri": ["Mario Rossi", "Laura Bianchi"],
+    "tassi_cambio": {
+      "JPY_EUR": 0.0060,
+      "KRW_EUR": 0.00068
+    }
+  },
+  "alloggi": [
+    {
+      "id": "H1",
+      "citta": "Seoul",
+      "nome": "Sample Hotel Seoul",
+      "indirizzo_en": "100 Sejong-daero, Jung-gu, Seoul",
+      "indirizzo_locale": "서울특별시 중구 세종대로 100",
+      "check_in": "2026-07-28",
+      "check_out": "2026-08-01",
+      "notti": 4,
+      "stazione": "City Hall Station",
+      "stato_pagamento": "Pagato",
+      "note": "Lavatrice in camera, No colazione"
+    },
+    {
+      "id": "H2",
+      "citta": "Tokyo",
+      "nome": "Sample Hotel Tokyo",
+      "indirizzo_en": "1-1-1 Nishi-Shinjuku, Shinjuku-ku, Tokyo",
+      "indirizzo_locale": "東京都新宿区西新宿1丁目1-1",
+      "check_in": "2026-08-01",
+      "check_out": "2026-08-10",
+      "notti": 9,
+      "stazione": "Shinjuku Station",
+      "stato_pagamento": "Pagato",
+      "note": "Lavatrice in camera, No colazione"
+    }
+  ],
+  "trasporti": {
+    "voli": [
+      { "id": "V1", "data": "2026-07-27", "tratta": "Roma FCO -> Pechino PEK", "orario": "20:30 -> 12:45 (+1)", "durata": "10h 15m", "compagnia": "Air China CA 000", "pnr": "XXXXXX", "stato": "Confermato" },
+      { "id": "V2", "data": "2026-07-28", "tratta": "Pechino PEK -> Seoul ICN", "orario": "18:50 -> 21:45", "durata": "1h 55m", "compagnia": "Air China CA 000", "pnr": "XXXXXX", "stato": "Confermato", "note": "Layover PEK: 6h 05m" }
+    ],
+    "treni_e_bus": [
+      { "id": "T1", "data": "2026-08-10", "tratta": "Tokyo -> Kanazawa", "mezzo": "Shinkansen Kagayaki", "orario": "10:21 -> 12:30", "pnr": "SAMPLE1", "posti": "Carrozza 1, Posti 1-A, 1-B", "codice_ritiro": "0000000000000000", "note": "Ritirare biglietti cartacei" }
+    ]
+  },
+  "emergenze": {
+    "assicurazione": {
+      "compagnia": "Assicurazione Demo",
+      "polizza": "000000000",
+      "telefono_h24": "+39 00 0000 0000"
+    },
+    "corea": {
+      "polizia": "112",
+      "ambulanza": "119",
+      "hotline_turismo": "1330",
+      "ambasciata": "+82 00 0000 0000"
+    },
+    "giappone": {
+      "polizia": "110",
+      "ambulanza": "119",
+      "hotline_jnto": "000-0000-0000",
+      "ambasciata_tokyo": "+81 00 0000 0000"
+    }
+  },
+  "itinerario": [
+    {
+      "giorno": 0,
+      "data": "2026-07-28",
+      "citta": "Seoul",
+      "fase": "🇰🇷 Seoul",
+      "titolo": "Atterraggio e Benvenuti a Seoul",
+      "focus_culinario": "Cibo leggero vicino all'hotel",
+      "tabella_oraria": [
+        { "ora": "21:45", "attivita": "Atterraggio a Incheon (ICN)", "dettagli": "Immigrazione e ritiro bagagli" },
+        { "ora": "22:45", "attivita": "Transfer per l'Hotel", "dettagli": "Bus Limousine per il centro" }
+      ],
+      "todo_list": [
+        { "testo": "Scaricare Naver Map sul telefono", "fatto": true }
+      ]
+    }
+  ],
+  "protocolli": {
+    "onsen": {
+      "titolo": "♨️ Protocollo Onsen Demo",
+      "regole": [
+        "Spogliarsi totalmente nello spogliatoio.",
+        "Lavarsi accuratamente prima di entrare in acqua."
+      ]
+    }
+  },
+  "frasario": [
+    { "categoria": "Cortesia", "it": "Buongiorno", "jp": "おはようございます", "pronuncia": "Ohayō gozaimasu", "kr": "안녕하세요", "kr_pronuncia": "Annyeonghaseyo" },
+    { "categoria": "Cortesia", "it": "Grazie", "jp": "ありがとうございます", "pronuncia": "Arigatō gozaimasu", "kr": "감사합니다", "kr_pronuncia": "Gamsahamnida" }
+  ]
+}
