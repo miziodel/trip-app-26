@@ -5,6 +5,7 @@ import { BottomNav } from './components/layout/BottomNav';
 import { Toast } from './components/ui/Toast';
 import { TaxiCard } from './components/ui/TaxiCard';
 import { CurrencyModal } from './components/ui/CurrencyModal';
+import { TodoDrawer } from './components/ui/TodoDrawer';
 import { WelcomeScreen } from './components/welcome/WelcomeScreen';
 import { OggiTab } from './tabs/Oggi';
 import { ItinerarioTab } from './tabs/Itinerario';
@@ -67,6 +68,7 @@ export const App: React.FC = () => {
       {/* Global Modals & Overlays */}
       <TaxiCard />
       <CurrencyModal />
+      <TodoDrawer />
       <Toast />
     </div>
   );

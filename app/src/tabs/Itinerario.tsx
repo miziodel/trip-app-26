@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useViaggioStore } from '../store/store';
 import { ScheduleCard } from '../components/ui/ScheduleCard';
 import { CopyableText } from '../components/ui/CopyableText';
+import { formatDate } from '../utils/dateUtils';
 import {
   Map,
   ChevronDown,
@@ -24,7 +25,6 @@ export const ItinerarioTab: React.FC = () => {
   const setSelectedDay = useViaggioStore((state) => state.setSelectedDay);
   const openTaxiCard = useViaggioStore((state) => state.openTaxiCard);
   const userLogs = useViaggioStore((state) => state.userLogs);
-  const updateLog = useViaggioStore((state) => state.updateLog);
   const userTodos = useViaggioStore((state) => state.userTodos);
   const updateTodo = useViaggioStore((state) => state.updateTodo);
   const customTodos = useViaggioStore((state) => state.customTodos);
@@ -65,17 +65,6 @@ export const ItinerarioTab: React.FC = () => {
     setActiveTab('oggi');
   };
 
-  const handleReaction = (itemKey: string, reaction: string) => {
-    const currentLog = userLogs[itemKey] || {};
-    const newReaction = currentLog.reaction === reaction ? undefined : reaction;
-    updateLog(itemKey, newReaction, currentLog.note);
-  };
-
-  const handleNoteChange = (itemKey: string, noteText: string) => {
-    const currentLog = userLogs[itemKey] || {};
-    updateLog(itemKey, currentLog.reaction, noteText);
-  };
-
   const handleAddCustomTodoForDay = async (giornoNum: number, e?: React.FormEvent) => {
     if (e) e.preventDefault();
     const inputVal = customTodoInputs[giornoNum] || '';
@@ -106,13 +95,6 @@ export const ItinerarioTab: React.FC = () => {
       showToast('Errore durante l\'esportazione del diario');
     }
   };
-
-  const reactionsList = [
-    { key: '❤️', label: 'Love' },
-    { key: '👍', label: 'Like' },
-    { key: '😐', label: 'Okay' },
-    { key: '👎', label: 'Dislike' },
-  ];
 
   return (
     <div className="pb-24 pt-4 px-4 max-w-md mx-auto space-y-4 animate-in fade-in duration-300">
@@ -158,12 +140,16 @@ export const ItinerarioTab: React.FC = () => {
       <div className="space-y-3">
         {filteredItinerario.map((giorno) => {
           const isExpanded = !!expandedDays[giorno.giorno];
-          const dayLogKey = `day_${giorno.giorno}`;
-          const currentDayLog = userLogs[dayLogKey] || {};
           const isJapan = !giorno.citta.toLowerCase().includes('seoul') && !giorno.citta.toLowerCase().includes('roma');
 
           // Find flights for this day
-          const dayFlights = data.trasporti.voli.filter((v) => v.data === giorno.data);
+          let dayFlights = data.trasporti.voli.filter((v) => v.data === giorno.data);
+
+          // Giorno 0 special logic: include initial flight from day before (27 Luglio)
+          if (giorno.giorno === 0) {
+            const prevDayFlights = data.trasporti.voli.filter((v) => v.data === '2026-07-27');
+            dayFlights = [...prevDayFlights, ...dayFlights];
+          }
 
           // Find accommodation for this day
           const dayAccommodation = data.alloggi.find((h) => {
@@ -191,7 +177,7 @@ export const ItinerarioTab: React.FC = () => {
                     </span>
                     <span className="text-xs text-slate-500">•</span>
                     <span className="text-xs font-semibold text-slate-400">Giorno {giorno.giorno}</span>
-                    <span className="text-xs text-slate-500">({giorno.data})</span>
+                    <span className="text-xs text-slate-500">({formatDate(giorno.data)})</span>
                   </div>
                   <h3 className="text-base font-bold text-white leading-snug break-words">
                     {giorno.titolo}
@@ -203,11 +189,6 @@ export const ItinerarioTab: React.FC = () => {
                 </div>
 
                 <div className="flex items-center gap-2 flex-shrink-0">
-                  {currentDayLog.reaction && (
-                    <span className="text-base bg-slate-950 px-2 py-0.5 rounded-md border border-slate-800">
-                      {currentDayLog.reaction}
-                    </span>
-                  )}
                   <button
                     type="button"
                     onClick={(e) => toggleAccordion(giorno.giorno, e)}
@@ -237,7 +218,14 @@ export const ItinerarioTab: React.FC = () => {
                           <div className="flex items-center justify-between">
                             <span className="font-bold text-blue-300 flex items-center gap-1.5">
                               <Plane className="w-4 h-4 text-blue-400" />
-                              <span>{flight.compagnia} ({flight.tratta})</span>
+                              <span>
+                                {flight.compagnia} ({flight.tratta})
+                                {flight.data === '2026-07-27' && (
+                                  <span className="ml-1 px-1.5 py-0.5 bg-amber-500/20 text-amber-300 text-[10px] rounded font-mono">
+                                    Volo Ieri
+                                  </span>
+                                )}
+                              </span>
                             </span>
                             <span className="px-2 py-0.5 bg-blue-500/20 text-blue-300 rounded font-semibold text-[10px] border border-blue-500/30">
                               {flight.stato}
@@ -297,6 +285,9 @@ export const ItinerarioTab: React.FC = () => {
                           key={sIdx}
                           item={slot}
                           citta={giorno.citta}
+                          giornoDate={giorno.data}
+                          giornoIndex={giorno.giorno}
+                          itemIndex={sIdx}
                         />
                       ))}
                     </div>
@@ -315,6 +306,7 @@ export const ItinerarioTab: React.FC = () => {
                           onClick={() =>
                             openTaxiCard({
                               name: dayAccommodation.nome,
+                              nameLocale: dayAccommodation.nome_locale,
                               addressLocale: dayAccommodation.indirizzo_locale,
                               addressEn: dayAccommodation.indirizzo_en,
                             })
@@ -417,46 +409,6 @@ export const ItinerarioTab: React.FC = () => {
                         <span>Aggiungi</span>
                       </button>
                     </form>
-                  </div>
-
-                  {/* Reaction & Travel Log Notes Input */}
-                  <div className="bg-slate-900 p-3 rounded-xl border border-slate-800 space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold text-slate-300">
-                        1-Tap Feedback & Diario (Giorno {giorno.giorno})
-                      </span>
-                    </div>
-
-                    {/* Reaction Buttons */}
-                    <div className="flex items-center gap-2">
-                      {reactionsList.map((r) => {
-                        const isSelected = currentDayLog.reaction === r.key;
-                        return (
-                          <button
-                            key={r.key}
-                            type="button"
-                            onClick={() => handleReaction(dayLogKey, r.key)}
-                            className={`flex-1 py-2 rounded-xl text-lg flex items-center justify-center transition-all border ${
-                              isSelected
-                                ? 'bg-amber-400/20 border-amber-400 text-amber-300 scale-105 shadow'
-                                : 'bg-slate-950 border-slate-800 text-slate-400 hover:border-slate-700'
-                            }`}
-                            title={r.label}
-                          >
-                            <span>{r.key}</span>
-                          </button>
-                        );
-                      })}
-                    </div>
-
-                    {/* Note Input */}
-                    <input
-                      type="text"
-                      value={currentDayLog.note || ''}
-                      onChange={(e) => handleNoteChange(dayLogKey, e.target.value)}
-                      placeholder="Aggiungi una nota personale o un ricordo..."
-                      className="w-full bg-slate-950 border border-slate-800 text-xs text-white p-2.5 rounded-xl focus:outline-none focus:border-amber-400"
-                    />
                   </div>
                 </div>
               )}

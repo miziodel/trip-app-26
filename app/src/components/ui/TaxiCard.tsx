@@ -11,8 +11,11 @@ export const TaxiCard: React.FC = () => {
 
   const handleCopyLocale = async () => {
     try {
-      await navigator.clipboard.writeText(activeTaxiCard.addressLocale);
-      showToast('Indirizzo locale copiato!');
+      const copyText = activeTaxiCard.nameLocale
+        ? `${activeTaxiCard.nameLocale}\n${activeTaxiCard.addressLocale}`
+        : activeTaxiCard.addressLocale;
+      await navigator.clipboard.writeText(copyText);
+      showToast('Destinazione e Indirizzo copiati! 🚕');
     } catch (err) {
       console.error('Failed to copy', err);
     }
@@ -34,27 +37,46 @@ export const TaxiCard: React.FC = () => {
         <span>Mostra al Tassista / 택시 기사님께</span>
       </div>
 
-      <h2 className="text-xl font-medium text-slate-300 mb-6">{activeTaxiCard.name}</h2>
+      {/* Western / Main English Name */}
+      <h2 className="text-xl font-medium text-slate-300 mb-4">{activeTaxiCard.name}</h2>
 
-      {/* Main Large Local Address */}
-      <div className="bg-slate-900 border-2 border-amber-500/40 p-6 rounded-2xl max-w-lg w-full mb-6 shadow-2xl">
-        <p className="text-4xl text-center font-bold text-white mb-4 leading-tight tracking-wide select-all">
-          {activeTaxiCard.addressLocale}
-        </p>
-        
+      {/* Main Large Display Box for Driver */}
+      <div className="bg-slate-900 border-2 border-amber-500/50 p-6 rounded-2xl max-w-lg w-full mb-6 shadow-2xl space-y-4">
+        {/* Destination Translated Name */}
+        {activeTaxiCard.nameLocale && (
+          <div className="border-b border-slate-800 pb-3">
+            <span className="text-xs text-amber-400 font-mono uppercase tracking-wider block mb-1">
+              Nome Destinazione Tradotto:
+            </span>
+            <p className="text-3xl font-black text-amber-300 leading-tight tracking-wide select-all">
+              {activeTaxiCard.nameLocale}
+            </p>
+          </div>
+        )}
+
+        {/* Local Address */}
+        <div>
+          <span className="text-xs text-slate-400 font-mono uppercase tracking-wider block mb-1">
+            Indirizzo Locale / 주소:
+          </span>
+          <p className="text-3xl text-center font-bold text-white leading-tight tracking-wide select-all">
+            {activeTaxiCard.addressLocale}
+          </p>
+        </div>
+
         <button
           type="button"
           onClick={handleCopyLocale}
-          className="w-full py-2.5 px-4 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl flex items-center justify-center gap-2 text-sm transition-all"
+          className="w-full py-3 px-4 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl flex items-center justify-center gap-2 text-sm transition-all active:scale-95 shadow"
         >
           <Copy className="w-4 h-4" />
-          <span>Copia Indirizzo Locale</span>
+          <span>Copia Nome & Indirizzo Locale</span>
         </button>
       </div>
 
       {activeTaxiCard.addressEn && (
-        <p className="text-base text-slate-400 max-w-md mb-8">
-          <span className="font-semibold text-slate-300">English:</span> {activeTaxiCard.addressEn}
+        <p className="text-sm text-slate-400 max-w-md mb-8">
+          <span className="font-semibold text-slate-300">Indirizzo EN:</span> {activeTaxiCard.addressEn}
         </p>
       )}
 

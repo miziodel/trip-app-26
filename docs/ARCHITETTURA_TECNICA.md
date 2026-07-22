@@ -87,4 +87,16 @@ src/
     ├── Trasporti.tsx           # Tab 3: Voli, treni/bus, alloggi & biglietti musei
     ├── Guida.tsx               # Tab 4: Frasario (30 espressioni) & protocolli
     └── Emergenze.tsx           # Tab 5: Assicurazione, emergenze & reset DB
+
+---
+
+## 4. Workflow Generali di Progetto
+
+1. **Automated CI (Quality Gate)**: Workflow GitHub Actions (`.github/workflows/ci.yml`) che esegue linter, `tsc`, test unitari/BDD e build PWA ad ogni push/PR.
+2. **Schema Validation Workflow**: Validazione rigorosa dei file JSON di viaggio (`app/src/utils/schemaValidator.ts`, eseguibile via `npm run validate-schema`).
+3. **BDD / Spec-Driven Development Flow**: Test trasparenti Given-When-Then in `app/tests/bdd/` allineati agli scenari BDD (`docs/BDD_SCENARIOS.md`).
+4. **Offline-First E2E Testing Workflow**: Verification suite (`app/tests/unit/offline-pwa.spec.ts`) per testare il caricamento del Service Worker, IndexedDB e reazioni offline.
+5. **Living Documentation Workflow**: Mantenimento attivo e aggiornato della Single Source of Truth in `docs/` (`maintain_living_documentation`).
+6. **Cleanup-Session Workflow**: Procedura di fine sessione in 3 fasi (Roadmap & Walkthrough Sync → Knowledge Check `/knowledge-check` → Git & Data Hygiene).
+
 ```

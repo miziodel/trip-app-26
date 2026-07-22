@@ -2,26 +2,28 @@ import React, { useState } from 'react';
 import { useViaggioStore } from '../store/store';
 import { ScheduleCard } from '../components/ui/ScheduleCard';
 import { CopyableText } from '../components/ui/CopyableText';
+import { formatDate } from '../utils/dateUtils';
+import { getMapDeepLink } from '../utils/linkUtils';
 import {
   ChevronLeft,
   ChevronRight,
-  CloudRain,
   CheckSquare,
   Square,
   Clock,
-  Sparkles,
   Utensils,
-  Hotel,
   Plus,
   Trash2,
+  ExternalLink,
+  Sun,
+  Moon,
+  MapPin,
+  Car,
 } from 'lucide-react';
 
 export const OggiTab: React.FC = () => {
   const data = useViaggioStore((state) => state.data);
   const selectedDay = useViaggioStore((state) => state.selectedDay);
   const setSelectedDay = useViaggioStore((state) => state.setSelectedDay);
-  const showRainPlan = useViaggioStore((state) => state.showRainPlan);
-  const toggleRainPlan = useViaggioStore((state) => state.toggleRainPlan);
   const openTaxiCard = useViaggioStore((state) => state.openTaxiCard);
   const userTodos = useViaggioStore((state) => state.userTodos);
   const updateTodo = useViaggioStore((state) => state.updateTodo);
@@ -36,10 +38,25 @@ export const OggiTab: React.FC = () => {
   const totalDays = data.itinerario.length;
   const currentDayData = data.itinerario.find((g) => g.giorno === selectedDay) || data.itinerario[0];
 
-  // Find accommodation for selected day
-  const dayAccommodation = data.alloggi.find((h) => {
-    return currentDayData.data >= h.check_in && currentDayData.data <= h.check_out;
-  }) || data.alloggi[0];
+  // Helper to subtract 1 day from ISO string
+  const getPreviousDayDateStr = (dateStr: string): string => {
+    const d = new Date(dateStr);
+    d.setDate(d.getDate() - 1);
+    return d.toISOString().split('T')[0];
+  };
+
+  // Sleep accommodation: night of date D (check_in <= D < check_out)
+  const sleepAccommodation = data.alloggi.find(
+    (h) => currentDayData.data >= h.check_in && currentDayData.data < h.check_out
+  ) || data.alloggi[data.alloggi.length - 1];
+
+  // Wakeup accommodation: night of date D-1 (check_in <= D-1 < check_out)
+  const prevDateStr = getPreviousDayDateStr(currentDayData.data);
+  const wakeupAccommodation = data.alloggi.find(
+    (h) => prevDateStr >= h.check_in && prevDateStr < h.check_out
+  );
+
+  const sameAccommodation = wakeupAccommodation?.id === sleepAccommodation?.id;
 
   const currentTodos = userTodos[currentDayData.giorno] || currentDayData.todo_list.map((t) => t.fatto);
   const customList = customTodos[currentDayData.giorno] || [];
@@ -50,6 +67,26 @@ export const OggiTab: React.FC = () => {
     await addCustomTodo(currentDayData.giorno, newTodoInput);
     setNewTodoInput('');
   };
+
+  // Extract food items for Google Search Photos links
+  const getFoodItems = (): string[] => {
+    if (currentDayData.focus_culinario_items && currentDayData.focus_culinario_items.length > 0) {
+      return currentDayData.focus_culinario_items;
+    }
+    if (!currentDayData.focus_culinario) return [];
+
+    const match = currentDayData.focus_culinario.match(/\(([^)]+)\)/);
+    if (match && match[1]) {
+      return match[1].split(/,|\+|\//).map((s) => s.trim()).filter(Boolean);
+    }
+
+    return currentDayData.focus_culinario
+      .split(/,|\+|\/|da\s+/)
+      .map((s) => s.trim())
+      .filter((s) => s.length > 2 && !s.toLowerCase().startsWith('cena') && !s.toLowerCase().startsWith('pranzo'));
+  };
+
+  const foodItems = getFoodItems();
 
   // Find index of item closest to current time (if today)
   const now = new Date();
@@ -82,7 +119,7 @@ export const OggiTab: React.FC = () => {
             <span>•</span>
             <span>Giorno {currentDayData.giorno}</span>
           </div>
-          <h2 className="text-lg font-black text-white">{currentDayData.data}</h2>
+          <h2 className="text-lg font-black text-white">{formatDate(currentDayData.data)}</h2>
           <p className="text-xs text-slate-400 font-medium">{currentDayData.titolo}</p>
         </div>
 
@@ -96,62 +133,100 @@ export const OggiTab: React.FC = () => {
         </button>
       </div>
 
-      {/* Culinary Focus Box */}
-      {currentDayData.focus_culinario && (
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex items-start gap-3 shadow-md">
-          <div className="p-2.5 rounded-xl bg-orange-500/10 text-orange-400 border border-orange-500/20 flex-shrink-0">
-            <Utensils className="w-5 h-5" />
+      {/* 1. FIRST ITEM OF THE DAY: WAKEUP ACCOMMODATION (If different from sleep hotel) */}
+      {!sameAccommodation && wakeupAccommodation && (
+        <div className="bg-gradient-to-r from-amber-950/40 to-slate-900 border border-amber-500/40 rounded-2xl p-4 space-y-2.5 shadow-lg">
+          <div className="flex items-center justify-between text-xs border-b border-slate-800/80 pb-2">
+            <span className="flex items-center gap-1.5 font-bold text-amber-300">
+              <Sun className="w-4 h-4 text-amber-400" />
+              <span>🌅 Sveglia a ({wakeupAccommodation.citta})</span>
+            </span>
+            <span className="text-[10px] text-slate-400 font-semibold">{wakeupAccommodation.stazione}</span>
           </div>
-          <div>
-            <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-0.5">
-              Focus Culinario 🍜
+
+          <div className="space-y-1">
+            <h4 className="text-base font-bold text-white flex items-center gap-2">
+              <span>{wakeupAccommodation.nome}</span>
+              {wakeupAccommodation.nome_locale && (
+                <span className="text-xs text-amber-300 font-normal font-mono">({wakeupAccommodation.nome_locale})</span>
+              )}
             </h4>
-            <p className="text-sm text-slate-200 font-medium leading-snug">
-              {currentDayData.focus_culinario}
-            </p>
+            <CopyableText text={wakeupAccommodation.indirizzo_locale} className="text-xs text-amber-300 font-mono block">
+              📍 {wakeupAccommodation.indirizzo_locale}
+            </CopyableText>
+          </div>
+
+          <div className="grid grid-cols-2 gap-2 pt-1">
+            <a
+              href={getMapDeepLink(wakeupAccommodation.indirizzo_locale, wakeupAccommodation.citta)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold rounded-xl text-xs flex items-center justify-center gap-1 border border-slate-700 transition-all active:scale-95"
+            >
+              <MapPin className="w-3.5 h-3.5 text-amber-400" />
+              <span>Mappa</span>
+            </a>
+
+            <button
+              type="button"
+              onClick={() =>
+                openTaxiCard({
+                  name: wakeupAccommodation.nome,
+                  nameLocale: wakeupAccommodation.nome_locale,
+                  addressLocale: wakeupAccommodation.indirizzo_locale,
+                  addressEn: wakeupAccommodation.indirizzo_en,
+                })
+              }
+              className="py-2 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold rounded-xl text-xs border border-amber-500/30 flex items-center justify-center gap-1 transition-all active:scale-95"
+            >
+              <Car className="w-3.5 h-3.5" />
+              <span>Taxi Card</span>
+            </button>
           </div>
         </div>
       )}
 
-      {/* Rain Plan / Heatwave Toggle */}
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <CloudRain className={`w-5 h-5 ${showRainPlan ? 'text-blue-400' : 'text-slate-400'}`} />
+      {/* Culinary Focus Box with Google Image Links */}
+      {currentDayData.focus_culinario && (
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-2.5 shadow-md">
+          <div className="flex items-start gap-3">
+            <div className="p-2.5 rounded-xl bg-orange-500/10 text-orange-400 border border-orange-500/20 flex-shrink-0">
+              <Utensils className="w-5 h-5" />
+            </div>
             <div>
-              <h3 className="text-sm font-bold text-white">Piano Pioggia / Caldo ☔</h3>
-              <p className="text-[11px] text-slate-400">Rifugi al coperto e aria condizionata</p>
+              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-0.5">
+                Focus Culinario 🍜
+              </h4>
+              <p className="text-sm text-slate-200 font-medium leading-snug">
+                {currentDayData.focus_culinario}
+              </p>
             </div>
           </div>
-          <button
-            type="button"
-            onClick={toggleRainPlan}
-            className={`w-12 h-6 rounded-full transition-colors relative p-1 ${
-              showRainPlan ? 'bg-blue-600' : 'bg-slate-700'
-            }`}
-          >
-            <div
-              className={`w-4 h-4 rounded-full bg-white transition-transform ${
-                showRainPlan ? 'translate-x-6' : 'translate-x-0'
-              }`}
-            />
-          </button>
-        </div>
 
-        {showRainPlan && (
-          <div className="bg-blue-950/40 border border-blue-800/60 p-3 rounded-xl text-xs text-blue-200 space-y-2 animate-in fade-in">
-            <div className="flex items-center gap-1.5 font-bold text-blue-300">
-              <Sparkles className="w-4 h-4" />
-              <span>Consigli anti-pioggia/caldo per {currentDayData.citta}:</span>
+          {/* Photo Search Links */}
+          {foodItems.length > 0 && (
+            <div className="pt-2 border-t border-slate-800/80 space-y-1.5">
+              <span className="text-[10px] font-bold text-orange-400 uppercase tracking-wider block">
+                📸 Guarda foto cibo su Google:
+              </span>
+              <div className="flex items-center gap-1.5 flex-wrap">
+                {foodItems.map((item, idx) => (
+                  <a
+                    key={idx}
+                    href={`https://www.google.com/search?q=${encodeURIComponent(item)}+food&tbm=isch`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-[11px] font-semibold bg-orange-500/10 hover:bg-orange-500/20 text-orange-300 px-2.5 py-1 rounded-lg border border-orange-500/30 transition-all active:scale-95"
+                  >
+                    <span>{item}</span>
+                    <ExternalLink className="w-3 h-3 text-orange-400" />
+                  </a>
+                ))}
+              </div>
             </div>
-            <ul className="list-disc list-inside space-y-1 text-slate-300">
-              <li>Usa i centri commerciali sotterranei (Depachika / Shotengai coperti).</li>
-              <li>Mantieni idratazione costante con integratori Pocari Sweat da 7-Eleven.</li>
-              <li>Musei e concept store climatizzati (The Hyundai, teamLab, Mori Art Museum).</li>
-            </ul>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      )}
 
       {/* Timeline Schedule list with Expandable Cards */}
       <div className="space-y-3">
@@ -166,6 +241,9 @@ export const OggiTab: React.FC = () => {
               key={idx}
               item={item}
               citta={currentDayData.citta}
+              giornoDate={currentDayData.data}
+              giornoIndex={currentDayData.giorno}
+              itemIndex={idx}
               isDefaultOpen={idx === defaultOpenIndex}
             />
           ))}
@@ -246,48 +324,69 @@ export const OggiTab: React.FC = () => {
         </div>
       </div>
 
-      {/* Current Accommodation Info */}
-      {dayAccommodation && (
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-2">
+      {/* LAST ITEM OF THE DAY: SLEEP ACCOMMODATION */}
+      {sleepAccommodation && (
+        <div className="bg-gradient-to-r from-slate-900 to-purple-950/30 border border-purple-500/40 rounded-2xl p-4 space-y-2.5 shadow-lg">
           <div className="flex items-center justify-between text-xs text-slate-400 border-b border-slate-800 pb-2">
-            <span className="flex items-center gap-1.5 font-bold text-slate-300">
-              <Hotel className="w-4 h-4 text-amber-400" />
-              <span>Alloggio Notturno ({dayAccommodation.citta})</span>
+            <span className="flex items-center gap-1.5 font-bold text-purple-300">
+              <Moon className="w-4 h-4 text-purple-400" />
+              <span>🌙 Pernottamento ({sleepAccommodation.citta})</span>
             </span>
             <span className="px-2 py-0.5 bg-slate-800 text-amber-400 font-semibold rounded text-[10px]">
-              {dayAccommodation.stato_pagamento}
+              {sleepAccommodation.stato_pagamento}
             </span>
           </div>
 
-          <h4 className="text-base font-bold text-white">{dayAccommodation.nome}</h4>
+          <div className="space-y-1">
+            <h4 className="text-base font-bold text-white flex items-center gap-2">
+              <span>{sleepAccommodation.nome}</span>
+              {sleepAccommodation.nome_locale && (
+                <span className="text-xs text-purple-300 font-normal font-mono">({sleepAccommodation.nome_locale})</span>
+              )}
+            </h4>
 
-          <div className="text-xs space-y-1">
-            <CopyableText text={dayAccommodation.indirizzo_locale} className="text-amber-300 font-mono block">
-              📍 {dayAccommodation.indirizzo_locale}
-            </CopyableText>
-            <p className="text-slate-400">EN: {dayAccommodation.indirizzo_en}</p>
-            <p className="text-slate-400">🚉 Stazione: {dayAccommodation.stazione}</p>
+            <div className="text-xs space-y-1">
+              <CopyableText text={sleepAccommodation.indirizzo_locale} className="text-amber-300 font-mono block">
+                📍 {sleepAccommodation.indirizzo_locale}
+              </CopyableText>
+              <p className="text-slate-400">EN: {sleepAccommodation.indirizzo_en}</p>
+              <p className="text-slate-400">🚉 Stazione: {sleepAccommodation.stazione}</p>
+            </div>
           </div>
 
-          {dayAccommodation.note && (
-            <p className="text-[11px] bg-slate-950 p-2.5 rounded-lg border border-slate-800 text-slate-300 mt-2">
-              💡 {dayAccommodation.note}
+          {sleepAccommodation.note && (
+            <p className="text-[11px] bg-slate-950 p-2.5 rounded-lg border border-slate-800 text-slate-300 mt-1">
+              💡 {sleepAccommodation.note}
             </p>
           )}
 
-          <button
-            type="button"
-            onClick={() =>
-              openTaxiCard({
-                name: dayAccommodation.nome,
-                addressLocale: dayAccommodation.indirizzo_locale,
-                addressEn: dayAccommodation.indirizzo_en,
-              })
-            }
-            className="w-full mt-2 py-2.5 bg-slate-800 hover:bg-slate-700 text-amber-300 font-bold rounded-xl text-xs border border-amber-500/30 shadow transition-all active:scale-95"
-          >
-            🚗 Mostra Taxi Card
-          </button>
+          <div className="grid grid-cols-2 gap-2 pt-1">
+            <a
+              href={getMapDeepLink(sleepAccommodation.indirizzo_locale, sleepAccommodation.citta)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold rounded-xl text-xs flex items-center justify-center gap-1 border border-slate-700 transition-all active:scale-95"
+            >
+              <MapPin className="w-3.5 h-3.5 text-amber-400" />
+              <span>Mappa</span>
+            </a>
+
+            <button
+              type="button"
+              onClick={() =>
+                openTaxiCard({
+                  name: sleepAccommodation.nome,
+                  nameLocale: sleepAccommodation.nome_locale,
+                  addressLocale: sleepAccommodation.indirizzo_locale,
+                  addressEn: sleepAccommodation.indirizzo_en,
+                })
+              }
+              className="py-2.5 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold rounded-xl text-xs border border-amber-500/30 shadow transition-all active:scale-95 flex items-center justify-center gap-1"
+            >
+              <Car className="w-3.5 h-3.5" />
+              <span>Taxi Card</span>
+            </button>
+          </div>
         </div>
       )}
     </div>

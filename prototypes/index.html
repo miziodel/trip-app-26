@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trip App 26 - UI Design Prototypes Showcase</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body { font-family: 'Plus Jakarta Sans', sans-serif; }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen p-4 md:p-8">
+  <div class="max-w-6xl mx-auto space-y-8">
+    <!-- Header -->
+    <header class="text-center space-y-3 py-6 border-b border-slate-800">
+      <div class="inline-flex items-center space-x-2 bg-amber-500/10 border border-amber-500/30 text-amber-400 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider">
+        <i data-lucide="sparkles" class="w-4 h-4"></i>
+        <span>UI Redesign Proposals • Trip App 26</span>
+      </div>
+      <h1 class="text-3xl md:text-5xl font-extrabold tracking-tight bg-gradient-to-r from-amber-200 via-rose-300 to-sky-300 bg-clip-text text-transparent">
+        Valutazione Varianti UI & Layout
+      </h1>
+      <p class="text-slate-400 text-sm md:text-base max-w-2xl mx-auto">
+        Confronta i tre prototipi interattivi realizzati per la PWA di viaggio in Corea & Giappone 2026. Seleziona una variante per esplorarla nel simulatore mobile.
+      </p>
+    </header>
+
+    <!-- Grid of 3 Variants -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+      <!-- Variant A Card -->
+      <div class="bg-slate-900/80 border border-white/10 rounded-2xl p-6 flex flex-col justify-between hover:border-amber-500/50 transition-all hover:shadow-2xl hover:shadow-amber-500/10 group">
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-mono px-2.5 py-1 rounded-md bg-amber-500/20 text-amber-300 font-semibold">VARIANTE A</span>
+            <span class="text-xs text-amber-400 font-medium">Consigliata 🌟</span>
+          </div>
+          <h2 class="text-xl font-bold text-slate-100 group-hover:text-amber-300 transition-colors">Neo-Glassmorphic Travel Companion</h2>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Stile premium lussuoso con schede in *Frosted Glass* (`backdrop-blur-xl`), bagliori ambientali, tipografia *Plus Jakarta Sans* e connettore timeline sfumato.
+          </p>
+          <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+            <li>Hero Card "In Corso" con progress bar</li>
+            <li>Convertitore & Taxi Card floating</li>
+            <li>Badge colorati morbidi</li>
+          </ul>
+        </div>
+        <div class="pt-6 border-t border-slate-800/80 mt-4 flex items-center justify-between">
+          <a href="variant-a-glassmorphism.html" target="_blank" class="w-full text-center bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-2.5 px-4 rounded-xl transition-all flex items-center justify-center space-x-2 text-sm">
+            <span>Apri Prototipo A</span>
+            <i data-lucide="external-link" class="w-4 h-4"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Variant B Card -->
+      <div class="bg-slate-900/80 border border-white/10 rounded-2xl p-6 flex flex-col justify-between hover:border-sky-500/50 transition-all hover:shadow-2xl hover:shadow-sky-500/10 group">
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-mono px-2.5 py-1 rounded-md bg-sky-500/20 text-sky-300 font-semibold">VARIANTE B</span>
+            <span class="text-xs text-sky-400 font-medium">Utility First 🎫</span>
+          </div>
+          <h2 class="text-xl font-bold text-slate-100 group-hover:text-sky-300 transition-colors">Tactical Ticket & Passbook</h2>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Estetica in stile Apple Wallet e carte d'imbarco tattiche. Sfondo OLED True Black, PNR in grande font monospace, barcode visuali e massimo contrasto al sole.
+          </p>
+          <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+            <li>Schede "Boarding Pass" staccabili</li>
+            <li>Visualizzazione rapida PNR e Posto</li>
+            <li>Ottimizzato per risparmio batteria</li>
+          </ul>
+        </div>
+        <div class="pt-6 border-t border-slate-800/80 mt-4 flex items-center justify-between">
+          <a href="variant-b-tactical-passbook.html" target="_blank" class="w-full text-center bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold py-2.5 px-4 rounded-xl transition-all flex items-center justify-center space-x-2 text-sm">
+            <span>Apri Prototipo B</span>
+            <i data-lucide="external-link" class="w-4 h-4"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Variant C Card -->
+      <div class="bg-slate-900/80 border border-white/10 rounded-2xl p-6 flex flex-col justify-between hover:border-rose-500/50 transition-all hover:shadow-2xl hover:shadow-rose-500/10 group">
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-mono px-2.5 py-1 rounded-md bg-rose-500/20 text-rose-300 font-semibold">VARIANTE C</span>
+            <span class="text-xs text-rose-400 font-medium">Editorial 🌸</span>
+          </div>
+          <h2 class="text-xl font-bold text-slate-100 group-hover:text-rose-300 transition-colors">East Asian Editorial Minimalist</h2>
+          <p class="text-xs text-slate-400 leading-relaxed">
+            Ispirato al design editoriale contemporaneo giapponese e coreano (Torii Vermilion, Sakura Pink, Bamboo Teal). Spaziature ampie e font *Outfit* raffinato.
+          </p>
+          <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+            <li>Header "DAY 04" in evidenza</li>
+            <li>Filtri a pillola (Mattina, Pomeriggio, Sera)</li>
+            <li>Card esperienziali pulite ed eleganti</li>
+          </ul>
+        </div>
+        <div class="pt-6 border-t border-slate-800/80 mt-4 flex items-center justify-between">
+          <a href="variant-c-east-asian-editorial.html" target="_blank" class="w-full text-center bg-rose-500 hover:bg-rose-400 text-slate-950 font-bold py-2.5 px-4 rounded-xl transition-all flex items-center justify-center space-x-2 text-sm">
+            <span>Apri Prototipo C</span>
+            <i data-lucide="external-link" class="w-4 h-4"></i>
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Live Preview Simulator Section -->
+    <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 space-y-4">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h3 class="text-lg font-bold text-slate-100">Simulatore Anteprima Mobile</h3>
+          <p class="text-xs text-slate-400">Passa da un prototipo all'altro nel viewport qui sotto:</p>
+        </div>
+        <div class="flex items-center space-x-2 bg-slate-950 p-1.5 rounded-xl border border-slate-800 text-xs font-semibold">
+          <button onclick="setIframe('variant-a-glassmorphism.html')" id="btn-a" class="px-3 py-1.5 rounded-lg bg-amber-500 text-slate-950 transition-all">Prototipo A</button>
+          <button onclick="setIframe('variant-b-tactical-passbook.html')" id="btn-b" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition-all">Prototipo B</button>
+          <button onclick="setIframe('variant-c-east-asian-editorial.html')" id="btn-c" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition-all">Prototipo C</button>
+        </div>
+      </div>
+
+      <div class="flex justify-center py-4 bg-slate-950/60 rounded-2xl border border-slate-800/60">
+        <div class="w-[390px] h-[780px] bg-black rounded-[48px] p-3 shadow-2xl border-4 border-slate-800 relative">
+          <!-- Phone Notch -->
+          <div class="absolute top-5 left-1/2 -translate-x-1/2 w-28 h-4 bg-slate-900 rounded-full z-50"></div>
+          <!-- iframe -->
+          <iframe id="preview-iframe" src="variant-a-glassmorphism.html" class="w-full h-full rounded-[38px] bg-slate-950 border-0"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    function setIframe(url) {
+      document.getElementById('preview-iframe').src = url;
+      ['btn-a', 'btn-b', 'btn-c'].forEach(id => {
+        const btn = document.getElementById(id);
+        btn.className = "px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition-all";
+      });
+
+      if (url.includes('variant-a')) {
+        document.getElementById('btn-a').className = "px-3 py-1.5 rounded-lg bg-amber-500 text-slate-950 font-bold transition-all";
+      } else if (url.includes('variant-b')) {
+        document.getElementById('btn-b').className = "px-3 py-1.5 rounded-lg bg-sky-500 text-slate-950 font-bold transition-all";
+      } else if (url.includes('variant-c')) {
+        document.getElementById('btn-c').className = "px-3 py-1.5 rounded-lg bg-rose-500 text-slate-950 font-bold transition-all";
+      }
+    }
+  </script>
+</body>
+</html>

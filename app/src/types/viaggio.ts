@@ -12,6 +12,7 @@ export interface Alloggio {
   id: string;
   citta: string;
   nome: string;
+  nome_locale?: string;
   indirizzo_en: string;
   indirizzo_locale: string;
   check_in: string;
@@ -55,6 +56,7 @@ export interface Assicurazione {
   compagnia: string;
   polizza: string;
   telefono_h24: string;
+  sito_web?: string;
 }
 
 export interface EmergenzeCitta {
@@ -78,6 +80,7 @@ export interface TabellaOraria {
   ora: string;
   attivita: string;
   dettagli: string;
+  tipo_luogo?: 'coperto' | 'aperto' | 'misto';
 }
 
 export interface Todo {
@@ -93,6 +96,7 @@ export interface GiornoItinerario {
   fase: string;
   titolo: string;
   focus_culinario: string;
+  focus_culinario_items?: string[];
   tabella_oraria: TabellaOraria[];
   todo_list: Todo[];
 }

@@ -55,6 +55,13 @@ export const DEFAULT_FRASARIO: Frase[] = [
 export const GuidaTab: React.FC = () => {
   const data = useViaggioStore((state) => state.data);
   const [selectedCategory, setSelectedCategory] = useState<string>('Tutti');
+  const [selectedLanguage, setSelectedLanguage] = useState<'both' | 'jp' | 'kr'>('both');
+  const [expandedProtocols, setExpandedProtocols] = useState<Record<string, boolean>>({
+    onsen: false,
+    monjayaki: false,
+    pechino: false,
+    geta: false,
+  });
 
   if (!data) return null;
 
@@ -67,6 +74,10 @@ export const GuidaTab: React.FC = () => {
     if (selectedCategory === 'Tutti') return true;
     return frase.categoria.toLowerCase() === selectedCategory.toLowerCase();
   });
+
+  const toggleProtocol = (key: string) => {
+    setExpandedProtocols((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
 
   const scrollToElement = (id: string) => {
     const el = document.getElementById(id);
@@ -116,84 +127,175 @@ export const GuidaTab: React.FC = () => {
 
         {/* Onsen Protocol */}
         {protocolli.onsen && (
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3 shadow-md">
-            <h4 className="text-base font-bold text-amber-400 flex items-center gap-2">
-              <Flame className="w-5 h-5 text-amber-400" />
-              <span>{protocolli.onsen.titolo}</span>
-            </h4>
-            <ul className="space-y-2 text-xs text-slate-300">
-              {protocolli.onsen.regole?.map((r, idx) => (
-                <li key={idx} className="flex items-start gap-2 bg-slate-950/60 p-2.5 rounded-xl border border-slate-800">
-                  <span className="text-amber-400 font-bold">{idx + 1}.</span>
-                  <span className="leading-relaxed">{r}</span>
-                </li>
-              ))}
-            </ul>
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl shadow-md overflow-hidden">
+            <button
+              type="button"
+              onClick={() => toggleProtocol('onsen')}
+              className="w-full p-4 flex items-center justify-between text-left hover:bg-slate-800/50 transition-colors"
+            >
+              <h4 className="text-base font-bold text-amber-400 flex items-center gap-2">
+                <Flame className="w-5 h-5 text-amber-400" />
+                <span>{protocolli.onsen.titolo}</span>
+              </h4>
+              <span className="text-slate-400 font-bold text-sm">
+                {expandedProtocols.onsen ? '▲' : '▼'}
+              </span>
+            </button>
+            {expandedProtocols.onsen && (
+              <div className="px-4 pb-4 space-y-3 pt-1 border-t border-slate-800/80">
+                <ul className="space-y-2 text-xs text-slate-300">
+                  {protocolli.onsen.regole?.map((r, idx) => (
+                    <li key={idx} className="flex items-start gap-2 bg-slate-950/60 p-2.5 rounded-xl border border-slate-800">
+                      <span className="text-amber-400 font-bold">{idx + 1}.</span>
+                      <span className="leading-relaxed">{r}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         )}
 
         {/* Monjayaki Protocol */}
         {protocolli.monjayaki && (
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3 shadow-md">
-            <h4 className="text-base font-bold text-orange-400 flex items-center gap-2">
-              <Utensils className="w-5 h-5 text-orange-400" />
-              <span>{protocolli.monjayaki.titolo}</span>
-            </h4>
-            <ol className="space-y-2 text-xs text-slate-300">
-              {protocolli.monjayaki.passaggi?.map((p, idx) => (
-                <li key={idx} className="flex items-start gap-2 bg-slate-950/60 p-2.5 rounded-xl border border-slate-800">
-                  <span className="text-orange-400 font-bold">{idx + 1}.</span>
-                  <span className="leading-relaxed">{p}</span>
-                </li>
-              ))}
-            </ol>
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl shadow-md overflow-hidden">
+            <button
+              type="button"
+              onClick={() => toggleProtocol('monjayaki')}
+              className="w-full p-4 flex items-center justify-between text-left hover:bg-slate-800/50 transition-colors"
+            >
+              <h4 className="text-base font-bold text-orange-400 flex items-center gap-2">
+                <Utensils className="w-5 h-5 text-orange-400" />
+                <span>{protocolli.monjayaki.titolo}</span>
+              </h4>
+              <span className="text-slate-400 font-bold text-sm">
+                {expandedProtocols.monjayaki ? '▲' : '▼'}
+              </span>
+            </button>
+            {expandedProtocols.monjayaki && (
+              <div className="px-4 pb-4 space-y-3 pt-1 border-t border-slate-800/80">
+                <ol className="space-y-2 text-xs text-slate-300">
+                  {protocolli.monjayaki.passaggi?.map((p, idx) => (
+                    <li key={idx} className="flex items-start gap-2 bg-slate-950/60 p-2.5 rounded-xl border border-slate-800">
+                      <span className="text-orange-400 font-bold">{idx + 1}.</span>
+                      <span className="leading-relaxed">{p}</span>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+            )}
           </div>
         )}
 
         {/* Beijing Layover Protocol */}
         {protocolli.pechino_transito && (
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3 shadow-md">
-            <h4 className="text-base font-bold text-blue-400 flex items-center gap-2">
-              <Plane className="w-5 h-5 text-blue-400" />
-              <span>{protocolli.pechino_transito.titolo}</span>
-            </h4>
-            <ul className="space-y-2 text-xs text-slate-300">
-              {protocolli.pechino_transito.istruzioni?.map((istr, idx) => (
-                <li key={idx} className="flex items-start gap-2 bg-slate-950/60 p-2.5 rounded-xl border border-slate-800">
-                  <span className="text-blue-400 font-bold">•</span>
-                  <span className="leading-relaxed">{istr}</span>
-                </li>
-              ))}
-            </ul>
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl shadow-md overflow-hidden">
+            <button
+              type="button"
+              onClick={() => toggleProtocol('pechino')}
+              className="w-full p-4 flex items-center justify-between text-left hover:bg-slate-800/50 transition-colors"
+            >
+              <h4 className="text-base font-bold text-blue-400 flex items-center gap-2">
+                <Plane className="w-5 h-5 text-blue-400" />
+                <span>{protocolli.pechino_transito.titolo}</span>
+              </h4>
+              <span className="text-slate-400 font-bold text-sm">
+                {expandedProtocols.pechino ? '▲' : '▼'}
+              </span>
+            </button>
+            {expandedProtocols.pechino && (
+              <div className="px-4 pb-4 space-y-3 pt-1 border-t border-slate-800/80">
+                <ul className="space-y-2 text-xs text-slate-300">
+                  {protocolli.pechino_transito.istruzioni?.map((istr, idx) => (
+                    <li key={idx} className="flex items-start gap-2 bg-slate-950/60 p-2.5 rounded-xl border border-slate-800">
+                      <span className="text-blue-400 font-bold">•</span>
+                      <span className="leading-relaxed">{istr}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         )}
 
         {/* Geta Gujo Protocol */}
         {protocolli.geta_gujo && (
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3 shadow-md">
-            <h4 className="text-base font-bold text-emerald-400 flex items-center gap-2">
-              <Footprints className="w-5 h-5 text-emerald-400" />
-              <span>{protocolli.geta_gujo.titolo}</span>
-            </h4>
-            <ul className="space-y-2 text-xs text-slate-300">
-              {protocolli.geta_gujo.consigli?.map((c, idx) => (
-                <li key={idx} className="flex items-start gap-2 bg-slate-950/60 p-2.5 rounded-xl border border-slate-800">
-                  <span className="text-emerald-400 font-bold">•</span>
-                  <span className="leading-relaxed">{c}</span>
-                </li>
-              ))}
-            </ul>
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl shadow-md overflow-hidden">
+            <button
+              type="button"
+              onClick={() => toggleProtocol('geta')}
+              className="w-full p-4 flex items-center justify-between text-left hover:bg-slate-800/50 transition-colors"
+            >
+              <h4 className="text-base font-bold text-emerald-400 flex items-center gap-2">
+                <Footprints className="w-5 h-5 text-emerald-400" />
+                <span>{protocolli.geta_gujo.titolo}</span>
+              </h4>
+              <span className="text-slate-400 font-bold text-sm">
+                {expandedProtocols.geta ? '▲' : '▼'}
+              </span>
+            </button>
+            {expandedProtocols.geta && (
+              <div className="px-4 pb-4 space-y-3 pt-1 border-t border-slate-800/80">
+                <ul className="space-y-2 text-xs text-slate-300">
+                  {protocolli.geta_gujo.consigli?.map((c, idx) => (
+                    <li key={idx} className="flex items-start gap-2 bg-slate-950/60 p-2.5 rounded-xl border border-slate-800">
+                      <span className="text-emerald-400 font-bold">•</span>
+                      <span className="leading-relaxed">{c}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </div>
         )}
       </div>
 
       {/* Phrasebook Section */}
       <div id="frasario" className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-4 shadow-md pt-4">
-        <div className="flex items-center justify-between">
-          <h3 className="text-sm font-bold text-white flex items-center gap-2">
-            <Volume2 className="w-4 h-4 text-amber-400" />
-            <span>Frasario Tascabile 🗣️ ({filteredFrasario.length} frasi)</span>
-          </h3>
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <h3 className="text-sm font-bold text-white flex items-center gap-2">
+              <Volume2 className="w-4 h-4 text-amber-400" />
+              <span>Frasario Tascabile 🗣️ ({filteredFrasario.length} frasi)</span>
+            </h3>
+          </div>
+
+          {/* Language Selector */}
+          <div className="grid grid-cols-3 gap-1.5 p-1 bg-slate-950 rounded-xl border border-slate-800 text-xs font-semibold">
+            <button
+              type="button"
+              onClick={() => setSelectedLanguage('jp')}
+              className={`py-1.5 px-2 rounded-lg text-center transition-all ${
+                selectedLanguage === 'jp'
+                  ? 'bg-amber-400 text-slate-950 font-bold shadow'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              🇯🇵 Giapponese
+            </button>
+            <button
+              type="button"
+              onClick={() => setSelectedLanguage('kr')}
+              className={`py-1.5 px-2 rounded-lg text-center transition-all ${
+                selectedLanguage === 'kr'
+                  ? 'bg-sky-400 text-slate-950 font-bold shadow'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              🇰🇷 Coreano
+            </button>
+            <button
+              type="button"
+              onClick={() => setSelectedLanguage('both')}
+              className={`py-1.5 px-2 rounded-lg text-center transition-all ${
+                selectedLanguage === 'both'
+                  ? 'bg-purple-500 text-white font-bold shadow'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              📖 Entrambe
+            </button>
+          </div>
         </div>
 
         {/* Category Pills */}
@@ -229,28 +331,32 @@ export const GuidaTab: React.FC = () => {
               </div>
 
               {/* Japanese */}
-              <div className="bg-slate-900 p-2.5 rounded-lg border border-slate-800 space-y-1">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-bold text-slate-400">🇯🇵 Giapponese:</span>
-                  <CopyableText text={f.jp} toastMessage="Frase Giapponese copiata!" className="text-amber-400 text-xs font-bold">
-                    Copia 📋
-                  </CopyableText>
+              {(selectedLanguage === 'both' || selectedLanguage === 'jp') && (
+                <div className="bg-slate-900 p-2.5 rounded-lg border border-slate-800 space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold text-slate-400">🇯🇵 Giapponese:</span>
+                    <CopyableText text={f.jp} toastMessage="Frase Giapponese copiata!" className="text-amber-400 text-xs font-bold">
+                      Copia 📋
+                    </CopyableText>
+                  </div>
+                  <p className="text-base font-bold text-amber-300 font-mono">{f.jp}</p>
+                  <p className="text-xs text-slate-300 italic">Pronuncia: {f.pronuncia}</p>
                 </div>
-                <p className="text-base font-bold text-amber-300 font-mono">{f.jp}</p>
-                <p className="text-xs text-slate-300 italic">Pronuncia: {f.pronuncia}</p>
-              </div>
+              )}
 
               {/* Korean */}
-              <div className="bg-slate-900 p-2.5 rounded-lg border border-slate-800 space-y-1">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-bold text-slate-400">🇰🇷 Coreano:</span>
-                  <CopyableText text={f.kr} toastMessage="Frase Coreana copiata!" className="text-blue-400 text-xs font-bold">
-                    Copia 📋
-                  </CopyableText>
+              {(selectedLanguage === 'both' || selectedLanguage === 'kr') && (
+                <div className="bg-slate-900 p-2.5 rounded-lg border border-slate-800 space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold text-slate-400">🇰🇷 Coreano:</span>
+                    <CopyableText text={f.kr} toastMessage="Frase Coreana copiata!" className="text-blue-400 text-xs font-bold">
+                      Copia 📋
+                    </CopyableText>
+                  </div>
+                  <p className="text-base font-bold text-blue-300 font-mono">{f.kr}</p>
+                  <p className="text-xs text-slate-300 italic">Pronuncia: {f.kr_pronuncia}</p>
                 </div>
-                <p className="text-base font-bold text-blue-300 font-mono">{f.kr}</p>
-                <p className="text-xs text-slate-300 italic">Pronuncia: {f.kr_pronuncia}</p>
-              </div>
+              )}
             </div>
           ))}
         </div>

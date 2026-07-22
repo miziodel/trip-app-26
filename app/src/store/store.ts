@@ -20,6 +20,7 @@ export type ActiveTab = 'oggi' | 'itinerario' | 'trasporti' | 'guida' | 'emergen
 
 export interface TaxiCardData {
   name: string;
+  nameLocale?: string;
   addressLocale: string;
   addressEn?: string;
 }
@@ -32,6 +33,7 @@ export interface ViaggioState {
   showRainPlan: boolean;
   activeTaxiCard: TaxiCardData | null;
   showCurrencyModal: boolean;
+  showTodoDrawer: boolean;
   toastMessage: string | null;
   userLogs: Record<string, TravelLog>;
   userTodos: Record<number, boolean[]>;
@@ -47,6 +49,7 @@ export interface ViaggioState {
   openTaxiCard: (card: TaxiCardData) => void;
   closeTaxiCard: () => void;
   toggleCurrencyModal: () => void;
+  toggleTodoDrawer: () => void;
   showToast: (message: string, durationMs?: number) => void;
   updateTodo: (giorno: number, todoIndex: number, done: boolean) => Promise<void>;
   addCustomTodo: (giorno: number, testo: string) => Promise<void>;
@@ -74,6 +77,7 @@ export const useViaggioStore = create<ViaggioState>((set, get) => ({
   showRainPlan: false,
   activeTaxiCard: null,
   showCurrencyModal: false,
+  showTodoDrawer: false,
   toastMessage: null,
   userLogs: {},
   userTodos: {},
@@ -113,6 +117,8 @@ export const useViaggioStore = create<ViaggioState>((set, get) => ({
   closeTaxiCard: () => set({ activeTaxiCard: null }),
 
   toggleCurrencyModal: () => set((state) => ({ showCurrencyModal: !state.showCurrencyModal })),
+
+  toggleTodoDrawer: () => set((state) => ({ showTodoDrawer: !state.showTodoDrawer })),
 
   showToast: (message: string, durationMs = 2500) => {
     set({ toastMessage: message });

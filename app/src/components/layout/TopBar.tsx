@@ -1,19 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Wifi, WifiOff, Coins } from 'lucide-react';
+import { Coins, CheckSquare } from 'lucide-react';
 import { useViaggioStore } from '../../store/store';
 
 export const TopBar: React.FC = () => {
   const toggleCurrencyModal = useViaggioStore((state) => state.toggleCurrencyModal);
-  const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine);
+  const toggleTodoDrawer = useViaggioStore((state) => state.toggleTodoDrawer);
   const [times, setTimes] = useState<{ cet: string; asia: string }>({ cet: '', asia: '' });
 
   useEffect(() => {
-    const handleOnline = () => setIsOnline(true);
-    const handleOffline = () => setIsOnline(false);
-
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
-
     const updateClock = () => {
       const now = new Date();
       
@@ -36,8 +30,6 @@ export const TopBar: React.FC = () => {
     const interval = setInterval(updateClock, 1000);
 
     return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
       clearInterval(interval);
     };
   }, []);
@@ -58,28 +50,26 @@ export const TopBar: React.FC = () => {
       </div>
 
       {/* Right controls */}
-      <div className="flex items-center space-x-2">
-        {/* Network status */}
-        <div
-          className={`flex items-center space-x-1 text-[11px] px-2 py-1 rounded-full border ${
-            isOnline
-              ? 'bg-emerald-950/60 border-emerald-800/80 text-emerald-400'
-              : 'bg-rose-950/60 border-rose-800/80 text-rose-400'
-          }`}
-          title={isOnline ? 'Connesso' : 'Modalità Offline Active'}
+      <div className="flex items-center space-x-1.5">
+        {/* Todo Drawer Trigger */}
+        <button
+          type="button"
+          onClick={toggleTodoDrawer}
+          className="flex items-center space-x-1 bg-slate-800 border border-slate-700 text-slate-200 hover:bg-slate-700 px-2.5 py-1.5 rounded-xl transition-all active:scale-95 text-xs font-semibold"
+          title="Tutti i Todo & Promemoria"
         >
-          {isOnline ? <Wifi className="w-3 h-3" /> : <WifiOff className="w-3 h-3" />}
-          <span className="font-medium hidden sm:inline">{isOnline ? 'Online' : 'Offline'}</span>
-        </div>
+          <CheckSquare className="w-3.5 h-3.5 text-amber-400" />
+          <span>Todo</span>
+        </button>
 
         {/* Currency Converter Trigger */}
         <button
           type="button"
           onClick={toggleCurrencyModal}
-          className="flex items-center space-x-1 bg-amber-500/20 border border-amber-500/40 text-amber-300 hover:bg-amber-500/30 px-3 py-1.5 rounded-xl transition-all active:scale-95 text-xs font-semibold"
+          className="flex items-center space-x-1 bg-amber-500/20 border border-amber-500/40 text-amber-300 hover:bg-amber-500/30 px-2.5 py-1.5 rounded-xl transition-all active:scale-95 text-xs font-semibold"
         >
-          <Coins className="w-4 h-4 text-amber-400" />
-          <span>Convertitore</span>
+          <Coins className="w-3.5 h-3.5 text-amber-400" />
+          <span>Cambio</span>
         </button>
       </div>
     </header>

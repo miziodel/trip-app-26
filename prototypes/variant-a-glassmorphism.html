@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="it" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Korea & Japan Trip 2026 - Neo-Glassmorphism Companion</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+JP:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+            jp: ['"Noto Sans JP"', 'sans-serif'],
+          },
+          colors: {
+            glass: {
+              bg: 'rgba(15, 23, 42, 0.65)',
+              border: 'rgba(255, 255, 255, 0.12)',
+              card: 'rgba(30, 41, 59, 0.55)',
+              accent: '#38bdf8',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* Custom Scrollbar & Glassmorphism Utilities */
+    body {
+      background-color: #020617;
+      color: #f8fafc;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      overflow-x: hidden;
+    }
+    .glass-card {
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    .glass-card-interactive {
+      background: rgba(30, 41, 59, 0.55);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .glass-card-interactive:active {
+      transform: scale(0.98);
+      background: rgba(51, 65, 85, 0.65);
+      border-color: rgba(56, 189, 248, 0.4);
+    }
+    .glass-pill {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+    .glow-cyan {
+      box-shadow: 0 0 25px -5px rgba(6, 182, 212, 0.35);
+    }
+    .glow-purple {
+      box-shadow: 0 0 25px -5px rgba(168, 85, 247, 0.35);
+    }
+    .pulse-ring {
+      box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.7);
+      animation: pulse-ring 2s infinite cubic-bezier(0.66, 0, 0, 1);
+    }
+    @keyframes pulse-ring {
+      to {
+        box-shadow: 0 0 0 10px rgba(56, 189, 248, 0);
+      }
+    }
+    /* Hide scrollbars */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="antialiased selection:bg-cyan-500 selection:text-white">
+
+  <!-- Glow Background Orbs -->
+  <div class="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-md h-full overflow-hidden pointer-events-none z-0">
+    <div class="absolute -top-20 -left-20 w-72 h-72 bg-cyan-600/25 rounded-full blur-3xl"></div>
+    <div class="absolute top-1/3 -right-20 w-80 h-80 bg-indigo-600/20 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-20 -left-20 w-72 h-72 bg-purple-600/20 rounded-full blur-3xl"></div>
+  </div>
+
+  <!-- Main Mobile App Container -->
+  <div class="max-w-md mx-auto min-h-screen relative z-10 pb-28 flex flex-col bg-slate-950/40">
+
+    <!-- 1. STICKY TOP BAR (Dual Clock + Currency + Offline Badge) -->
+    <header class="sticky top-0 z-40 px-4 pt-3 pb-3 glass-card border-b border-white/10 shadow-lg">
+      <div class="flex items-center justify-between gap-2">
+        
+        <!-- Dual Clock -->
+        <div class="flex items-center gap-3">
+          <div class="flex flex-col">
+            <span class="text-[10px] uppercase tracking-wider text-slate-400 font-semibold flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span> ITA
+            </span>
+            <span id="clock-ita" class="font-mono text-sm font-bold text-slate-200">04:15</span>
+          </div>
+          <div class="h-6 w-[1px] bg-slate-700/60"></div>
+          <div class="flex flex-col">
+            <span class="text-[10px] uppercase tracking-wider text-cyan-400 font-bold flex items-center gap-1">
+              <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span> JP/KR
+            </span>
+            <span id="clock-jp" class="font-mono text-base font-extrabold text-cyan-300">11:15</span>
+          </div>
+        </div>
+
+        <!-- Right Quick Actions (Currency quick pill & Offline status) -->
+        <div class="flex items-center gap-2">
+          <!-- Currency Quick Toggle Pill -->
+          <button onclick="openModal('currency-modal')" class="glass-pill px-2.5 py-1 rounded-full flex items-center gap-1.5 text-xs font-mono text-amber-300 hover:bg-white/15 transition-all">
+            <i data-lucide="coins" class="w-3.5 h-3.5 text-amber-400"></i>
+            <span>1k¥ ≈ 6.2€</span>
+          </button>
+
+          <!-- Offline Status Badge -->
+          <div class="glass-pill px-2 py-1 rounded-full flex items-center gap-1 text-[10px] font-medium text-emerald-400 border border-emerald-500/30">
+            <i data-lucide="wifi-off" class="w-3 h-3 text-emerald-400"></i>
+            <span class="hidden sm:inline">Offline</span>
+          </div>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- MAIN CONTENT SCROLL AREA -->
+    <main class="flex-1 px-4 pt-4 space-y-5">
+
+      <!-- APP HEADER / GREETING -->
+      <div class="flex justify-between items-end px-1">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-bold px-2 py-0.5 rounded-md bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">GIORNO 7</span>
+            <span class="text-xs text-slate-400">22 Luglio 2026</span>
+          </div>
+          <h1 class="text-xl font-extrabold text-white tracking-tight mt-1">Kyoto & Kansai Day</h1>
+        </div>
+        <div class="text-right">
+          <span class="text-xs text-slate-400 block">Meteo Kyoto</span>
+          <span class="text-sm font-semibold text-amber-300 flex items-center gap-1 justify-end">
+            <i data-lucide="sun-medium" class="w-4 h-4 text-amber-400"></i> 29°C
+          </span>
+        </div>
+      </div>
+
+      <!-- 2. HERO CARD - TAPPA ATTUALE IN CORSO -->
+      <section class="glass-card rounded-2xl p-4 border border-cyan-500/30 relative overflow-hidden glow-cyan">
+        <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-cyan-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+        <!-- Status Header -->
+        <div class="flex items-center justify-between mb-3">
+          <div class="flex items-center gap-2">
+            <span class="relative flex h-2.5 w-2.5">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-cyan-500"></span>
+            </span>
+            <span class="text-xs font-bold tracking-wider text-cyan-400 uppercase">In Corso</span>
+          </div>
+          <span class="text-xs font-mono text-slate-400 bg-slate-800/80 px-2 py-0.5 rounded border border-white/5">PNR: JR-9204X</span>
+        </div>
+
+        <!-- Train Details -->
+        <div class="space-y-2">
+          <div class="flex items-center gap-2 text-white">
+            <i data-lucide="train-front" class="w-5 h-5 text-cyan-400 shrink-0"></i>
+            <h2 class="text-base font-bold tracking-tight">Shinkansen Nozomi #23</h2>
+          </div>
+          <div class="flex items-center justify-between text-xs text-slate-300 pt-1 font-mono">
+            <div class="flex flex-col">
+              <span class="text-[10px] text-slate-400 font-sans">PARTENZA</span>
+              <span class="text-sm font-bold text-white">09:00</span>
+              <span class="text-slate-400 font-sans">Tokyo St.</span>
+            </div>
+            <div class="flex flex-col items-center px-4">
+              <span class="text-[10px] text-cyan-300 font-sans font-bold">2h 15m</span>
+              <div class="w-20 h-[2px] bg-cyan-500/40 relative my-1">
+                <i data-lucide="chevron-right" class="w-3 h-3 text-cyan-400 absolute -top-1 left-12"></i>
+              </div>
+              <span class="text-[9px] text-slate-400">Carrozza 5 • Posto 12A</span>
+            </div>
+            <div class="flex flex-col items-end">
+              <span class="text-[10px] text-slate-400 font-sans">ARRIVO STIMATO</span>
+              <span class="text-sm font-bold text-cyan-300">11:15</span>
+              <span class="text-slate-400 font-sans">Kyoto St.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="mt-4 space-y-1.5">
+          <div class="flex justify-between text-[11px] font-mono">
+            <span class="text-slate-400">Avanzamento viaggio</span>
+            <span class="text-cyan-400 font-bold">65% (Arrivo tra 45 min)</span>
+          </div>
+          <div class="w-full bg-slate-800 rounded-full h-2 overflow-hidden border border-white/5 p-0.5">
+            <div class="bg-gradient-to-r from-cyan-500 to-blue-500 h-full rounded-full transition-all duration-500" style="width: 65%"></div>
+          </div>
+        </div>
+
+        <!-- Quick Ticket View Button -->
+        <button onclick="alert('Biglietto JR Pass #9204X verificato e salvato offline!')" class="mt-3.5 w-full py-2 px-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-xs font-semibold text-slate-200 flex items-center justify-center gap-2 transition-all">
+          <i data-lucide="qr-code" class="w-3.5 h-3.5 text-cyan-400"></i>
+          Mostra QR Code & Dettagli Biglietto
+        </button>
+      </section>
+
+      <!-- 3. TIMELINE ITINERARIO DI OGGI -->
+      <section class="space-y-3">
+        <div class="flex items-center justify-between">
+          <h3 class="text-sm font-bold text-white tracking-wide flex items-center gap-2">
+            <i data-lucide="calendar" class="w-4 h-4 text-cyan-400"></i> Programma del Giorno
+          </h3>
+          <span class="text-xs text-slate-400">4 Tappe</span>
+        </div>
+
+        <!-- Timeline Box Container -->
+        <div class="glass-card rounded-2xl p-4 relative space-y-6">
+          
+          <!-- Neon Gradient Connector Line -->
+          <div class="absolute left-7 top-7 bottom-7 w-[2px] bg-gradient-to-b from-cyan-500 via-indigo-500 to-purple-500 opacity-60"></div>
+
+          <!-- Item 1: Shinkansen (Active/Completed) -->
+          <div class="relative flex items-start gap-4">
+            <div class="w-6 h-6 rounded-full bg-cyan-500/20 border-2 border-cyan-400 flex items-center justify-center z-10 shrink-0 mt-0.5 glow-cyan">
+              <i data-lucide="check" class="w-3 h-3 text-cyan-300"></i>
+            </div>
+            <div class="flex-1 bg-slate-900/50 p-3 rounded-xl border border-white/5 space-y-1">
+              <div class="flex justify-between items-center">
+                <span class="font-mono text-xs font-bold text-cyan-400">09:00 - 11:15</span>
+                <span class="text-[10px] bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded font-semibold">In Corso</span>
+              </div>
+              <h4 class="text-sm font-bold text-white">Shinkansen Nozomi per Kyoto</h4>
+              <p class="text-xs text-slate-400">Partenza da Tokyo Central. Luggage stored in Car 5.</p>
+            </div>
+          </div>
+
+          <!-- Item 2: Fushimi Inari -->
+          <div class="relative flex items-start gap-4">
+            <div class="w-6 h-6 rounded-full bg-slate-900 border-2 border-indigo-400 flex items-center justify-center z-10 shrink-0 mt-0.5">
+              <div class="w-2 h-2 rounded-full bg-indigo-400"></div>
+            </div>
+            <div class="flex-1 bg-slate-900/50 p-3 rounded-xl border border-white/5 space-y-1">
+              <div class="flex justify-between items-center">
+                <span class="font-mono text-xs font-bold text-slate-300">11:30 - 13:30</span>
+                <span class="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded">Prossimo</span>
+              </div>
+              <h4 class="text-sm font-bold text-white">Santuario Fushimi Inari Taisha</h4>
+              <p class="text-xs text-slate-400">Passeggiata tra i 10,000 torii rossi. Consigliata salita fino al punto panoramico Yotsutsuji.</p>
+              <div class="flex items-center gap-2 pt-1">
+                <button onclick="openTaxiModal('Fushimi Inari Taisha', '伏見稲荷大社', '68 Fukakusa Yabunouchicho, Fushimi Ward, Kyoto')" class="text-[11px] text-cyan-400 hover:underline flex items-center gap-1 font-semibold">
+                  <i data-lucide="car" class="w-3 h-3"></i> Indirizzo Taxi JP
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Item 3: Lunch Ramen -->
+          <div class="relative flex items-start gap-4">
+            <div class="w-6 h-6 rounded-full bg-slate-900 border-2 border-slate-600 flex items-center justify-center z-10 shrink-0 mt-0.5">
+              <div class="w-1.5 h-1.5 rounded-full bg-slate-500"></div>
+            </div>
+            <div class="flex-1 bg-slate-900/40 p-3 rounded-xl border border-white/5 space-y-1 opacity-90">
+              <div class="flex justify-between items-center">
+                <span class="font-mono text-xs font-bold text-slate-400">14:00 - 15:00</span>
+                <span class="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded">Pranzo</span>
+              </div>
+              <h4 class="text-sm font-bold text-slate-200">Ramen Tradizionale a Gion</h4>
+              <p class="text-xs text-slate-400">Men-ya Inoichi o Gion Duck Noodle (accettano solo Yen in contanti!).</p>
+            </div>
+          </div>
+
+          <!-- Item 4: Yasaka Shrine -->
+          <div class="relative flex items-start gap-4">
+            <div class="w-6 h-6 rounded-full bg-slate-900 border-2 border-slate-600 flex items-center justify-center z-10 shrink-0 mt-0.5">
+              <div class="w-1.5 h-1.5 rounded-full bg-slate-500"></div>
+            </div>
+            <div class="flex-1 bg-slate-900/40 p-3 rounded-xl border border-white/5 space-y-1 opacity-90">
+              <div class="flex justify-between items-center">
+                <span class="font-mono text-xs font-bold text-slate-400">17:00 - 19:00</span>
+                <span class="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded">Sera</span>
+              </div>
+              <h4 class="text-sm font-bold text-slate-200">Santuario Yasaka & Gion al Tramonto</h4>
+              <p class="text-xs text-slate-400">Lanterne illuminate nel quartiere delle Geishe.</p>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- 4. QUICK ACTION GRID -->
+      <section class="space-y-3">
+        <h3 class="text-sm font-bold text-white tracking-wide flex items-center gap-2">
+          <i data-lucide="zap" class="w-4 h-4 text-amber-400"></i> Utilità Rapide
+        </h3>
+
+        <div class="grid grid-cols-2 gap-3">
+          
+          <!-- Taxi Card -->
+          <div onclick="openTaxiModal('Hotel Kyoto Granvia', 'ホテルグランヴィア京都', 'JR Kyoto Station Karasuma Karasuma-dori')" class="glass-card-interactive p-3.5 rounded-2xl cursor-pointer flex flex-col justify-between h-28 border border-white/10 group">
+            <div class="flex justify-between items-start">
+              <div class="p-2 rounded-xl bg-amber-500/20 border border-amber-500/30 text-amber-300">
+                <i data-lucide="car" class="w-5 h-5"></i>
+              </div>
+              <i data-lucide="arrow-up-right" class="w-4 h-4 text-slate-400 group-hover:text-white transition-colors"></i>
+            </div>
+            <div>
+              <span class="text-xs font-bold text-white block">Taxi Card JP</span>
+              <span class="text-[10px] text-slate-400 block">Mostra indirizzo al tassista</span>
+            </div>
+          </div>
+
+          <!-- Currency Converter -->
+          <div onclick="openModal('currency-modal')" class="glass-card-interactive p-3.5 rounded-2xl cursor-pointer flex flex-col justify-between h-28 border border-white/10 group">
+            <div class="flex justify-between items-start">
+              <div class="p-2 rounded-xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-300">
+                <i data-lucide="calculator" class="w-5 h-5"></i>
+              </div>
+              <i data-lucide="arrow-up-right" class="w-4 h-4 text-slate-400 group-hover:text-white transition-colors"></i>
+            </div>
+            <div>
+              <span class="text-xs font-bold text-white block">Cambio Valuta</span>
+              <span class="text-[10px] text-slate-400 block">JPY / KRW ↔ EUR</span>
+            </div>
+          </div>
+
+          <!-- SOS Emergency -->
+          <div onclick="openModal('sos-modal')" class="glass-card-interactive p-3.5 rounded-2xl cursor-pointer flex flex-col justify-between h-28 border border-rose-500/30 bg-rose-950/20 group">
+            <div class="flex justify-between items-start">
+              <div class="p-2 rounded-xl bg-rose-500/20 border border-rose-500/30 text-rose-400">
+                <i data-lucide="phone-call" class="w-5 h-5"></i>
+              </div>
+              <i data-lucide="arrow-up-right" class="w-4 h-4 text-slate-400 group-hover:text-white transition-colors"></i>
+            </div>
+            <div>
+              <span class="text-xs font-bold text-rose-200 block">SOS & Emergenza</span>
+              <span class="text-[10px] text-rose-300/70 block">Ambasciata, Polizia 110</span>
+            </div>
+          </div>
+
+          <!-- Offline Notes & Pass -->
+          <div onclick="openModal('notes-modal')" class="glass-card-interactive p-3.5 rounded-2xl cursor-pointer flex flex-col justify-between h-28 border border-white/10 group">
+            <div class="flex justify-between items-start">
+              <div class="p-2 rounded-xl bg-indigo-500/20 border border-indigo-500/30 text-indigo-300">
+                <i data-lucide="file-text" class="w-5 h-5"></i>
+              </div>
+              <i data-lucide="arrow-up-right" class="w-4 h-4 text-slate-400 group-hover:text-white transition-colors"></i>
+            </div>
+            <div>
+              <span class="text-xs font-bold text-white block">Note & Documenti</span>
+              <span class="text-[10px] text-slate-400 block">Passaporti, Assicurazione</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- 5. MODALS SECTION -->
+
+    <!-- TAXI CARD MODAL -->
+    <div id="taxi-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-end sm:items-center justify-center p-4 hidden transition-opacity">
+      <div class="glass-card w-full max-w-md rounded-3xl p-6 border border-white/20 shadow-2xl relative space-y-4 animate-in fade-in slide-in-from-bottom-5">
+        <button onclick="closeModal('taxi-modal')" class="absolute top-4 right-4 p-2 rounded-full bg-slate-800 text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+        
+        <div class="flex items-center gap-2 text-amber-400">
+          <i data-lucide="car" class="w-6 h-6"></i>
+          <span class="text-xs font-bold uppercase tracking-wider">Taxi Card per Autista</span>
+        </div>
+
+        <div class="bg-amber-400/10 border border-amber-400/30 rounded-2xl p-4 text-center space-y-2">
+          <p class="text-xs text-amber-200">Mostra questo schermo al tassista giapponese:</p>
+          <div class="py-2">
+            <h2 id="taxi-modal-jp-title" class="font-jp text-2xl font-bold text-white tracking-wide">運転手さん、ここへ行ってください</h2>
+            <p id="taxi-modal-jp-name" class="font-jp text-3xl font-extrabold text-amber-300 my-2">ホテルグランヴィア京都</p>
+            <p id="taxi-modal-jp-address" class="font-jp text-sm text-slate-300">〒600-8216 京都府京都市下京区烏丸通塩小路下ル JR京都駅烏丸中央口</p>
+          </div>
+        </div>
+
+        <div class="bg-slate-900/60 rounded-xl p-3 text-xs text-slate-300 space-y-1">
+          <p><strong class="text-white">Nome in Italiano:</strong> <span id="taxi-modal-it-name">Hotel Kyoto Granvia</span></p>
+          <p><strong class="text-white">Frase utile:</strong> "Koko made onegai shimasu" (Per favore mi porti qui)</p>
+        </div>
+
+        <button onclick="closeModal('taxi-modal')" class="w-full py-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-sm transition-colors">
+          Chiudi Taxi Card
+        </button>
+      </div>
+    </div>
+
+    <!-- CURRENCY CONVERTER MODAL -->
+    <div id="currency-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-end sm:items-center justify-center p-4 hidden">
+      <div class="glass-card w-full max-w-md rounded-3xl p-6 border border-white/20 shadow-2xl relative space-y-5">
+        <button onclick="closeModal('currency-modal')" class="absolute top-4 right-4 p-2 rounded-full bg-slate-800 text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+
+        <div class="flex items-center gap-2 text-emerald-400">
+          <i data-lucide="coins" class="w-6 h-6"></i>
+          <h3 class="text-lg font-bold text-white">Convertitore Valuta Real-Time</h3>
+        </div>
+
+        <!-- Mode selector tab -->
+        <div class="flex rounded-xl bg-slate-900/80 p-1 border border-white/10 text-xs font-semibold">
+          <button id="tab-jpy" onclick="switchCurrencyTab('jpy')" class="flex-1 py-2 rounded-lg bg-emerald-500 text-slate-950 font-bold transition-all">Giappone (JPY ¥)</button>
+          <button id="tab-krw" onclick="switchCurrencyTab('krw')" class="flex-1 py-2 rounded-lg text-slate-400 hover:text-white transition-all">Korea (KRW ₩)</button>
+        </div>
+
+        <!-- Calculator Input Block -->
+        <div class="space-y-3">
+          <div class="bg-slate-900/80 p-3.5 rounded-2xl border border-white/10 flex justify-between items-center">
+            <div>
+              <span id="curr-label-foreign" class="text-xs text-slate-400 block">YEN GIAPPONESE (¥)</span>
+              <input id="input-foreign" type="number" value="1000" oninput="calculateCurrency()" class="bg-transparent text-xl font-mono font-bold text-white focus:outline-none w-36" placeholder="0" />
+            </div>
+            <span id="curr-symbol-foreign" class="font-mono text-xl text-emerald-400 font-bold">¥</span>
+          </div>
+
+          <div class="flex justify-center -my-1">
+            <div class="w-8 h-8 rounded-full bg-slate-800 border border-white/10 flex items-center justify-center text-slate-400">
+              <i data-lucide="arrow-down-up" class="w-4 h-4"></i>
+            </div>
+          </div>
+
+          <div class="bg-slate-900/80 p-3.5 rounded-2xl border border-white/10 flex justify-between items-center">
+            <div>
+              <span class="text-xs text-slate-400 block">EURO (EUR €)</span>
+              <span id="output-eur" class="text-2xl font-mono font-extrabold text-emerald-300 block">6.21 €</span>
+            </div>
+            <span class="font-mono text-xl text-emerald-400 font-bold">€</span>
+          </div>
+        </div>
+
+        <!-- Quick conversion buttons -->
+        <div class="space-y-1.5">
+          <span class="text-[11px] text-slate-400 block font-medium">Tagli Frequenti:</span>
+          <div id="quick-buttons" class="grid grid-cols-4 gap-2">
+            <button onclick="setForeignAmount(500)" class="py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-mono text-slate-200">500¥</button>
+            <button onclick="setForeignAmount(1000)" class="py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-mono text-slate-200">1,000¥</button>
+            <button onclick="setForeignAmount(5000)" class="py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-mono text-slate-200">5,000¥</button>
+            <button onclick="setForeignAmount(10000)" class="py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-mono text-slate-200">10,000¥</button>
+          </div>
+        </div>
+
+        <button onclick="closeModal('currency-modal')" class="w-full py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded-xl text-sm transition-colors">
+          Fatto
+        </button>
+      </div>
+    </div>
+
+    <!-- SOS EMERGENCY MODAL -->
+    <div id="sos-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-end sm:items-center justify-center p-4 hidden">
+      <div class="glass-card w-full max-w-md rounded-3xl p-6 border border-rose-500/30 shadow-2xl relative space-y-4">
+        <button onclick="closeModal('sos-modal')" class="absolute top-4 right-4 p-2 rounded-full bg-slate-800 text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+
+        <div class="flex items-center gap-2 text-rose-400">
+          <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+          <h3 class="text-lg font-bold text-white">Numeri Emergenza & Assistenza</h3>
+        </div>
+
+        <div class="space-y-2.5">
+          <a href="tel:110" class="flex items-center justify-between p-3 rounded-xl bg-slate-900/80 border border-white/10 hover:bg-slate-800">
+            <div class="flex items-center gap-3">
+              <i data-lucide="shield-alert" class="w-5 h-5 text-rose-400"></i>
+              <div>
+                <span class="text-xs font-bold text-white block">Polizia Giappone</span>
+                <span class="text-[10px] text-slate-400">Chiamata d'emergenza</span>
+              </div>
+            </div>
+            <span class="font-mono text-sm font-bold text-rose-400">110</span>
+          </a>
+
+          <a href="tel:119" class="flex items-center justify-between p-3 rounded-xl bg-slate-900/80 border border-white/10 hover:bg-slate-800">
+            <div class="flex items-center gap-3">
+              <i data-lucide="ambulance" class="w-5 h-5 text-rose-400"></i>
+              <div>
+                <span class="text-xs font-bold text-white block">Ambulanza / Vigili del Fuoco</span>
+                <span class="text-[10px] text-slate-400">Soccorso Medico</span>
+              </div>
+            </div>
+            <span class="font-mono text-sm font-bold text-rose-400">119</span>
+          </a>
+
+          <a href="tel:+81334535201" class="flex items-center justify-between p-3 rounded-xl bg-slate-900/80 border border-white/10 hover:bg-slate-800">
+            <div class="flex items-center gap-3">
+              <i data-lucide="building-2" class="w-5 h-5 text-cyan-400"></i>
+              <div>
+                <span class="text-xs font-bold text-white block">Ambasciata d'Italia a Tokyo</span>
+                <span class="text-[10px] text-slate-400">Minato-ku, Tokyo</span>
+              </div>
+            </div>
+            <span class="font-mono text-xs font-bold text-cyan-300">+81 3-3453-5201</span>
+          </a>
+
+          <div class="p-3 rounded-xl bg-slate-900/60 border border-white/5 space-y-1">
+            <span class="text-xs font-bold text-amber-300 block">Polizza Assicurazione Viaggio</span>
+            <p class="text-xs text-slate-300">Heymondo Polizza #HM-9982412</p>
+            <p class="text-[11px] text-slate-400">Centrale Operativa 24/7: +39 02 1234567</p>
+          </div>
+        </div>
+
+        <button onclick="closeModal('sos-modal')" class="w-full py-3 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-xl text-sm transition-colors">
+          Chiudi
+        </button>
+      </div>
+    </div>
+
+    <!-- NOTES MODAL -->
+    <div id="notes-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-end sm:items-center justify-center p-4 hidden">
+      <div class="glass-card w-full max-w-md rounded-3xl p-6 border border-white/20 shadow-2xl relative space-y-4">
+        <button onclick="closeModal('notes-modal')" class="absolute top-4 right-4 p-2 rounded-full bg-slate-800 text-slate-400 hover:text-white">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+
+        <div class="flex items-center gap-2 text-indigo-400">
+          <i data-lucide="file-text" class="w-6 h-6"></i>
+          <h3 class="text-lg font-bold text-white">Note & Documenti Offline</h3>
+        </div>
+
+        <div class="space-y-2 text-xs text-slate-300">
+          <div class="p-3 rounded-xl bg-slate-900/70 border border-white/10">
+            <span class="font-bold text-white block mb-1">Passaporti:</span>
+            <p class="font-mono text-slate-400">M.W. - N° YA8192301 (Scad. 2031)</p>
+            <p class="font-mono text-slate-400">A.B. - N° YB4910294 (Scad. 2030)</p>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-900/70 border border-white/10">
+            <span class="font-bold text-white block mb-1">Codici QR Visit Japan Web:</span>
+            <p class="text-slate-400">Immigrazione & Dogana salvati nella Galleria foto Offline.</p>
+          </div>
+          <div class="p-3 rounded-xl bg-slate-900/70 border border-white/10">
+            <span class="font-bold text-white block mb-1">Pocket Wi-Fi Pickup:</span>
+            <p class="text-slate-400">Aeroporto Haneda Terminal 3 - Counter Ninja WiFi (Codice prenotazione: #NW-8812)</p>
+          </div>
+        </div>
+
+        <button onclick="closeModal('notes-modal')" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-xl text-sm transition-colors">
+          Chiudi
+        </button>
+      </div>
+    </div>
+
+
+    <!-- 6. BOTTOM NAVIGATION BAR (5 Icons with Translucent Active Pill) -->
+    <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md z-40 px-3 pb-3 pt-1 pointer-events-none">
+      <div class="glass-card rounded-2xl px-2 py-2 border border-white/15 shadow-2xl flex items-center justify-around pointer-events-auto">
+        
+        <!-- Tab 1: Oggi (Active) -->
+        <button onclick="setActiveNav(this)" class="nav-item flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 transition-all">
+          <i data-lucide="compass" class="w-5 h-5"></i>
+          <span class="text-[10px] font-bold">Oggi</span>
+        </button>
+
+        <!-- Tab 2: Itinerario -->
+        <button onclick="setActiveNav(this)" class="nav-item flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl text-slate-400 hover:text-slate-200 transition-all">
+          <i data-lucide="map" class="w-5 h-5"></i>
+          <span class="text-[10px] font-medium">Itinerario</span>
+        </button>
+
+        <!-- Tab 3: Trasporti -->
+        <button onclick="setActiveNav(this)" class="nav-item flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl text-slate-400 hover:text-slate-200 transition-all">
+          <i data-lucide="train" class="w-5 h-5"></i>
+          <span class="text-[10px] font-medium">Trasporti</span>
+        </button>
+
+        <!-- Tab 4: Guida -->
+        <button onclick="setActiveNav(this)" class="nav-item flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl text-slate-400 hover:text-slate-200 transition-all">
+          <i data-lucide="book-open" class="w-5 h-5"></i>
+          <span class="text-[10px] font-medium">Guida</span>
+        </button>
+
+        <!-- Tab 5: Emergenze -->
+        <button onclick="openModal('sos-modal')" class="nav-item flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl text-slate-400 hover:text-rose-400 transition-all">
+          <i data-lucide="shield-alert" class="w-5 h-5"></i>
+          <span class="text-[10px] font-medium">SOS</span>
+        </button>
+
+      </div>
+    </nav>
+
+  </div>
+
+  <!-- EMBEDDED INTERACTIVE JAVASCRIPT -->
+  <script>
+    // Initialize Lucide icons
+    lucide.createIcons();
+
+    // Dual Clock Simulation Script
+    function updateClocks() {
+      const now = new Date();
+      
+      // Simulated ITA time (UTC+2 in Summer)
+      const itaHours = String((now.getHours() - 7 + 24) % 24).padStart(2, '0');
+      const itaMinutes = String(now.getMinutes()).padStart(2, '0');
+      
+      // Japan / Korea time (UTC+9)
+      const jpHours = String((now.getHours() + 0) % 24).padStart(2, '0');
+      const jpMinutes = String(now.getMinutes()).padStart(2, '0');
+
+      document.getElementById('clock-ita').textContent = `${itaHours}:${itaMinutes}`;
+      document.getElementById('clock-jp').textContent = `${jpHours}:${jpMinutes}`;
+    }
+    setInterval(updateClocks, 1000);
+    updateClocks();
+
+    // Modal Control Functions
+    function openModal(id) {
+      document.getElementById(id).classList.remove('hidden');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.add('hidden');
+    }
+
+    function openTaxiModal(titleIt, nameJp, addressJp) {
+      document.getElementById('taxi-modal-it-name').textContent = titleIt;
+      document.getElementById('taxi-modal-jp-name').textContent = nameJp;
+      document.getElementById('taxi-modal-jp-address').textContent = addressJp;
+      openModal('taxi-modal');
+    }
+
+    // Currency Converter Logic
+    let currentCurrencyMode = 'jpy'; // 'jpy' or 'krw'
+    const rates = {
+      jpy: 0.00621, // 1 JPY = 0.00621 EUR (approx 1000 JPY = 6.21 EUR)
+      krw: 0.00067  // 1 KRW = 0.00067 EUR (approx 10000 KRW = 6.70 EUR)
+    };
+
+    function switchCurrencyTab(mode) {
+      currentCurrencyMode = mode;
+      const tabJp = document.getElementById('tab-jpy');
+      const tabKr = document.getElementById('tab-krw');
+      const label = document.getElementById('curr-label-foreign');
+      const symbol = document.getElementById('curr-symbol-foreign');
+      const input = document.getElementById('input-foreign');
+      const quickBtns = document.getElementById('quick-buttons');
+
+      if (mode === 'jpy') {
+        tabJp.className = "flex-1 py-2 rounded-lg bg-emerald-500 text-slate-950 font-bold transition-all";
+        tabKr.className = "flex-1 py-2 rounded-lg text-slate-400 hover:text-white transition-all";
+        label.textContent = "YEN GIAPPONESE (¥)";
+        symbol.textContent = "¥";
+        input.value = "1000";
+        quickBtns.innerHTML = `
+          <button onclick="setForeignAmount(500)" class="py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-mono text-slate-200">500¥</button>
+          <button onclick="setForeignAmount(1000)" class="py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-mono text-slate-200">1,000¥</button>
+          <button onclick="setForeignAmount(5000)" class="py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-mono text-slate-200">5,000¥</button>
+          <button onclick="setForeignAmount(10000)" class="py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-mono text-slate-200">10,000¥</button>
+        `;
+      } else {
+        tabKr.className = "flex-1 py-2 rounded-lg bg-emerald-500 text-slate-950 font-bold transition-all";
+        tabJp.className = "flex-1 py-2 rounded-lg text-slate-400 hover:text-white transition-all";
+        label.textContent = "WON SUDCOREANO (₩)";
+        symbol.textContent = "₩";
+        input.value = "10000";
+        quickBtns.innerHTML = `
+          <button onclick="setForeignAmount(3000)" class="py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-mono text-slate-200">3,000₩</button>
+          <button onclick="setForeignAmount(10000)" class="py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-mono text-slate-200">10,000₩</button>
+          <button onclick="setForeignAmount(50000)" class="py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-mono text-slate-200">50,000₩</button>
+          <button onclick="setForeignAmount(100000)" class="py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-mono text-slate-200">100,000₩</button>
+        `;
+      }
+      calculateCurrency();
+    }
+
+    function calculateCurrency() {
+      const val = parseFloat(document.getElementById('input-foreign').value) || 0;
+      const rate = rates[currentCurrencyMode];
+      const eur = (val * rate).toFixed(2);
+      document.getElementById('output-eur').textContent = `${eur} €`;
+    }
+
+    function setForeignAmount(amt) {
+      document.getElementById('input-foreign').value = amt;
+      calculateCurrency();
+    }
+
+    // Bottom Navigation Pill Active State Toggle
+    function setActiveNav(element) {
+      const items = document.querySelectorAll('.nav-item');
+      items.forEach(item => {
+        item.className = "nav-item flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl text-slate-400 hover:text-slate-200 transition-all";
+      });
+      element.className = "nav-item flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 transition-all";
+    }
+  </script>
+</body>
+</html>

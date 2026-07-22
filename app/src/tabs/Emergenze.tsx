@@ -44,13 +44,25 @@ export const EmergenzeTab: React.FC = () => {
           </div>
         </div>
 
-        <a
-          href={`tel:${assicurazione.telefono_h24.replace(/\s+/g, '')}`}
-          className="w-full bg-rose-600 hover:bg-rose-500 text-white font-bold py-3 px-4 rounded-xl text-xs shadow-lg transition-all active:scale-95 flex items-center justify-center space-x-2"
-        >
-          <PhoneCall className="w-4 h-4" />
-          <span>Chiama Assicurazione H24 (+39 02 3600 5814)</span>
-        </a>
+        <div className="grid grid-cols-2 gap-2">
+          <a
+            href={`tel:${assicurazione.telefono_h24.replace(/\s+/g, '')}`}
+            className="bg-rose-600 hover:bg-rose-500 text-white font-bold py-3 px-3 rounded-xl text-xs shadow-lg transition-all active:scale-95 flex items-center justify-center space-x-1.5"
+          >
+            <PhoneCall className="w-4 h-4 shrink-0" />
+            <span className="truncate">Chiama H24</span>
+          </a>
+
+          <a
+            href={assicurazione.sito_web || 'https://www.columbus.it'}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-slate-900 hover:bg-slate-800 text-rose-300 border border-rose-500/40 font-bold py-3 px-3 rounded-xl text-xs shadow-lg transition-all active:scale-95 flex items-center justify-center space-x-1.5"
+          >
+            <ExternalLink className="w-4 h-4 shrink-0" />
+            <span className="truncate">Sito Web Polizza</span>
+          </a>
+        </div>
       </div>
 
       {/* Korea Emergency Numbers */}
