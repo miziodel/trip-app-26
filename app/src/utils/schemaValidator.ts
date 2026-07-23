@@ -24,7 +24,10 @@ export function validateViaggioSchema(data: unknown): { valid: boolean; errors: 
     errors.push('Campo "trasporti" mancante o non valido.');
   } else {
     if (!Array.isArray(obj.trasporti.voli)) errors.push('Campo "trasporti.voli" mancante o non array.');
-    if (!Array.isArray(obj.trasporti.treni_e_bus)) errors.push('Campo "trasporti.treni_e_bus" mancante o non array.');
+    // Backward compatibility & new 4.0 schema support
+    if (!Array.isArray(obj.trasporti.treni) && !(obj.trasporti as any).treni_e_bus) {
+      errors.push('Campo "trasporti.treni" mancante o non array.');
+    }
   }
 
   if (!obj.emergenze || typeof obj.emergenze !== 'object') {

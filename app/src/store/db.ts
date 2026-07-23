@@ -122,6 +122,17 @@ export async function getCustomTodos(): Promise<Record<number, string[]> | undef
   return todos as Record<number, string[]> | undefined;
 }
 
+export async function saveTheme(theme: 'day' | 'night'): Promise<void> {
+  const db = await getDB();
+  await db.put('config', theme as any, 'theme');
+}
+
+export async function getTheme(): Promise<'day' | 'night' | undefined> {
+  const db = await getDB();
+  const theme = await db.get('config', 'theme');
+  return theme as ('day' | 'night') | undefined;
+}
+
 export async function clearAllData(): Promise<void> {
   const db = await getDB();
   const stores = ['config', 'logs', 'customRates', 'customTodos'] as const;

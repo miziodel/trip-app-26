@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import { useViaggioStore } from '../store/store';
 import { ScheduleCard } from '../components/ui/ScheduleCard';
 import { CopyableText } from '../components/ui/CopyableText';
+import { HeroProgressCard } from '../components/ui/HeroProgressCard';
 import { formatDate } from '../utils/dateUtils';
 import { getMapDeepLink } from '../utils/linkUtils';
+import { isTransitActiveNow, getTransitProgressPercent, getTransitEtaMinutes } from '../utils/transitUtils';
+import type { Volo, Treno, Bus } from '../types/viaggio';
 import {
   ChevronLeft,
   ChevronRight,
@@ -18,7 +21,21 @@ import {
   Moon,
   MapPin,
   Car,
+  Sparkles,
+  Plane,
+  Train,
+  Ticket,
 } from 'lucide-react';
+
+const TYPE_DOT_COLORS: Record<string, string> = {
+  trasporto: 'bg-sky-500',
+  attivita: 'bg-emerald-500',
+  pasto: 'bg-amber-500',
+  alloggio: 'bg-purple-500',
+  festival: 'bg-rose-500',
+  compito: 'bg-yellow-500',
+  info: 'bg-slate-500',
+};
 
 export const OggiTab: React.FC = () => {
   const data = useViaggioStore((state) => state.data);
@@ -30,27 +47,55 @@ export const OggiTab: React.FC = () => {
   const customTodos = useViaggioStore((state) => state.customTodos);
   const addCustomTodo = useViaggioStore((state) => state.addCustomTodo);
   const removeCustomTodo = useViaggioStore((state) => state.removeCustomTodo);
+  const userLogs = useViaggioStore((state) => state.userLogs);
+  const updateLog = useViaggioStore((state) => state.updateLog);
 
   const [newTodoInput, setNewTodoInput] = useState<string>('');
+  const [openCardIndexes, setOpenCardIndexes] = useState<Record<number, boolean>>({});
 
   if (!data || !data.itinerario) return null;
 
   const totalDays = data.itinerario.length;
-  const currentDayData = data.itinerario.find((g) => g.giorno === selectedDay) || data.itinerario[0];
+  const currentDayData =
+    data.itinerario.find((g) => g.giorno === selectedDay) || data.itinerario[0];
 
-  // Helper to subtract 1 day from ISO string
+  const toggleCardIndex = (idx: number) => {
+    setOpenCardIndexes((prev) => ({
+      ...prev,
+      [idx]: !prev[idx],
+    }));
+  };
+
+  // Calculate active transits for current selected date only across Voli, Treni, and Bus
+  const todayTransits: (Volo | Treno | Bus)[] = [
+    ...(data.trasporti?.voli || []).filter((t) => t.data === currentDayData.data),
+    ...(data.trasporti?.treni || []).filter((t) => t.data === currentDayData.data),
+    ...(data.trasporti?.bus || []).filter((t) => t.data === currentDayData.data),
+  ];
+
+  const activeTransit = todayTransits.length > 0 ? todayTransits[0] : null;
+
+  // Day specific sections calculations
+  const dayFlights = (data.trasporti?.voli || []).filter((v) => v.data === currentDayData.data);
+  const dayTransits = [
+    ...(data.trasporti?.treni || []),
+    ...(data.trasporti?.bus || []),
+  ].filter((t) => t.data === currentDayData.data);
+  const dayTickets = (data.biglietti || []).filter(
+    (b) => b.data === currentDayData.data || b.giorno === currentDayData.giorno
+  );
+
   const getPreviousDayDateStr = (dateStr: string): string => {
     const d = new Date(dateStr);
     d.setDate(d.getDate() - 1);
     return d.toISOString().split('T')[0];
   };
 
-  // Sleep accommodation: night of date D (check_in <= D < check_out)
-  const sleepAccommodation = data.alloggi.find(
-    (h) => currentDayData.data >= h.check_in && currentDayData.data < h.check_out
-  ) || data.alloggi[data.alloggi.length - 1];
+  const sleepAccommodation =
+    data.alloggi.find(
+      (h) => currentDayData.data >= h.check_in && currentDayData.data < h.check_out
+    ) || data.alloggi[data.alloggi.length - 1];
 
-  // Wakeup accommodation: night of date D-1 (check_in <= D-1 < check_out)
   const prevDateStr = getPreviousDayDateStr(currentDayData.data);
   const wakeupAccommodation = data.alloggi.find(
     (h) => prevDateStr >= h.check_in && prevDateStr < h.check_out
@@ -58,7 +103,8 @@ export const OggiTab: React.FC = () => {
 
   const sameAccommodation = wakeupAccommodation?.id === sleepAccommodation?.id;
 
-  const currentTodos = userTodos[currentDayData.giorno] || currentDayData.todo_list.map((t) => t.fatto);
+  const currentTodos =
+    userTodos[currentDayData.giorno] || currentDayData.todo_list.map((t) => t.fatto);
   const customList = customTodos[currentDayData.giorno] || [];
 
   const handleAddTodo = async (e: React.FormEvent) => {
@@ -68,11 +114,7 @@ export const OggiTab: React.FC = () => {
     setNewTodoInput('');
   };
 
-  // Extract food items for Google Search Photos links
   const getFoodItems = (): string[] => {
-    if (currentDayData.focus_culinario_items && currentDayData.focus_culinario_items.length > 0) {
-      return currentDayData.focus_culinario_items;
-    }
     if (!currentDayData.focus_culinario) return [];
 
     const match = currentDayData.focus_culinario.match(/\(([^)]+)\)/);
@@ -83,85 +125,326 @@ export const OggiTab: React.FC = () => {
     return currentDayData.focus_culinario
       .split(/,|\+|\/|da\s+/)
       .map((s) => s.trim())
-      .filter((s) => s.length > 2 && !s.toLowerCase().startsWith('cena') && !s.toLowerCase().startsWith('pranzo'));
+      .filter(
+        (s) =>
+          s.length > 2 &&
+          !s.toLowerCase().startsWith('cena') &&
+          !s.toLowerCase().startsWith('pranzo')
+      );
   };
 
   const foodItems = getFoodItems();
+  const isJapan = currentDayData.paese === 'JP' || (!currentDayData.citta.toLowerCase().includes('seoul') && !currentDayData.citta.toLowerCase().includes('roma'));
 
-  // Find index of item closest to current time (if today)
-  const now = new Date();
-  const currentHour = now.getHours();
-  let defaultOpenIndex = 0;
-  if (currentDayData.tabella_oraria.length > 0) {
-    const found = currentDayData.tabella_oraria.findIndex((item) => {
-      const startHour = parseInt(item.ora.split(':')[0], 10);
-      return !isNaN(startHour) && startHour >= currentHour;
-    });
-    if (found !== -1) defaultOpenIndex = found;
-  }
+  // Kanji watermark based on current city
+  const kanjiCityMap: Record<string, string> = {
+    Tokyo: '東京',
+    Seoul: '서울',
+    Kyoto: '京都',
+    Osaka: '大阪',
+    Kanazawa: '金沢',
+    Takayama: '高山',
+    Gujo: '郡上',
+    Hiroshima: '広島',
+    Nara: '奈良',
+    Hakone: '箱根',
+  };
+  const currentKanji = kanjiCityMap[currentDayData.citta] || '旅';
 
   return (
-    <div className="pb-24 pt-4 px-4 max-w-md mx-auto space-y-5 animate-in fade-in duration-300">
-      {/* Day Selector Header */}
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-md flex items-center justify-between">
+    <div className="pb-28 pt-4 px-4 max-w-md mx-auto space-y-6 relative overflow-hidden font-sans">
+      {/* Kanji Decorative Watermark Background */}
+      <div className="kanji-watermark text-[180px] -right-10 top-12 text-[var(--text-primary)]">
+        {currentKanji}
+      </div>
+
+      {/* EDITORIAL HEADER BANNER */}
+      <div className="relative">
+        <div className="flex items-center space-x-2 text-torii font-mono text-xs font-bold tracking-widest uppercase mb-1">
+          <span>GIORNO {String(currentDayData.giorno).padStart(2, '0')}</span>
+          <span>•</span>
+          <span className="text-slate-400">{formatDate(currentDayData.data)}</span>
+        </div>
+        <h1 className="text-3xl font-extrabold text-[var(--text-primary)] tracking-tight uppercase leading-none mb-1.5 font-outfit">
+          {currentDayData.titolo}
+        </h1>
+        <p className="text-xs text-sakura font-noto tracking-wide">
+          {currentDayData.fase} • Tappa a {currentDayData.citta}
+        </p>
+      </div>
+
+      {/* QUICK DAY SELECTOR NAV */}
+      <div className="flex items-center justify-between bg-slate-900/70 p-1.5 rounded-2xl border border-[var(--border-subtle)] font-mono text-xs shadow-sm">
         <button
           type="button"
           onClick={() => setSelectedDay(Math.max(0, selectedDay - 1))}
           disabled={selectedDay === 0}
-          className="p-2 rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700 disabled:opacity-30 disabled:pointer-events-none"
+          className="p-1.5 rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700 disabled:opacity-30 transition-colors"
         >
-          <ChevronLeft className="w-5 h-5" />
+          <ChevronLeft className="w-4 h-4" />
         </button>
 
-        <div className="text-center">
-          <div className="flex items-center justify-center gap-1.5 text-xs text-amber-400 font-bold uppercase tracking-wider">
-            <span>{currentDayData.fase}</span>
-            <span>•</span>
-            <span>Giorno {currentDayData.giorno}</span>
-          </div>
-          <h2 className="text-lg font-black text-white">{formatDate(currentDayData.data)}</h2>
-          <p className="text-xs text-slate-400 font-medium">{currentDayData.titolo}</p>
+        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
+          {data.itinerario.slice(Math.max(0, selectedDay - 1), Math.min(totalDays, selectedDay + 2)).map((g) => (
+            <button
+              key={g.giorno}
+              type="button"
+              onClick={() => setSelectedDay(g.giorno)}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                g.giorno === selectedDay
+                  ? 'bg-torii text-white shadow-md shadow-torii/30'
+                  : 'text-slate-400 hover:text-slate-200'
+              }`}
+            >
+              Day {String(g.giorno).padStart(2, '0')}
+            </button>
+          ))}
         </div>
 
         <button
           type="button"
           onClick={() => setSelectedDay(Math.min(totalDays - 1, selectedDay + 1))}
           disabled={selectedDay === totalDays - 1}
-          className="p-2 rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700 disabled:opacity-30 disabled:pointer-events-none"
+          className="p-1.5 rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700 disabled:opacity-30 transition-colors"
         >
-          <ChevronRight className="w-5 h-5" />
+          <ChevronRight className="w-4 h-4" />
         </button>
       </div>
 
-      {/* 1. FIRST ITEM OF THE DAY: WAKEUP ACCOMMODATION (If different from sleep hotel) */}
+      {/* HERO PROGRESS CARD FOR ACTIVE TRANSIT */}
+      {activeTransit && isTransitActiveNow(activeTransit) && (
+        <HeroProgressCard
+          item={activeTransit}
+          progressPercent={getTransitProgressPercent(activeTransit)}
+          etaMinutes={getTransitEtaMinutes(activeTransit)}
+          onCopyPnr={(pnr) => {
+            if (navigator.clipboard) navigator.clipboard.writeText(pnr);
+          }}
+          onOpenTaxiCard={() =>
+            sleepAccommodation &&
+            openTaxiCard({
+              name: sleepAccommodation.nome,
+              nameLocale: sleepAccommodation.nome_locale,
+              addressLocale: sleepAccommodation.indirizzo_locale,
+              addressEn: sleepAccommodation.indirizzo_en,
+            })
+          }
+        />
+      )}
+
+      {/* 1. Voli del Giorno */}
+      {dayFlights.length > 0 && (
+        <div className="space-y-2">
+          {dayFlights.map((flight) => (
+            <div
+              key={flight.id}
+              className="bg-blue-950/30 border border-blue-800/50 rounded-xl p-3 space-y-2 text-xs"
+            >
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-blue-300 flex items-center gap-1.5">
+                  <Plane className="w-4 h-4 text-blue-400" />
+                  <span>
+                    {flight.compagnia} {flight.numero_volo} ({flight.citta_partenza} → {flight.citta_arrivo})
+                  </span>
+                </span>
+                <span className="px-2 py-0.5 bg-blue-500/20 text-blue-300 rounded font-semibold text-[10px] border border-blue-500/30">
+                  {flight.stato}
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between text-slate-300">
+                <span>🕒 Orario: <strong className="text-white">{flight.ora_partenza} → {flight.ora_arrivo}</strong></span>
+                <span>⏳ Durata: {flight.durata}</span>
+              </div>
+
+              <div className="flex items-center justify-between pt-1 border-t border-blue-900/40">
+                <CopyableText text={flight.pnr} toastMessage="PNR copiato! 🎟️" className="text-blue-300 font-mono">
+                  🎟️ PNR: <strong className="underline">{flight.pnr}</strong>
+                </CopyableText>
+
+                {flight.note && (
+                  <span className="text-[11px] text-amber-300 italic">{flight.note}</span>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* 2. Treni & Bus del Giorno */}
+      {dayTransits.length > 0 && (
+        <div className="space-y-2">
+          {dayTransits.map((transit) => {
+            const isTrain = 'mezzo' in transit;
+            const mezzoName = isTrain ? (transit as Treno).mezzo : (transit as Bus).vettore;
+            const depStation = transit.stazione_partenza;
+            const arrStation = transit.stazione_arrivo;
+            const seats = transit.posti?.join(', ');
+
+            return (
+              <div
+                key={transit.id}
+                className="bg-amber-950/20 border border-amber-800/40 rounded-xl p-3 space-y-2 text-xs"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-amber-300 flex items-center gap-1.5">
+                    <Train className="w-4 h-4 text-amber-400" />
+                    <span>
+                      {mezzoName} ({depStation} → {arrStation})
+                    </span>
+                  </span>
+                  {'durata' in transit && transit.durata && (
+                    <span className="px-2 py-0.5 bg-amber-500/20 text-amber-300 rounded font-semibold text-[10px] border border-amber-500/30">
+                      {transit.durata}
+                    </span>
+                  )}
+                </div>
+
+                <div className="flex items-center justify-between text-slate-300">
+                  <span>🕒 Orario: <strong className="text-white">{transit.ora_partenza} → {transit.ora_arrivo}</strong></span>
+                  {seats && <span>💺 Posti: <strong className="text-white">{seats}</strong></span>}
+                </div>
+
+                <div className="flex items-center justify-between pt-1 border-t border-amber-900/40 flex-wrap gap-2">
+                  {'pnr' in transit && transit.pnr && (
+                    <CopyableText text={transit.pnr} toastMessage="PNR copiato! 🎟️" className="text-amber-300 font-mono">
+                      🎟️ PNR: <strong className="underline">{transit.pnr}</strong>
+                    </CopyableText>
+                  )}
+                  {isTrain && (transit as Treno).codice_ritiro && (
+                    <CopyableText text={(transit as Treno).codice_ritiro!} toastMessage="Codice ritiro copiato!" className="text-amber-300 font-mono">
+                      🔑 Ritiro: <strong className="underline">{(transit as Treno).codice_ritiro}</strong>
+                    </CopyableText>
+                  )}
+                  {transit.note && (
+                    <span className="text-[11px] text-amber-300/80 italic">{transit.note}</span>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* 3. Biglietti del Giorno */}
+      {dayTickets.length > 0 && (
+        <div className="space-y-2">
+          {dayTickets.map((ticket) => (
+            <div
+              key={ticket.id}
+              className="bg-emerald-950/30 border border-emerald-800/50 rounded-xl p-3 space-y-2 text-xs"
+            >
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-emerald-300 flex items-center gap-1.5">
+                  <Ticket className="w-4 h-4 text-emerald-400" />
+                  <span>
+                    {ticket.nome} {ticket.nome_locale && `(${ticket.nome_locale})`}
+                  </span>
+                </span>
+                {ticket.ora_ingresso && (
+                  <span className="px-2 py-0.5 bg-emerald-500/20 text-emerald-300 rounded font-semibold text-[10px] border border-emerald-500/30">
+                    🕒 {ticket.ora_ingresso}
+                  </span>
+                )}
+              </div>
+
+              <div className="flex items-center justify-between pt-1 border-t border-emerald-900/40">
+                <CopyableText text={ticket.codice} toastMessage="Codice biglietto copiato! 🎟️" className="text-emerald-300 font-mono">
+                  🎟️ Codice: <strong className="underline">{ticket.codice}</strong>
+                </CopyableText>
+
+                {ticket.note && (
+                  <span className="text-[11px] text-emerald-200/80 italic">{ticket.note}</span>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* 4. Focus Culinario del Giorno */}
+      {currentDayData.focus_culinario && (
+        <div className="editorial-card p-4 space-y-2.5 shadow-md">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="p-2 rounded-xl bg-torii/15 text-torii border border-torii/30 flex-shrink-0">
+                <Utensils className="w-4 h-4" />
+              </div>
+              <h4 className="text-xs font-mono font-bold text-torii uppercase tracking-wider">
+                Focus Culinario 🍜
+              </h4>
+            </div>
+
+            {isJapan && (
+              <a
+                href={`https://tabelog.com/rstLst/?vs=1&sa=${encodeURIComponent(currentDayData.citta)}&sk=${encodeURIComponent(currentDayData.focus_culinario.split('(')[0])}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-400 hover:underline bg-amber-400/10 px-2.5 py-1 rounded-md border border-amber-400/20"
+              >
+                <span>🍜 Cerca su Tabelog</span>
+                <ExternalLink className="w-3 h-3" />
+              </a>
+            )}
+          </div>
+
+          <p className="text-xs text-[var(--text-primary)] font-semibold leading-snug font-sans">
+            {currentDayData.focus_culinario}
+          </p>
+
+          {foodItems.length > 0 && (
+            <div className="pt-2 border-t border-[var(--border-subtle)] space-y-1.5">
+              <span className="text-[10px] font-mono font-bold text-gold uppercase tracking-wider block">
+                📸 Guarda foto cibo su Google:
+              </span>
+              <div className="flex items-center gap-1.5 flex-wrap">
+                {foodItems.map((item, idx) => (
+                  <a
+                    key={idx}
+                    href={`https://www.google.com/search?q=${encodeURIComponent(item)}+food&tbm=isch`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-[11px] font-semibold bg-torii/10 hover:bg-torii/20 text-torii px-2.5 py-1 rounded-full border border-torii/30 transition-all active:scale-95"
+                  >
+                    <span>{item}</span>
+                    <ExternalLink className="w-3 h-3 text-torii" />
+                  </a>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* WAKEUP HOTEL CARD (IF DIFFERENT) */}
       {!sameAccommodation && wakeupAccommodation && (
-        <div className="bg-gradient-to-r from-amber-950/40 to-slate-900 border border-amber-500/40 rounded-2xl p-4 space-y-2.5 shadow-lg">
-          <div className="flex items-center justify-between text-xs border-b border-slate-800/80 pb-2">
-            <span className="flex items-center gap-1.5 font-bold text-amber-300">
-              <Sun className="w-4 h-4 text-amber-400" />
+        <div className="editorial-card p-4 space-y-2.5 shadow-lg border-l-4 border-l-amber-400">
+          <div className="flex items-center justify-between text-xs border-b border-[var(--border-subtle)] pb-2 font-mono">
+            <span className="flex items-center gap-1.5 font-bold text-amber-400">
+              <Sun className="w-4 h-4" />
               <span>🌅 Sveglia a ({wakeupAccommodation.citta})</span>
             </span>
-            <span className="text-[10px] text-slate-400 font-semibold">{wakeupAccommodation.stazione}</span>
+            <span className="text-[10px] text-slate-400">{wakeupAccommodation.stazione}</span>
           </div>
 
           <div className="space-y-1">
-            <h4 className="text-base font-bold text-white flex items-center gap-2">
+            <h4 className="text-base font-bold text-[var(--text-primary)] flex items-center gap-2 font-sans">
               <span>{wakeupAccommodation.nome}</span>
               {wakeupAccommodation.nome_locale && (
-                <span className="text-xs text-amber-300 font-normal font-mono">({wakeupAccommodation.nome_locale})</span>
+                <span className="text-xs text-amber-400 font-noto font-normal">({wakeupAccommodation.nome_locale})</span>
               )}
             </h4>
-            <CopyableText text={wakeupAccommodation.indirizzo_locale} className="text-xs text-amber-300 font-mono block">
+            <CopyableText text={wakeupAccommodation.indirizzo_locale} className="text-xs text-amber-400 font-noto block">
               📍 {wakeupAccommodation.indirizzo_locale}
             </CopyableText>
           </div>
 
-          <div className="grid grid-cols-2 gap-2 pt-1">
+          <div className="grid grid-cols-2 gap-2 pt-1 font-sans">
             <a
               href={getMapDeepLink(wakeupAccommodation.indirizzo_locale, wakeupAccommodation.citta)}
               target="_blank"
               rel="noopener noreferrer"
-              className="py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold rounded-xl text-xs flex items-center justify-center gap-1 border border-slate-700 transition-all active:scale-95"
+              className="py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 border border-slate-700 transition-all active:scale-95"
             >
               <MapPin className="w-3.5 h-3.5 text-amber-400" />
               <span>Mappa</span>
@@ -177,7 +460,7 @@ export const OggiTab: React.FC = () => {
                   addressEn: wakeupAccommodation.indirizzo_en,
                 })
               }
-              className="py-2 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold rounded-xl text-xs border border-amber-500/30 flex items-center justify-center gap-1 transition-all active:scale-95"
+              className="py-2 bg-torii/20 hover:bg-torii/30 text-torii font-bold rounded-xl text-xs border border-torii/30 flex items-center justify-center gap-1.5 transition-all active:scale-95"
             >
               <Car className="w-3.5 h-3.5" />
               <span>Taxi Card</span>
@@ -186,81 +469,64 @@ export const OggiTab: React.FC = () => {
         </div>
       )}
 
-      {/* Culinary Focus Box with Google Image Links */}
-      {currentDayData.focus_culinario && (
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-2.5 shadow-md">
-          <div className="flex items-start gap-3">
-            <div className="p-2.5 rounded-xl bg-orange-500/10 text-orange-400 border border-orange-500/20 flex-shrink-0">
-              <Utensils className="w-5 h-5" />
-            </div>
-            <div>
-              <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-0.5">
-                Focus Culinario 🍜
-              </h4>
-              <p className="text-sm text-slate-200 font-medium leading-snug">
-                {currentDayData.focus_culinario}
-              </p>
-            </div>
-          </div>
-
-          {/* Photo Search Links */}
-          {foodItems.length > 0 && (
-            <div className="pt-2 border-t border-slate-800/80 space-y-1.5">
-              <span className="text-[10px] font-bold text-orange-400 uppercase tracking-wider block">
-                📸 Guarda foto cibo su Google:
-              </span>
-              <div className="flex items-center gap-1.5 flex-wrap">
-                {foodItems.map((item, idx) => (
-                  <a
-                    key={idx}
-                    href={`https://www.google.com/search?q=${encodeURIComponent(item)}+food&tbm=isch`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-[11px] font-semibold bg-orange-500/10 hover:bg-orange-500/20 text-orange-300 px-2.5 py-1 rounded-lg border border-orange-500/30 transition-all active:scale-95"
-                  >
-                    <span>{item}</span>
-                    <ExternalLink className="w-3 h-3 text-orange-400" />
-                  </a>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Timeline Schedule list with Expandable Cards */}
+      {/* DAILY TIMELINE SCHEDULE LIST */}
       <div className="space-y-3">
-        <h3 className="text-sm font-bold text-white flex items-center gap-2 px-1">
-          <Clock className="w-4 h-4 text-amber-400" />
-          <span>Programma della Giornata ({currentDayData.tabella_oraria.length} attività)</span>
-        </h3>
+        <div className="flex items-center justify-between px-1 font-mono">
+          <h3 className="text-sm font-bold text-[var(--text-primary)] flex items-center gap-2 uppercase tracking-wider">
+            <Clock className="w-4 h-4 text-gold" />
+            <span>Programma del Giorno</span>
+          </h3>
+          <span className="text-xs text-slate-400">
+            {currentDayData.tabella_oraria.length} Attività
+          </span>
+        </div>
 
-        <div className="space-y-2.5">
-          {currentDayData.tabella_oraria.map((item, idx) => (
-            <ScheduleCard
-              key={idx}
-              item={item}
-              citta={currentDayData.citta}
-              giornoDate={currentDayData.data}
-              giornoIndex={currentDayData.giorno}
-              itemIndex={idx}
-              isDefaultOpen={idx === defaultOpenIndex}
-            />
-          ))}
+        <div className="space-y-4 relative before:absolute before:inset-0 before:left-3.5 before:w-0.5 before:bg-[var(--border-strong)]">
+          {currentDayData.tabella_oraria.map((item, idx) => {
+            const itemKey = `${currentDayData.giorno}-${idx}`;
+            return (
+              <div key={idx} className="timeline-item relative pl-9">
+                <div
+                  className={`absolute left-1.5 top-4 w-4 h-4 rounded-full ${
+                    TYPE_DOT_COLORS[item.tipo] || 'bg-[var(--accent-torii)]'
+                  } border-4 border-[var(--bg-primary)] z-10`}
+                />
+                <ScheduleCard
+                  item={item}
+                  index={idx}
+                  isOpen={!!openCardIndexes[idx]}
+                  onToggle={() => toggleCardIndex(idx)}
+                  userReaction={userLogs[itemKey]?.reaction}
+                  userNote={userLogs[itemKey]?.note}
+                  onSaveReaction={(reaction) => updateLog(itemKey, reaction, undefined)}
+                  onSaveNote={(note) => updateLog(itemKey, undefined, note)}
+                  onOpenTaxiCard={(name, address, nameLocale) =>
+                    openTaxiCard({
+                      name,
+                      addressEn: address,
+                      nameLocale,
+                      addressLocale: address
+                    })
+                  }
+                  currentCity={currentDayData.citta}
+                  countryContext={currentDayData.paese}
+                />
+              </div>
+            );
+          })}
         </div>
       </div>
 
-      {/* Daily Checklist / Todo */}
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3">
-        <h3 className="text-sm font-bold text-white flex items-center gap-2 border-b border-slate-800 pb-2">
-          <CheckSquare className="w-4 h-4 text-amber-400" />
+      {/* DAILY CHECKLIST / TODO */}
+      <div className="editorial-card p-4 space-y-3 shadow-md">
+        <h3 className="text-sm font-bold text-[var(--text-primary)] flex items-center gap-2 border-b border-[var(--border-subtle)] pb-2 font-mono uppercase tracking-wider">
+          <CheckSquare className="w-4 h-4 text-bamboo" />
           <span>
-            Checklist & Promemoria ({currentTodos.filter(Boolean).length}/{currentDayData.todo_list.length})
+            Checklist ({currentTodos.filter(Boolean).length}/{currentDayData.todo_list.length})
           </span>
         </h3>
 
-        <div className="space-y-2">
-          {/* Base JSON todos */}
+        <div className="space-y-2 font-sans">
           {currentDayData.todo_list.map((todo, idx) => {
             const isChecked = currentTodos[idx] ?? todo.fatto;
             return (
@@ -270,12 +536,12 @@ export const OggiTab: React.FC = () => {
                 onClick={() => updateTodo(currentDayData.giorno, idx, !isChecked)}
                 className={`w-full text-left p-3 rounded-xl border flex items-start gap-3 transition-all ${
                   isChecked
-                    ? 'bg-emerald-950/20 border-emerald-800/40 text-slate-400 line-through'
-                    : 'bg-slate-950/70 border-slate-800 text-slate-200 hover:border-slate-700'
+                    ? 'bg-bamboo/10 border-bamboo/30 text-slate-400 line-through'
+                    : 'bg-slate-900/60 border-[var(--border-subtle)] text-[var(--text-primary)] hover:border-torii/40'
                 }`}
               >
                 {isChecked ? (
-                  <CheckSquare className="w-5 h-5 text-emerald-400 flex-shrink-0 mt-0.5" />
+                  <CheckSquare className="w-5 h-5 text-bamboo flex-shrink-0 mt-0.5" />
                 ) : (
                   <Square className="w-5 h-5 text-slate-500 flex-shrink-0 mt-0.5" />
                 )}
@@ -284,38 +550,36 @@ export const OggiTab: React.FC = () => {
             );
           })}
 
-          {/* Custom local user todos */}
           {customList.map((customItem, cIdx) => (
             <div
               key={cIdx}
-              className="p-3 rounded-xl bg-slate-950/70 border border-amber-500/30 text-amber-200 flex items-center justify-between text-xs font-medium"
+              className="p-3 rounded-xl bg-gold/10 border border-gold/30 text-gold flex items-center justify-between text-xs font-medium"
             >
               <span className="flex items-center gap-2">
-                <span className="text-amber-400 font-bold">★</span>
+                <Sparkles className="w-3.5 h-3.5 text-gold" />
                 {customItem}
               </span>
               <button
                 type="button"
                 onClick={() => removeCustomTodo(currentDayData.giorno, cIdx)}
-                className="p-1 text-slate-400 hover:text-rose-400"
+                className="p-1 text-slate-400 hover:text-torii"
               >
                 <Trash2 className="w-3.5 h-3.5" />
               </button>
             </div>
           ))}
 
-          {/* Add custom todo input */}
           <form onSubmit={handleAddTodo} className="flex gap-2 pt-2">
             <input
               type="text"
               placeholder="+ Aggiungi nota o promemoria..."
               value={newTodoInput}
               onChange={(e) => setNewTodoInput(e.target.value)}
-              className="flex-1 bg-slate-950 border border-slate-800 text-slate-100 text-xs rounded-xl px-3 py-2 focus:outline-none focus:border-amber-400"
+              className="flex-1 bg-slate-950 border border-[var(--border-subtle)] text-[var(--text-primary)] text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:border-torii font-sans"
             />
             <button
               type="submit"
-              className="px-3 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl text-xs flex items-center gap-1 active:scale-95 transition-all"
+              className="px-3.5 py-2.5 bg-torii hover:bg-torii/90 text-white font-bold rounded-xl text-xs flex items-center gap-1 active:scale-95 transition-all shadow-md shadow-torii/20"
             >
               <Plus className="w-4 h-4" />
               <span>Aggiungi</span>
@@ -324,50 +588,50 @@ export const OggiTab: React.FC = () => {
         </div>
       </div>
 
-      {/* LAST ITEM OF THE DAY: SLEEP ACCOMMODATION */}
+      {/* SLEEP ACCOMMODATION CARD */}
       {sleepAccommodation && (
-        <div className="bg-gradient-to-r from-slate-900 to-purple-950/30 border border-purple-500/40 rounded-2xl p-4 space-y-2.5 shadow-lg">
-          <div className="flex items-center justify-between text-xs text-slate-400 border-b border-slate-800 pb-2">
-            <span className="flex items-center gap-1.5 font-bold text-purple-300">
-              <Moon className="w-4 h-4 text-purple-400" />
+        <div className="editorial-card p-4 space-y-2.5 shadow-lg border-l-4 border-l-sakura">
+          <div className="flex items-center justify-between text-xs text-slate-400 border-b border-[var(--border-subtle)] pb-2 font-mono">
+            <span className="flex items-center gap-1.5 font-bold text-sakura">
+              <Moon className="w-4 h-4" />
               <span>🌙 Pernottamento ({sleepAccommodation.citta})</span>
             </span>
-            <span className="px-2 py-0.5 bg-slate-800 text-amber-400 font-semibold rounded text-[10px]">
+            <span className="px-2 py-0.5 bg-slate-800 text-gold font-semibold rounded text-[10px]">
               {sleepAccommodation.stato_pagamento}
             </span>
           </div>
 
-          <div className="space-y-1">
-            <h4 className="text-base font-bold text-white flex items-center gap-2">
+          <div className="space-y-1 font-sans">
+            <h4 className="text-base font-bold text-[var(--text-primary)] flex items-center gap-2">
               <span>{sleepAccommodation.nome}</span>
               {sleepAccommodation.nome_locale && (
-                <span className="text-xs text-purple-300 font-normal font-mono">({sleepAccommodation.nome_locale})</span>
+                <span className="text-xs text-sakura font-noto font-normal">({sleepAccommodation.nome_locale})</span>
               )}
             </h4>
 
             <div className="text-xs space-y-1">
-              <CopyableText text={sleepAccommodation.indirizzo_locale} className="text-amber-300 font-mono block">
+              <CopyableText text={sleepAccommodation.indirizzo_locale} className="text-gold font-noto block">
                 📍 {sleepAccommodation.indirizzo_locale}
               </CopyableText>
               <p className="text-slate-400">EN: {sleepAccommodation.indirizzo_en}</p>
-              <p className="text-slate-400">🚉 Stazione: {sleepAccommodation.stazione}</p>
+              <p className="text-slate-400 font-mono">🚉 Stazione: {sleepAccommodation.stazione}</p>
             </div>
           </div>
 
           {sleepAccommodation.note && (
-            <p className="text-[11px] bg-slate-950 p-2.5 rounded-lg border border-slate-800 text-slate-300 mt-1">
+            <p className="text-[11px] bg-slate-950 p-2.5 rounded-xl border border-[var(--border-subtle)] text-slate-300 mt-1 font-sans">
               💡 {sleepAccommodation.note}
             </p>
           )}
 
-          <div className="grid grid-cols-2 gap-2 pt-1">
+          <div className="grid grid-cols-2 gap-2 pt-1 font-sans">
             <a
               href={getMapDeepLink(sleepAccommodation.indirizzo_locale, sleepAccommodation.citta)}
               target="_blank"
               rel="noopener noreferrer"
-              className="py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold rounded-xl text-xs flex items-center justify-center gap-1 border border-slate-700 transition-all active:scale-95"
+              className="py-2.5 bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 border border-slate-700 transition-all active:scale-95"
             >
-              <MapPin className="w-3.5 h-3.5 text-amber-400" />
+              <MapPin className="w-3.5 h-3.5 text-gold" />
               <span>Mappa</span>
             </a>
 
@@ -381,7 +645,7 @@ export const OggiTab: React.FC = () => {
                   addressEn: sleepAccommodation.indirizzo_en,
                 })
               }
-              className="py-2.5 bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-bold rounded-xl text-xs border border-amber-500/30 shadow transition-all active:scale-95 flex items-center justify-center gap-1"
+              className="py-2.5 bg-torii/20 hover:bg-torii/30 text-torii font-bold rounded-xl text-xs border border-torii/30 shadow transition-all active:scale-95 flex items-center justify-center gap-1.5"
             >
               <Car className="w-3.5 h-3.5" />
               <span>Taxi Card</span>

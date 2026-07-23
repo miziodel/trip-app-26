@@ -19,12 +19,23 @@ import {
   Calendar,
 } from 'lucide-react';
 
+const TYPE_DOT_COLORS: Record<string, string> = {
+  trasporto: 'bg-sky-500',
+  attivita: 'bg-emerald-500',
+  pasto: 'bg-amber-500',
+  alloggio: 'bg-purple-500',
+  festival: 'bg-rose-500',
+  compito: 'bg-yellow-500',
+  info: 'bg-slate-500',
+};
+
 export const ItinerarioTab: React.FC = () => {
   const data = useViaggioStore((state) => state.data);
   const setActiveTab = useViaggioStore((state) => state.setActiveTab);
   const setSelectedDay = useViaggioStore((state) => state.setSelectedDay);
   const openTaxiCard = useViaggioStore((state) => state.openTaxiCard);
   const userLogs = useViaggioStore((state) => state.userLogs);
+  const updateLog = useViaggioStore((state) => state.updateLog);
   const userTodos = useViaggioStore((state) => state.userTodos);
   const updateTodo = useViaggioStore((state) => state.updateTodo);
   const customTodos = useViaggioStore((state) => state.customTodos);
@@ -35,6 +46,15 @@ export const ItinerarioTab: React.FC = () => {
   const [selectedCityFilter, setSelectedCityFilter] = useState<string>('Tutti');
   const [expandedDays, setExpandedDays] = useState<Record<number, boolean>>({ 0: true, 1: true });
   const [customTodoInputs, setCustomTodoInputs] = useState<Record<number, string>>({});
+  const [openScheduleCards, setOpenScheduleCards] = useState<Record<string, boolean>>({});
+
+  const toggleScheduleCard = (giornoNum: number, sIdx: number) => {
+    const cardKey = `${giornoNum}-${sIdx}`;
+    setOpenScheduleCards((prev) => ({
+      ...prev,
+      [cardKey]: prev[cardKey] !== undefined ? !prev[cardKey] : false,
+    }));
+  };
 
   if (!data || !data.itinerario) return null;
 
@@ -219,7 +239,7 @@ export const ItinerarioTab: React.FC = () => {
                             <span className="font-bold text-blue-300 flex items-center gap-1.5">
                               <Plane className="w-4 h-4 text-blue-400" />
                               <span>
-                                {flight.compagnia} ({flight.tratta})
+                                {flight.compagnia} {flight.numero_volo} ({flight.citta_partenza} → {flight.citta_arrivo})
                                 {flight.data === '2026-07-27' && (
                                   <span className="ml-1 px-1.5 py-0.5 bg-amber-500/20 text-amber-300 text-[10px] rounded font-mono">
                                     Volo Ieri
@@ -233,7 +253,7 @@ export const ItinerarioTab: React.FC = () => {
                           </div>
 
                           <div className="flex items-center justify-between text-slate-300">
-                            <span>🕒 Orario: <strong className="text-white">{flight.orario}</strong></span>
+                            <span>🕒 Orario: <strong className="text-white">{flight.ora_partenza} → {flight.ora_arrivo}</strong></span>
                             <span>⏳ Durata: {flight.durata}</span>
                           </div>
 
@@ -275,21 +295,44 @@ export const ItinerarioTab: React.FC = () => {
                   )}
 
                   {/* Hourly Schedule Table using ScheduleCard */}
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
                       Tabella Oraria
                     </h4>
-                    <div className="space-y-2">
-                      {giorno.tabella_oraria.map((slot, sIdx) => (
-                        <ScheduleCard
-                          key={sIdx}
-                          item={slot}
-                          citta={giorno.citta}
-                          giornoDate={giorno.data}
-                          giornoIndex={giorno.giorno}
-                          itemIndex={sIdx}
-                        />
-                      ))}
+                    <div className="space-y-4 relative before:absolute before:inset-0 before:left-3.5 before:w-0.5 before:bg-[var(--border-strong)]">
+                      {giorno.tabella_oraria.map((slot, sIdx) => {
+                        const cardKey = `${giorno.giorno}-${sIdx}`;
+                        const isCardOpen = openScheduleCards[cardKey] ?? true;
+                        return (
+                          <div key={sIdx} className="timeline-item relative pl-9">
+                            <div
+                              className={`absolute left-1.5 top-4 w-4 h-4 rounded-full ${
+                                TYPE_DOT_COLORS[slot.tipo] || 'bg-[var(--accent-torii)]'
+                              } border-4 border-[var(--bg-primary)] z-10`}
+                            />
+                            <ScheduleCard
+                              item={slot}
+                              index={sIdx}
+                              isOpen={isCardOpen}
+                              onToggle={() => toggleScheduleCard(giorno.giorno, sIdx)}
+                              userReaction={userLogs[cardKey]?.reaction}
+                              userNote={userLogs[cardKey]?.note}
+                              onSaveReaction={(reaction) => updateLog(cardKey, reaction, undefined)}
+                              onSaveNote={(note) => updateLog(cardKey, undefined, note)}
+                              onOpenTaxiCard={(name, address, nameLocale) =>
+                                openTaxiCard({
+                                  name,
+                                  addressEn: address,
+                                  nameLocale,
+                                  addressLocale: address,
+                                })
+                              }
+                              currentCity={giorno.citta}
+                              countryContext={giorno.paese}
+                            />
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
 

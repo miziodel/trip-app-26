@@ -23,7 +23,14 @@ describe('linkUtils - getMapDeepLink', () => {
   });
 
   it('uses city as query if query is empty', () => {
-    const link = getMapDeepLink('', 'Seoul');
-    expect(link).toBe('https://www.google.com/maps/search/?api=1&query=Seoul');
+    const link = getMapDeepLink('', 'Tokyo');
+    expect(link).toBe('https://www.google.com/maps/search/?api=1&query=Tokyo');
+  });
+
+  it('returns Naver Maps URL for Seoul, Busan, or Korea', () => {
+    expect(getMapDeepLink('Gyeongbokgung', 'Seoul')).toBe('https://map.naver.com/v5/search/Gyeongbokgung%2C%20Seoul');
+    expect(getMapDeepLink('Haeundae Beach', 'Busan')).toBe('https://map.naver.com/v5/search/Haeundae%20Beach%2C%20Busan');
+    expect(getMapDeepLink('Myeongdong Korea')).toBe('https://map.naver.com/v5/search/Myeongdong%20Korea');
+    expect(getMapDeepLink('', 'Seoul')).toBe('https://map.naver.com/v5/search/Seoul');
   });
 });

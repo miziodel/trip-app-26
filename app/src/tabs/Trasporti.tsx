@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Plane, Train, Hotel, Package, AlertCircle, Ticket, Globe, ExternalLink, MapPin } from 'lucide-react';
 import { useViaggioStore } from '../store/store';
 import { CopyableText } from '../components/ui/CopyableText';
+import { TransitCard3Col } from '../components/ui/TransitCard3Col';
 import { getMapDeepLink } from '../utils/linkUtils';
 
 export const TrasportiTab: React.FC = () => {
@@ -19,16 +20,20 @@ export const TrasportiTab: React.FC = () => {
   const yamatoHotel = data.alloggi.find((h) => h.id === 'H6') || data.alloggi[0];
 
   const filteredVoli = data.trasporti.voli.filter((volo) => !hidePast || volo.data >= todayStr);
-  const filteredTreni = data.trasporti.treni_e_bus.filter((item) => !hidePast || item.data >= todayStr);
+  const filteredTreni = [
+    ...(data.trasporti.treni || []),
+    ...(data.trasporti.bus || [])
+  ].filter((item) => !hidePast || item.data >= todayStr);
 
   // Extract tickets & vouchers from schedule details
   const extractedTickets: { title: string; date: string; details: string; code?: string }[] = [];
   data.itinerario.forEach((g) => {
     g.tabella_oraria.forEach((item) => {
       if (
-        item.dettagli.toLowerCase().includes('ticket') ||
-        item.dettagli.toLowerCase().includes('prenotato') ||
-        item.dettagli.toLowerCase().includes('codice')
+        item.dettagli &&
+        (item.dettagli.toLowerCase().includes('ticket') ||
+         item.dettagli.toLowerCase().includes('prenotato') ||
+         item.dettagli.toLowerCase().includes('codice'))
       ) {
         const match = item.dettagli.match(/(Codice:\s*[\w-]+|Ticket ID:\s*[\w-]+|PNR:\s*[\w-]+)/i);
         extractedTickets.push({
@@ -127,16 +132,12 @@ export const TrasportiTab: React.FC = () => {
                     </span>
                   </div>
 
-                  <div className="text-sm font-bold text-white">{volo.tratta}</div>
-
-                  <div className="grid grid-cols-2 gap-2 text-xs text-slate-300 pt-1">
-                    <div>
-                      <span className="text-slate-400">Orario:</span> {volo.orario}
-                    </div>
-                    <div>
-                      <span className="text-slate-400">Durata:</span> {volo.durata}
-                    </div>
-                  </div>
+                  <TransitCard3Col
+                    tratta={`${volo.citta_partenza} (${volo.aeroporto_partenza}) -> ${volo.citta_arrivo} (${volo.aeroporto_arrivo})`}
+                    orario={`${volo.ora_partenza} -> ${volo.ora_arrivo}`}
+                    durata={volo.durata}
+                    isVolo={true}
+                  />
 
                   <div className="flex items-center justify-between text-xs pt-2 border-t border-slate-800">
                     <span className="text-slate-400">{volo.compagnia}</span>
@@ -180,26 +181,29 @@ export const TrasportiTab: React.FC = () => {
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-mono font-bold text-amber-400">{item.id} • {item.data}</span>
-                    <span className="text-xs font-semibold text-slate-300">{item.mezzo}</span>
+                    <span className="text-xs font-semibold text-slate-300">{'mezzo' in item ? item.mezzo : item.vettore}</span>
                   </div>
 
-                  <div className="text-sm font-bold text-white">{item.tratta}</div>
-
-                  <div className="text-xs text-slate-300">
-                    <span className="text-slate-400">Orario:</span> {item.orario}
-                  </div>
+                  <TransitCard3Col
+                    tratta={`${item.stazione_partenza} -> ${item.stazione_arrivo}`}
+                    orario={`${item.ora_partenza} -> ${item.ora_arrivo}`}
+                    durata={'durata' in item ? item.durata : undefined}
+                    isVolo={false}
+                  />
 
                   <div className="grid grid-cols-2 gap-2 text-xs pt-2 border-t border-slate-800">
                     <div>
-                      <span className="text-slate-400">Posti:</span> <span className="font-semibold text-slate-200">{item.posti}</span>
+                      <span className="text-slate-400">Posti:</span> <span className="font-semibold text-slate-200">{Array.isArray(item.posti) ? item.posti.join(', ') : item.posti || 'N/A'}</span>
                     </div>
-                    <div className="flex items-center space-x-1 font-mono">
-                      <span className="text-slate-400">PNR:</span>
-                      <CopyableText text={item.pnr} className="font-bold text-sky-300 bg-sky-500/20 px-2 py-0.5 rounded border border-sky-500/30" />
-                    </div>
+                    {'pnr' in item && item.pnr && (
+                      <div className="flex items-center space-x-1 font-mono">
+                        <span className="text-slate-400">PNR:</span>
+                        <CopyableText text={item.pnr} className="font-bold text-sky-300 bg-sky-500/20 px-2 py-0.5 rounded border border-sky-500/30" />
+                      </div>
+                    )}
                   </div>
 
-                  {item.codice_ritiro && (
+                  {'codice_ritiro' in item && item.codice_ritiro && (
                     <div className="text-xs font-mono text-slate-300">
                       <span className="text-slate-400">Codice Ritiro:</span>{' '}
                       <CopyableText text={item.codice_ritiro} className="font-bold text-emerald-300" />
@@ -231,6 +235,7 @@ export const TrasportiTab: React.FC = () => {
             onClick={() =>
               openTaxiCard({
                 name: yamatoHotel.nome,
+                nameLocale: yamatoHotel.nome_locale,
                 addressLocale: yamatoHotel.indirizzo_locale,
                 addressEn: yamatoHotel.indirizzo_en,
               })
@@ -361,6 +366,7 @@ export const TrasportiTab: React.FC = () => {
                     onClick={() =>
                       openTaxiCard({
                         name: h.nome,
+                        nameLocale: h.nome_locale,
                         addressLocale: h.indirizzo_locale,
                         addressEn: h.indirizzo_en,
                       })

@@ -14,15 +14,26 @@
 
 ## 2. Architettura Offline-First & Storage Data Flow
 
-### 2.1 Flusso dei Dati
+### 2.1 Flusso dei Dati & Data Pipeline
+
 ```
 ┌─────────────────────────┐
-│   viaggio-2026.json     │ (File sorgente o custom caricato)
+│ database-app-v4.md      │ (Documentazione sorgente in Markdown)
+└───────────┬─────────────┘
+            │  (Prompt LLM: docs/PROMPT_GENERA_JSON.md)
+            ▼
+┌─────────────────────────┐
+│  viaggio-2026-v2.json   │ (JSON 4.0 generato con dati reali privati)
+└───────────┬─────────────┘
+            │  (Script: scripts/anonymize-sample-json.mjs)
+            ▼
+┌─────────────────────────┐
+│  viaggio-sample.json    │ (JSON 4.0 anonimizzato per repo/test)
 └───────────┬─────────────┘
             │
             ▼
 ┌─────────────────────────┐
-│  IndexedDB (viaggio-db) │ (Persistenza offline locale)
+│  IndexedDB (viaggio-db) │ (Persistenza offline locale PWA)
 │   - config (Data/Todos) │
 │   - logs (diario note)  │
 │   - customRates         │

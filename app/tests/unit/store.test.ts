@@ -12,6 +12,8 @@ vi.mock('../../src/store/db', () => ({
   saveCustomRates: vi.fn().mockResolvedValue(undefined),
   getCustomTodos: vi.fn().mockResolvedValue(undefined),
   saveCustomTodos: vi.fn().mockResolvedValue(undefined),
+  getTheme: vi.fn().mockResolvedValue(undefined),
+  saveTheme: vi.fn().mockResolvedValue(undefined),
   clearAllData: vi.fn().mockResolvedValue(undefined),
 }));
 
@@ -73,5 +75,21 @@ describe('ViaggioStore - customRates, customTodos, clearDatabase, loadInitialDat
     const state = useViaggioStore.getState();
     expect(state.data).toBeNull();
     expect(state.isLoading).toBe(false);
+  });
+
+  it('openTaxiCard e closeTaxiCard gestiscono activeTaxiCard', () => {
+    useViaggioStore.getState().openTaxiCard({
+      name: 'Wecostay Insadong',
+      nameLocale: '위코스테이 인사동',
+      addressLocale: '서울특별시 종로구',
+    });
+    expect(useViaggioStore.getState().activeTaxiCard).toEqual({
+      name: 'Wecostay Insadong',
+      nameLocale: '위코스테이 인사동',
+      addressLocale: '서울특별시 종로구',
+    });
+
+    useViaggioStore.getState().closeTaxiCard();
+    expect(useViaggioStore.getState().activeTaxiCard).toBeNull();
   });
 });

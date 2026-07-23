@@ -38,21 +38,27 @@ Feature: Tab OGGI e Schede Orarie
   Voglio vedere immediatamente l'impegno orario più rilevante e accedere alle mappe
   Per orientarmi rapidamente con una sola mano
 
-  Scenario: Auto-espansione della card dell'ora attuale
-    Given la data corrente è compresa nell'intervallo del viaggio
-    When l'utente apre il Tab OGGI
-    Then l'app seleziona automaticamente il giorno corrente
-    And la ScheduleCard più vicina all'ora attuale si espande automaticamente mostrando le azioni
+  Scenario: Hero Progress Card visibile solo per trasporti attivi in tempo reale
+    Given l'utente visualizza il Tab OGGI
+    When la data corrente e l'ora attuale rientrano strettamente nell'intervallo [ora_partenza, ora_arrivo] del trasporto attivo
+    Then la HeroProgressCard "IN CORSO NOW" viene visualizzata con la percentuale di avanzamento
+    But se la data o l'ora corrente sono fuori dal range della tratta
+    Then la HeroProgressCard rimane nascosta
 
-  Scenario: Apertura mappa locale per un punto d'interesse in Giappone
-    Given l'utente visualizza una ScheduleCard per una tappa a Tokyo
-    When tocca il pulsante "📍 Apri Mappa"
-    Then viene aperto un link esterno a Google Maps per quella voce
+  Scenario: Layout a 3 righe da chiuso e pannello espanso della ScheduleCard
+    Given l'utente visualizza l'elenco della tabella oraria
+    When le card vengono renderizzate
+    Then sono chiuse di default mostrando Riga 1 (Orario + Tag Tipo), Riga 2 (Titolo + Nome Locale) e Riga 3 (Descrizione)
+    When l'utente tocca qualsiasi punto della card
+    Then la card si espande mostrando le CTA Google Maps, Naver Maps, Taxi Card, Feedback Reazioni e Note offline
 
-  Scenario: Apertura mappa Naver per una tappa a Seoul
-    Given l'utente visualizza una ScheduleCard per una tappa a Seoul
-    When tocca il pulsante "📍 Apri Mappa"
-    Then viene aperto un link esterno a Naver Map (map.naver.com) per quella voce
+  Scenario: Feedback Reazioni e persistenza Note offline
+    Given una ScheduleCard espansa
+    When l'utente tocca un'icona di reazione (❤️, 👍, 😐, 👎)
+    Then la reazione viene salvata nello store locale IndexedDB (userLogs)
+    And viene visualizzata nell'header della scheda
+    When l'utente inserisce una nota offline
+    Then la nota viene salvata e mostrata nella scheda ambrata del dettaglio
 ```
 
 ---

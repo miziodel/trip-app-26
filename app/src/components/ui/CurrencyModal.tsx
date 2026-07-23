@@ -88,7 +88,7 @@ export const CurrencyModal: React.FC = () => {
 
   return (
     <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 p-4 flex items-center justify-center animate-in fade-in duration-200">
-      <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 max-w-md w-full shadow-2xl relative max-h-[90vh] overflow-y-auto">
+      <div className="bg-slate-900 text-[var(--text-primary)] border border-slate-800 rounded-3xl p-6 max-w-md w-full shadow-2xl relative max-h-[90vh] overflow-y-auto">
         <button
           type="button"
           onClick={toggleCurrencyModal}
@@ -98,12 +98,12 @@ export const CurrencyModal: React.FC = () => {
         </button>
 
         <div className="flex items-center justify-between mb-6 pr-8">
-          <div className="flex items-center gap-2 text-amber-400">
+          <div className="flex items-center gap-2 text-[var(--accent-gold)]">
             <ArrowRightLeft className="w-5 h-5" />
             <h2 className="text-xl font-bold text-white">Convertitore Valuta 💱</h2>
           </div>
           {isCustom && (
-            <span className="bg-amber-500/20 text-amber-400 border border-amber-500/40 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+            <span className="bg-[var(--accent-gold)]/20 text-[var(--accent-gold)] border border-[var(--accent-gold)]/40 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
               Personalizzato
             </span>
           )}
@@ -120,7 +120,7 @@ export const CurrencyModal: React.FC = () => {
                 setInputValue(m === 'EUR' ? '10' : m === 'JPY' ? '1000' : '10000');
               }}
               className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all ${
-                mode === m ? 'bg-amber-500 text-slate-950 shadow' : 'text-slate-400 hover:text-white'
+                mode === m ? 'bg-[var(--accent-gold)] text-slate-950 shadow' : 'text-slate-400 hover:text-white'
               }`}
             >
               {m === 'EUR' ? '🇪🇺 EUR (€)' : m === 'JPY' ? '🇯🇵 JPY (¥)' : '🇰🇷 KRW (₩)'}
@@ -137,7 +137,7 @@ export const CurrencyModal: React.FC = () => {
             type="number"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            className="w-full bg-slate-950 border border-slate-700 text-white text-2xl font-bold p-3 rounded-xl focus:outline-none focus:border-amber-400"
+            className="w-full bg-slate-950 border border-slate-700 text-white text-2xl font-bold p-3 rounded-xl focus:outline-none focus:border-[var(--accent-gold)]"
             placeholder="0"
           />
         </div>
@@ -171,7 +171,7 @@ export const CurrencyModal: React.FC = () => {
 
           <div className="flex justify-between items-center py-1 border-b border-slate-800/80">
             <span className="text-slate-400 text-sm font-medium">🇯🇵 Yen (JPY)</span>
-            <span className="text-xl font-bold text-amber-400">¥ {jpyAmount.toLocaleString('it-IT')}</span>
+            <span className="text-xl font-bold text-[var(--accent-gold)]">¥ {jpyAmount.toLocaleString('it-IT')}</span>
           </div>
 
           <div className="flex justify-between items-center py-1">
@@ -182,7 +182,7 @@ export const CurrencyModal: React.FC = () => {
 
         {/* Pivoted Rate Info */}
         <div className="mt-4 text-center space-y-1 bg-slate-950/40 p-2.5 rounded-xl border border-slate-800/60">
-          <p className="text-xs font-bold text-amber-400">
+          <p className="text-xs font-bold text-[var(--accent-gold)]">
             1 EUR = {jpyPerEur} JPY / {krwPerEur} KRW
           </p>
           <p className="text-[10px] text-slate-500">
@@ -198,7 +198,7 @@ export const CurrencyModal: React.FC = () => {
             className="w-full flex items-center justify-between text-xs text-slate-400 hover:text-white py-1 transition-colors"
           >
             <span className="flex items-center gap-1.5 font-bold">
-              <Settings className="w-3.5 h-3.5 text-amber-400" />
+              <Settings className="w-3.5 h-3.5 text-[var(--accent-gold)]" />
               ⚙️ Aggiorna Tassi di Cambio
             </span>
             <span className="text-[10px] font-mono text-slate-500">{showEditRates ? '▲ Chiudi' : '▼ Apri'}</span>
@@ -216,7 +216,7 @@ export const CurrencyModal: React.FC = () => {
                     step="0.00001"
                     value={editJpyRate}
                     onChange={(e) => setEditJpyRate(e.target.value)}
-                    className="w-full bg-slate-900 border border-slate-700 text-white font-mono text-xs p-2 rounded-lg focus:outline-none focus:border-amber-400"
+                    className="w-full bg-slate-900 border border-slate-700 text-white font-mono text-xs p-2 rounded-lg focus:outline-none focus:border-[var(--accent-gold)]"
                   />
                   <span className="text-[10px] text-slate-500 block mt-0.5">
                     1 € ≈ {parseFloat(editJpyRate) > 0 ? (1 / parseFloat(editJpyRate)).toFixed(1) : 0} ¥
@@ -231,7 +231,7 @@ export const CurrencyModal: React.FC = () => {
                     step="0.000001"
                     value={editKrwRate}
                     onChange={(e) => setEditKrwRate(e.target.value)}
-                    className="w-full bg-slate-900 border border-slate-700 text-white font-mono text-xs p-2 rounded-lg focus:outline-none focus:border-amber-400"
+                    className="w-full bg-slate-900 border border-slate-700 text-white font-mono text-xs p-2 rounded-lg focus:outline-none focus:border-[var(--accent-gold)]"
                   />
                   <span className="text-[10px] text-slate-500 block mt-0.5">
                     1 € ≈ {parseFloat(editKrwRate) > 0 ? (1 / parseFloat(editKrwRate)).toFixed(0) : 0} ₩
@@ -242,7 +242,7 @@ export const CurrencyModal: React.FC = () => {
               <div className="flex gap-2 pt-1">
                 <button
                   type="submit"
-                  className="flex-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-1.5 px-3 rounded-lg text-xs flex items-center justify-center gap-1 transition-colors"
+                  className="flex-1 bg-[var(--accent-gold)] hover:bg-amber-400 text-slate-950 font-bold py-1.5 px-3 rounded-lg text-xs flex items-center justify-center gap-1 transition-colors"
                 >
                   {rateSaved ? <Check className="w-3.5 h-3.5" /> : null}
                   <span>{rateSaved ? 'Salvato!' : 'Salva Tassi'}</span>

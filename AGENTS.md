@@ -17,7 +17,12 @@ trip-app-26/
 │   ├── ARCHITETTURA_TECNICA.md
 │   ├── BDD_SCENARIOS.md
 │   ├── ADR.md
-│   └── ROADMAP.md
+│   ├── ROADMAP.md
+│   └── PROMPT_GENERA_JSON.md  # LLM Prompt for converting MD source into 4.0 JSON schema
+├── scripts/                  # Data transformation & validation scripts
+│   ├── convert-v4-json.mjs       # Converts legacy JSON into 4.0 schema
+│   ├── anonymize-sample-json.mjs # Anonymizes private data to update viaggio-sample.json
+│   └── validate-viaggio-json.mjs  # Validates JSON files against 4.0 schema spec
 └── app/                      # Main React PWA application
     ├── package.json
     ├── vite.config.ts

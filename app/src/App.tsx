@@ -18,6 +18,8 @@ export const App: React.FC = () => {
   const activeTab = useViaggioStore((state) => state.activeTab);
   const isLoading = useViaggioStore((state) => state.isLoading);
   const loadInitialData = useViaggioStore((state) => state.loadInitialData);
+  const activeTaxiCard = useViaggioStore((state) => state.activeTaxiCard);
+  const closeTaxiCard = useViaggioStore((state) => state.closeTaxiCard);
 
   useEffect(() => {
     // Only load from IndexedDB. If empty, data will be null and WelcomeScreen will render.
@@ -66,7 +68,14 @@ export const App: React.FC = () => {
       <BottomNav />
 
       {/* Global Modals & Overlays */}
-      <TaxiCard />
+      <TaxiCard
+        isOpen={Boolean(activeTaxiCard)}
+        onClose={closeTaxiCard}
+        destinationName={activeTaxiCard?.name || ''}
+        destinationAddress={activeTaxiCard?.addressEn || ''}
+        nameLocale={activeTaxiCard?.nameLocale}
+        addressLocale={activeTaxiCard?.addressLocale}
+      />
       <CurrencyModal />
       <TodoDrawer />
       <Toast />

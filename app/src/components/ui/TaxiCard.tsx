@@ -1,94 +1,147 @@
-import React from 'react';
-import { useViaggioStore } from '../../store/store';
-import { X, Copy, Car } from 'lucide-react';
+import React, { useState } from 'react';
+import { X, Copy, Check, Car, Volume2 } from 'lucide-react';
 
-export const TaxiCard: React.FC = () => {
-  const activeTaxiCard = useViaggioStore((state) => state.activeTaxiCard);
-  const closeTaxiCard = useViaggioStore((state) => state.closeTaxiCard);
-  const showToast = useViaggioStore((state) => state.showToast);
+interface TaxiCardProps {
+  isOpen: boolean;
+  onClose: () => void;
+  destinationName: string;
+  destinationAddress: string;
+  nameLocale?: string;
+  addressLocale?: string;
+}
 
-  if (!activeTaxiCard) return null;
+/**
+ * High-contrast Taxi Card optimized for driver legibility in Japan & Korea
+ */
+export const TaxiCard: React.FC<TaxiCardProps> = ({
+  isOpen,
+  onClose,
+  destinationName,
+  destinationAddress,
+  nameLocale,
+  addressLocale
+}) => {
+  const [copied, setCopied] = useState(false);
 
-  const handleCopyLocale = async () => {
-    try {
-      const copyText = activeTaxiCard.nameLocale
-        ? `${activeTaxiCard.nameLocale}\n${activeTaxiCard.addressLocale}`
-        : activeTaxiCard.addressLocale;
-      await navigator.clipboard.writeText(copyText);
-      showToast('Destinazione e Indirizzo copiati! 🚕');
-    } catch (err) {
-      console.error('Failed to copy', err);
+  if (!isOpen) return null;
+
+  const displayTitleLocale = nameLocale || destinationName;
+  const displayAddressLocale = addressLocale || destinationAddress;
+
+  const handleCopy = () => {
+    const fullText = [
+      displayTitleLocale,
+      destinationName && destinationName !== displayTitleLocale ? `(${destinationName})` : null,
+      displayAddressLocale,
+      destinationAddress && destinationAddress !== displayAddressLocale ? `(${destinationAddress})` : null,
+    ].filter(Boolean).join('\n');
+    
+    navigator.clipboard.writeText(fullText);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleSpeak = () => {
+    if ('speechSynthesis' in window) {
+      const utterance = new SpeechSynthesisUtterance(displayTitleLocale);
+      // Auto-detect language
+      if (/[\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff]/.test(displayTitleLocale)) {
+        utterance.lang = 'ja-JP';
+      } else if (/[\uac00-\ud7af]/.test(displayTitleLocale)) {
+        utterance.lang = 'ko-KR';
+      }
+      window.speechSynthesis.speak(utterance);
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-black z-50 p-6 flex flex-col justify-center items-center text-center animate-in fade-in duration-200">
-      <button
-        type="button"
-        onClick={closeTaxiCard}
-        className="absolute top-6 right-6 p-3 text-slate-400 hover:text-white bg-slate-800 rounded-full focus:outline-none"
-        aria-label="Chiudi"
-      >
-        <X className="w-8 h-8" />
-      </button>
-
-      <div className="flex items-center gap-2 text-amber-400 font-semibold uppercase tracking-wider text-sm mb-4 bg-amber-400/10 px-4 py-1.5 rounded-full border border-amber-400/30">
-        <Car className="w-4 h-4" />
-        <span>Mostra al Tassista / 택시 기사님께</span>
-      </div>
-
-      {/* Western / Main English Name */}
-      <h2 className="text-xl font-medium text-slate-300 mb-4">{activeTaxiCard.name}</h2>
-
-      {/* Main Large Display Box for Driver */}
-      <div className="bg-slate-900 border-2 border-amber-500/50 p-6 rounded-2xl max-w-lg w-full mb-6 shadow-2xl space-y-4">
-        {/* Destination Translated Name */}
-        {activeTaxiCard.nameLocale && (
-          <div className="border-b border-slate-800 pb-3">
-            <span className="text-xs text-amber-400 font-mono uppercase tracking-wider block mb-1">
-              Nome Destinazione Tradotto:
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-fadeIn">
+      <div className="w-full max-w-md bg-white text-slate-950 rounded-3xl p-6 shadow-2xl border-4 border-amber-400 relative space-y-5">
+        
+        {/* Header */}
+        <div className="flex items-center justify-between border-b-2 border-slate-200 pb-3">
+          <div className="flex items-center gap-2">
+            <Car className="w-6 h-6 text-amber-500" />
+            <span className="text-xs font-black uppercase tracking-wider text-slate-600">
+              Driver Taxi Card
             </span>
-            <p className="text-3xl font-black text-amber-300 leading-tight tracking-wide select-all">
-              {activeTaxiCard.nameLocale}
-            </p>
           </div>
-        )}
-
-        {/* Local Address */}
-        <div>
-          <span className="text-xs text-slate-400 font-mono uppercase tracking-wider block mb-1">
-            Indirizzo Locale / 주소:
-          </span>
-          <p className="text-3xl text-center font-bold text-white leading-tight tracking-wide select-all">
-            {activeTaxiCard.addressLocale}
-          </p>
+          <button
+            type="button"
+            onClick={onClose}
+            className="p-1.5 rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200 transition"
+          >
+            <X className="w-5 h-5" />
+          </button>
         </div>
 
-        <button
-          type="button"
-          onClick={handleCopyLocale}
-          className="w-full py-3 px-4 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl flex items-center justify-center gap-2 text-sm transition-all active:scale-95 shadow"
-        >
-          <Copy className="w-4 h-4" />
-          <span>Copia Nome & Indirizzo Locale</span>
-        </button>
-      </div>
+        {/* High contrast destination for driver */}
+        <div className="space-y-4 text-center py-2">
+          {/* Destination Name */}
+          <div className="space-y-1">
+            <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest block">
+              Destinazione / Destination
+            </span>
+            <h2 className="text-3xl font-black font-noto tracking-tight text-slate-900 leading-tight">
+              {displayTitleLocale}
+            </h2>
+            {destinationName && (
+              <p className="text-sm font-semibold text-slate-700 mt-1 flex items-center justify-center gap-1">
+                <span>🇮🇹 / 🇬🇧</span>
+                <span>{destinationName}</span>
+              </p>
+            )}
+          </div>
 
-      {activeTaxiCard.addressEn && (
-        <p className="text-sm text-slate-400 max-w-md mb-8">
-          <span className="font-semibold text-slate-300">Indirizzo EN:</span> {activeTaxiCard.addressEn}
+          {/* Destination Address */}
+          <div className="bg-amber-50 p-4 rounded-2xl border-2 border-amber-300 space-y-2 text-left">
+            <div>
+              <span className="text-[10px] font-bold text-amber-900 uppercase tracking-widest block">
+                Indirizzo da mostrare al tassista (Locale)
+              </span>
+              <p className="text-lg font-bold font-noto text-slate-900 leading-relaxed break-words mt-0.5">
+                {displayAddressLocale}
+              </p>
+            </div>
+
+            {destinationAddress && (
+              <div className="border-t border-amber-200/80 pt-2 mt-1">
+                <span className="text-[10px] font-bold text-amber-800 uppercase tracking-widest block">
+                  Indirizzo (IT / EN)
+                </span>
+                <p className="text-xs font-semibold text-slate-800 leading-normal break-words mt-0.5">
+                  {destinationAddress}
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Actions */}
+        <div className="grid grid-cols-2 gap-3 pt-1">
+          <button
+            type="button"
+            onClick={handleSpeak}
+            className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-slate-100 text-slate-800 font-bold text-xs hover:bg-slate-200 transition"
+          >
+            <Volume2 className="w-4 h-4 text-slate-700" />
+            <span>Pronuncia</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={handleCopy}
+            className="flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-amber-400 text-slate-950 font-black text-xs hover:bg-amber-300 transition shadow-md"
+          >
+            {copied ? <Check className="w-4 h-4 text-emerald-700" /> : <Copy className="w-4 h-4" />}
+            <span>{copied ? 'Copiato!' : 'Copia Testo'}</span>
+          </button>
+        </div>
+
+        <p className="text-[10px] text-center text-slate-600 italic">
+          💡 Suggerimento: mostra questo schermo direttamente al conducente.
         </p>
-      )}
-
-      <button
-        type="button"
-        onClick={closeTaxiCard}
-        className="px-8 py-3 bg-slate-800 hover:bg-slate-700 text-white font-semibold rounded-xl text-base border border-slate-700"
-      >
-        Chiudi Taxi Card
-      </button>
+      </div>
     </div>
   );
 };
-
-export default TaxiCard;

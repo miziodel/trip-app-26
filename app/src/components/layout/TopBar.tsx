@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Coins, CheckSquare } from 'lucide-react';
+import { Coins, CheckSquare, Sun, Moon } from 'lucide-react';
 import { useViaggioStore } from '../../store/store';
 
 export const TopBar: React.FC = () => {
   const toggleCurrencyModal = useViaggioStore((state) => state.toggleCurrencyModal);
   const toggleTodoDrawer = useViaggioStore((state) => state.toggleTodoDrawer);
+  const theme = useViaggioStore((state) => state.theme);
+  const setTheme = useViaggioStore((state) => state.setTheme);
   const [times, setTimes] = useState<{ cet: string; asia: string }>({ cet: '', asia: '' });
 
   useEffect(() => {
@@ -35,14 +37,14 @@ export const TopBar: React.FC = () => {
   }, []);
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-slate-900/90 backdrop-blur-md border-b border-slate-800 px-4 py-2.5 flex items-center justify-between shadow-md">
+    <header className="sticky top-0 z-40 w-full bg-[var(--bg-card)] backdrop-blur-md border-b border-[var(--border-subtle)] px-4 py-2.5 flex items-center justify-between shadow-md">
       {/* Clock section */}
       <div className="flex items-center space-x-3 text-xs font-mono">
         <div className="flex flex-col">
-          <span className="text-slate-400 text-[10px] uppercase tracking-wider">ITA (CET)</span>
-          <span className="text-slate-200 font-semibold text-sm">{times.cet || '--:--'}</span>
+          <span className="text-[var(--text-secondary)] text-[10px] uppercase tracking-wider">ITA (CET)</span>
+          <span className="text-[var(--text-primary)] font-semibold text-sm">{times.cet || '--:--'}</span>
         </div>
-        <div className="h-6 w-px bg-slate-800" />
+        <div className="h-6 w-px bg-[var(--border-subtle)]" />
         <div className="flex flex-col">
           <span className="text-amber-400 text-[10px] uppercase tracking-wider">JP/KR (UTC+9)</span>
           <span className="text-amber-300 font-semibold text-sm">{times.asia || '--:--'}</span>
@@ -51,6 +53,16 @@ export const TopBar: React.FC = () => {
 
       {/* Right controls */}
       <div className="flex items-center space-x-1.5">
+        {/* Theme Toggle Button */}
+        <button
+          type="button"
+          onClick={() => setTheme(theme === 'night' ? 'day' : 'night')}
+          className="p-1.5 rounded-full bg-slate-800/80 border border-slate-700 hover:border-amber-400 text-amber-400 transition"
+          title={theme === 'night' ? 'Attiva Modalità Giorno' : 'Attiva Modalità Notte'}
+        >
+          {theme === 'night' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-sky-400" />}
+        </button>
+
         {/* Todo Drawer Trigger */}
         <button
           type="button"

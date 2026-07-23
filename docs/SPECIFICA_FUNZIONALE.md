@@ -31,13 +31,18 @@ L'interfaccia mobile-first presenta una **Bottom Navigation Bar fissa** a 5 sche
 - **Logica Data Automatica**:
   - Se la data corrente è compresa tra il 28 Luglio e il 20 Agosto 2026, l'app si apre automaticamente sul giorno corrispondente.
   - Altrimenti, parte da Giorno 0 mettendo a disposizione un selettore manuale (< Giorno X >).
-- **Top Bar Dual Timezone**:
-  - Orologio live doppio: **Italia (CET)** e **Giappone/Corea (UTC+9)**.
-  - Badge di stato connessione (Online/Offline).
-  - Pulsante `💱 Convertitore` per aprire il modal di conversione valuta.
-- **Focus Culinario**: Box informativo in evidenza con il piatto/esperienza gastronomica consigliata della giornata.
-- **Toggle "Piano Pioggia / Caldo ☔"**: Interruttore per visualizzare consigli utili relativi a luoghi al coperto, centri commerciali sotterranei (Depachika/Shotengai) e musei climatizzati.
+- **Hero Card "IN CORSO NOW"**:
+  - Mostrata **SOLO ED ESCLUSIVAMENTE** quando la data e l'ora attuale rientrano strettamente nell'intervallo del trasporto attivo del giorno (`isTransitActiveNow`).
+  - Layout a 3 colonne per tragitto, barra di avanzamento e pulsante Taxi Card all'arrivo.
+- **Parità Informativa Completa**:
+  - Espone in tempo reale tutte le informazioni del giorno visibili in Itinerario: Voli del giorno (`dayFlights`), Treni & Bus (`dayTransits`), Biglietti & Voucher con codice (`dayTickets`), e Focus Culinario con ricerche Tabelog/Google.
 - **Programma Orario Dinamico (`ScheduleCard`)**:
+  - **Stato chiuso di default** per una consultazione rapida e pulita.
+  - **Layout fisso a 3 righe da chiuso**:
+    - Riga 1: Pallino colorato per `tipo` (es. `bg-sky-500` trasporto, `bg-amber-500` pasto, `bg-emerald-500` visita) + Orario + Badge tipo.
+    - Riga 2: Titolo attivita + Nome locale in caratteri giapponesi/coreani.
+    - Riga 3: Descrizione dell'item (`dettagli`) visibile subito.
+  - **Sezione Espansa al Click**: Attiva le CTA per Google Maps, Naver Maps, Tabelog, Taxi Card, Feedback Reazioni (`❤️`, `👍`, `😐`, `👎`) e Note offline.
   - Ogni slot orario mostra l'ora, la categoria badge (Cibo 🍜, Trasporto 🚌, Cultura ⛩️, Onsen ♨️, Evento ⭐), il titolo e i dettagli.
   - **Auto-espansione**: L'attività più vicina all'orario attuale del giorno si espande automaticamente all'avvio.
   - **Pannello azioni al click**:
@@ -82,7 +87,7 @@ L'interfaccia mobile-first presenta una **Bottom Navigation Bar fissa** a 5 sche
   - *Uso dei Geta al Gujo Odori* (calzata corta, prevenzione vesciche).
 
 ### 3.5 🆘 Tab 5: "EMERGENZE & UTILITIES"
-- **Polizza Assicurativa Columbus**: Numero polizza `604213963` e avvio chiamata rapida `tel:+390236005814` H24.
+- **Polizza Assicurativa Columbus**: Numero polizza `000000000` e avvio chiamata rapida `tel:+390000000000` H24.
 - **Numeri Nazionali & Ambasciate**: Polizia, Ambulanza, Hotline Turistica (1330 Corea / JNTO Giappone), Ambasciata Seoul/Tokyo e Consolato Osaka con avvio chiamata rapida.
 - **Documenti Cloud**: Link diretto alla cartella Google Drive per il recupero dei voucher originali.
 - **Reset Database**: Pulsante `🗑️ Reimposta App (Cancella IndexedDB)` con modal di conferma per svuotare i dati e tornare alla WelcomeScreen.

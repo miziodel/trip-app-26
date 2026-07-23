@@ -345,7 +345,7 @@ export const GuidaTab: React.FC = () => {
               )}
 
               {/* Korean */}
-              {(selectedLanguage === 'both' || selectedLanguage === 'kr') && (
+              {(selectedLanguage === 'both' || selectedLanguage === 'kr') && f.kr && (
                 <div className="bg-slate-900 p-2.5 rounded-lg border border-slate-800 space-y-1">
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-bold text-slate-400">🇰🇷 Coreano:</span>
@@ -354,7 +354,7 @@ export const GuidaTab: React.FC = () => {
                     </CopyableText>
                   </div>
                   <p className="text-base font-bold text-blue-300 font-mono">{f.kr}</p>
-                  <p className="text-xs text-slate-300 italic">Pronuncia: {f.kr_pronuncia}</p>
+                  {f.kr_pronuncia && <p className="text-xs text-slate-300 italic">Pronuncia: {f.kr_pronuncia}</p>}
                 </div>
               )}
             </div>

@@ -11,10 +11,11 @@ import {
   saveCustomRates,
   getCustomTodos,
   saveCustomTodos,
+  getTheme,
+  saveTheme,
   clearAllData,
 } from './db';
 import type { CustomRates } from './db';
-
 
 export type ActiveTab = 'oggi' | 'itinerario' | 'trasporti' | 'guida' | 'emergenze';
 
@@ -39,6 +40,7 @@ export interface ViaggioState {
   userTodos: Record<number, boolean[]>;
   customTodos: Record<number, string[]>;
   customRates: CustomRates | null;
+  theme: 'day' | 'night';
   isLoading: boolean;
 
   // Actions
@@ -56,6 +58,7 @@ export interface ViaggioState {
   removeCustomTodo: (giorno: number, index: number) => Promise<void>;
   updateCustomRates: (rates: CustomRates) => Promise<void>;
   updateLog: (itemKey: string, reaction?: string, note?: string) => Promise<void>;
+  setTheme: (theme: 'day' | 'night') => Promise<void>;
   clearDatabase: () => Promise<void>;
   loadInitialData: () => Promise<void>;
 }
@@ -83,6 +86,7 @@ export const useViaggioStore = create<ViaggioState>((set, get) => ({
   userTodos: {},
   customTodos: {},
   customRates: null,
+  theme: 'night',
   isLoading: true,
 
   setViaggioData: async (data: ViaggioData) => {
@@ -183,6 +187,12 @@ export const useViaggioStore = create<ViaggioState>((set, get) => ({
     await saveLog(itemKey, updatedEntry);
   },
 
+  setTheme: async (newTheme: 'day' | 'night') => {
+    set({ theme: newTheme });
+    document.documentElement.setAttribute('data-theme', newTheme);
+    await saveTheme(newTheme);
+  },
+
   clearDatabase: async () => {
     await clearAllData();
     set({
@@ -203,6 +213,9 @@ export const useViaggioStore = create<ViaggioState>((set, get) => ({
       const savedLogs = await getLogs();
       const savedCustomTodos = await getCustomTodos();
       const savedCustomRates = await getCustomRates();
+      const savedTheme = (await getTheme()) || 'night';
+
+      document.documentElement.setAttribute('data-theme', savedTheme);
 
       let userTodos: Record<number, boolean[]> = savedTodos || {};
       if (data && Object.keys(userTodos).length === 0) {
@@ -220,6 +233,7 @@ export const useViaggioStore = create<ViaggioState>((set, get) => ({
         userLogs: savedLogs || {},
         customTodos: savedCustomTodos || {},
         customRates: savedCustomRates || null,
+        theme: savedTheme,
         selectedDay,
         isLoading: false,
       });

@@ -1,7 +1,90 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: 'Outfit', system-ui, sans-serif;
+  --font-outfit: 'Outfit', system-ui, sans-serif;
+  --font-mono: 'Space Mono', 'JetBrains Mono', monospace;
+  --font-space: 'Space Mono', 'JetBrains Mono', monospace;
+  --font-noto: 'Noto Sans JP', sans-serif;
+
+  --color-obsidian: var(--bg-primary);
+  --color-torii: var(--accent-torii);
+  --color-sakura: var(--accent-sakura);
+  --color-bamboo: var(--accent-bamboo);
+  --color-gold: var(--accent-gold);
+}
+
+:root, [data-theme="night"] {
+  --bg-primary: #0F1117;
+  --bg-card: rgba(30, 41, 59, 0.75);
+  --bg-card-solid: #1e293b;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.18);
+  --accent-torii: #FF4757;
+  --accent-sakura: #FF75A0;
+  --accent-bamboo: #10B981;
+  --accent-gold: #F59E0B;
+  --text-primary: #F3F4F6;
+  --text-secondary: #94A3B8;
+  --text-muted: #475569;
+  --kanji-opacity: 0.04;
+}
+
+[data-theme="day"] {
+  --bg-primary: #FAF7F5;
+  --bg-card: rgba(255, 255, 255, 0.85);
+  --bg-card-solid: #FFFFFF;
+  --border-subtle: rgba(0, 0, 0, 0.08);
+  --border-strong: rgba(0, 0, 0, 0.18);
+  --accent-torii: #E63950;
+  --accent-sakura: #D4547A;
+  --accent-bamboo: #0A9B71;
+  --accent-gold: #D97706;
+  --text-primary: #111827;
+  --text-secondary: #6B7280;
+  --text-muted: #9CA3AF;
+  --kanji-opacity: 0.06;
+}
+
 @layer base {
   body {
-    @apply bg-slate-900 text-slate-100 font-sans antialiased;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    @apply antialiased;
+  }
+}
+
+@layer components {
+  .editorial-card {
+    background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-card-solid) 100%);
+    border: 1px solid var(--border-subtle);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 1.25rem;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .editorial-card:hover {
+    border-color: var(--border-strong);
+  }
+
+  .kanji-watermark {
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 900;
+    opacity: var(--kanji-opacity);
+    pointer-events: none;
+    user-select: none;
+    line-height: 1;
+    position: absolute;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }

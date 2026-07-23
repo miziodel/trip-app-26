@@ -22,7 +22,7 @@ export const BottomNav: React.FC = () => {
   const setActiveTab = useViaggioStore((state) => state.setActiveTab);
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-slate-900/95 backdrop-blur-lg border-t border-slate-800 px-2 py-1 shadow-2xl">
+    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-[var(--bg-card)] backdrop-blur-lg border-t border-[var(--border-subtle)] px-2 py-1 shadow-2xl">
       <div className="max-w-md mx-auto flex items-center justify-around">
         {NAV_ITEMS.map((item) => {
           const Icon = item.icon;
@@ -38,8 +38,8 @@ export const BottomNav: React.FC = () => {
                 isActive
                   ? isSos
                     ? 'text-rose-400 bg-rose-500/10 font-bold'
-                    : 'text-amber-400 bg-amber-500/10 font-bold'
-                  : 'text-slate-400 hover:text-slate-200 font-medium'
+                    : 'text-[var(--accent-torii)] bg-[var(--accent-torii)]/10 font-bold'
+                  : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)] font-medium'
               }`}
             >
               <div className="relative">
@@ -47,7 +47,7 @@ export const BottomNav: React.FC = () => {
                 {isActive && (
                   <span
                     className={`absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full ${
-                      isSos ? 'bg-rose-500' : 'bg-amber-400'
+                      isSos ? 'bg-rose-500' : 'bg-[var(--accent-torii)]'
                     }`}
                   />
                 )}
