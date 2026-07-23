@@ -3,6 +3,8 @@ import { useViaggioStore } from '../store/store';
 import { ScheduleCard } from '../components/ui/ScheduleCard';
 import { CopyableText } from '../components/ui/CopyableText';
 import { HeroProgressCard } from '../components/ui/HeroProgressCard';
+import { NightlyJournalCard } from '../components/ui/NightlyJournalCard';
+import { CheckInCard } from '../components/ui/CheckInCard';
 import { formatDate } from '../utils/dateUtils';
 import { getMapDeepLink } from '../utils/linkUtils';
 import { isTransitActiveNow, getTransitProgressPercent, getTransitEtaMinutes } from '../utils/transitUtils';
@@ -47,8 +49,12 @@ export const OggiTab: React.FC = () => {
   const customTodos = useViaggioStore((state) => state.customTodos);
   const addCustomTodo = useViaggioStore((state) => state.addCustomTodo);
   const removeCustomTodo = useViaggioStore((state) => state.removeCustomTodo);
-  const userLogs = useViaggioStore((state) => state.userLogs);
-  const updateLog = useViaggioStore((state) => state.updateLog);
+  const dailyJournals = useViaggioStore((state) => state.dailyJournals);
+  const updateJournal = useViaggioStore((state) => state.updateJournal);
+
+  const checkIns = useViaggioStore((state) => state.checkIns);
+  const openCheckInModal = useViaggioStore((state) => state.openCheckInModal);
+  const deleteCheckIn = useViaggioStore((state) => state.deleteCheckIn);
 
   const [newTodoInput, setNewTodoInput] = useState<string>('');
   const [openCardIndexes, setOpenCardIndexes] = useState<Record<number, boolean>>({});
@@ -151,6 +157,8 @@ export const OggiTab: React.FC = () => {
   };
   const currentKanji = kanjiCityMap[currentDayData.citta] || '旅';
 
+  const currentDayCheckIns = Object.values(checkIns || {}).filter((c) => c.giorno === currentDayData.giorno);
+
   return (
     <div className="pb-28 pt-4 px-4 max-w-md mx-auto space-y-6 relative overflow-hidden font-sans">
       {/* Kanji Decorative Watermark Background */}
@@ -160,10 +168,32 @@ export const OggiTab: React.FC = () => {
 
       {/* EDITORIAL HEADER BANNER */}
       <div className="relative">
-        <div className="flex items-center space-x-2 font-mono text-xs font-bold tracking-widest uppercase mb-1">
-          <span className="text-[var(--text-primary)]">GIORNO {String(currentDayData.giorno).padStart(2, '0')}</span>
-          <span className="text-[var(--text-secondary)]">•</span>
-          <span className="text-[var(--text-secondary)]">{formatDate(currentDayData.data)}</span>
+        <div className="flex items-center justify-between gap-2 font-mono text-xs font-bold tracking-widest uppercase mb-2">
+          <button
+            type="button"
+            onClick={() => setSelectedDay(Math.max(0, selectedDay - 1))}
+            disabled={selectedDay === 0}
+            aria-label="Giorno precedente"
+            className="min-w-[44px] min-h-[44px] -ml-2 rounded-xl flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--border-subtle)] active:scale-95 disabled:opacity-30 disabled:pointer-events-none transition-all"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+
+          <div className="flex items-center space-x-2 text-center">
+            <span className="text-[var(--text-primary)]">GIORNO {String(currentDayData.giorno).padStart(2, '0')}</span>
+            <span className="text-[var(--text-secondary)]">•</span>
+            <span className="text-[var(--text-secondary)]">{formatDate(currentDayData.data)}</span>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setSelectedDay(Math.min(totalDays - 1, selectedDay + 1))}
+            disabled={selectedDay === totalDays - 1}
+            aria-label="Giorno successivo"
+            className="min-w-[44px] min-h-[44px] -mr-2 rounded-xl flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--border-subtle)] active:scale-95 disabled:opacity-30 disabled:pointer-events-none transition-all"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
         </div>
         <h1 className="text-3xl font-extrabold text-[var(--text-primary)] tracking-tight uppercase leading-none mb-1.5 font-outfit">
           {currentDayData.titolo}
@@ -174,44 +204,6 @@ export const OggiTab: React.FC = () => {
             <span> • Tappa a {currentDayData.citta}</span>
           )}
         </p>
-      </div>
-
-      {/* QUICK DAY SELECTOR NAV */}
-      <div className="flex items-center justify-between bg-[var(--bg-card)] p-1.5 rounded-2xl border border-[var(--border-subtle)] font-mono text-xs shadow-sm">
-        <button
-          type="button"
-          onClick={() => setSelectedDay(Math.max(0, selectedDay - 1))}
-          disabled={selectedDay === 0}
-          className="p-1.5 rounded-xl bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--border-subtle)] disabled:opacity-30 transition-colors"
-        >
-          <ChevronLeft className="w-4 h-4" />
-        </button>
-
-        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5">
-          {data.itinerario.slice(Math.max(0, selectedDay - 1), Math.min(totalDays, selectedDay + 2)).map((g) => (
-            <button
-              key={g.giorno}
-              type="button"
-              onClick={() => setSelectedDay(g.giorno)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
-                g.giorno === selectedDay
-                  ? 'bg-torii text-white shadow-md shadow-torii/30'
-                  : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
-              }`}
-            >
-              Day {String(g.giorno).padStart(2, '0')}
-            </button>
-          ))}
-        </div>
-
-        <button
-          type="button"
-          onClick={() => setSelectedDay(Math.min(totalDays - 1, selectedDay + 1))}
-          disabled={selectedDay === totalDays - 1}
-          className="p-1.5 rounded-xl bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--border-subtle)] disabled:opacity-30 transition-colors"
-        >
-          <ChevronRight className="w-4 h-4" />
-        </button>
       </div>
 
       {/* HERO PROGRESS CARD FOR ACTIVE TRANSIT */}
@@ -499,16 +491,19 @@ export const OggiTab: React.FC = () => {
                   index={idx}
                   isOpen={!!openCardIndexes[idx]}
                   onToggle={() => toggleCardIndex(idx)}
-                  userReaction={userLogs[itemKey]?.reaction}
-                  userNote={userLogs[itemKey]?.note}
-                  onSaveReaction={(reaction) => updateLog(itemKey, reaction, undefined)}
-                  onSaveNote={(note) => updateLog(itemKey, undefined, note)}
                   onOpenTaxiCard={(name, address, nameLocale) =>
                     openTaxiCard({
                       name,
                       addressEn: address,
                       nameLocale,
                       addressLocale: address
+                    })
+                  }
+                  onCheckIn={(locationName) =>
+                    openCheckInModal({
+                      defaultLocationName: locationName || item.luogo_nome || item.attivita,
+                      defaultGiorno: currentDayData.giorno,
+                      scheduleItemId: itemKey,
                     })
                   }
                   currentCity={currentDayData.citta}
@@ -519,6 +514,23 @@ export const OggiTab: React.FC = () => {
           })}
         </div>
       </div>
+
+      {/* CHECK-IN CARDS DEL GIORNO */}
+      {currentDayCheckIns.length > 0 && (
+        <div className="space-y-3">
+          <div className="flex items-center justify-between px-1 font-mono">
+            <h3 className="text-sm font-bold text-[var(--text-primary)] flex items-center gap-2 uppercase tracking-wider">
+              <MapPin className="w-4 h-4 text-torii" />
+              <span>Check-in Registrati ({currentDayCheckIns.length})</span>
+            </h3>
+          </div>
+          <div className="space-y-3">
+            {currentDayCheckIns.map((c) => (
+              <CheckInCard key={c.id} checkIn={c} onDelete={deleteCheckIn} />
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* DAILY CHECKLIST / TODO */}
       <div className="editorial-card p-4 space-y-3 shadow-md">
@@ -590,6 +602,14 @@ export const OggiTab: React.FC = () => {
           </form>
         </div>
       </div>
+
+      {/* NIGHTLY JOURNAL CARD */}
+      <NightlyJournalCard
+        giorno={currentDayData.giorno}
+        date={currentDayData.data}
+        journal={dailyJournals[currentDayData.giorno]}
+        onUpdate={updateJournal}
+      />
 
       {/* SLEEP ACCOMMODATION CARD */}
       {sleepAccommodation && (

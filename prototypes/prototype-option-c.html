@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Japan & Korea 2026 • Opzione C: Prugna & Sakura Nobile</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Sfondo & Superfici Solari Chiara
+                        pageBg: '#F8FAFC',
+                        cardBg: '#FFFFFF',
+                        
+                        // Testo Inchiostro Antracite
+                        inkPrimary: '#0F172A',
+                        inkSecondary: '#475569',
+                        inkMuted: '#64748B',
+
+                        // Blu Cobalto Rilassante (Orari e Tempistica)
+                        cobalt: {
+                            DEFAULT: '#1D4ED8',
+                            light: '#EFF6FF',
+                            border: '#BFDBFE',
+                            text: '#1E40AF'
+                        },
+
+                        // Prugna / Sakura Nobile (Fasi, Dettagli Nobilizzanti)
+                        plum: {
+                            DEFAULT: '#9D174D',
+                            light: '#FDF2F8',
+                            border: '#FBCFE8',
+                            text: '#831843',
+                            hover: '#BE185D'
+                        },
+
+                        // Accenti Utilità / Stato
+                        bamboo: '#059669', // Emerald rilassante per status live
+                        amberSoft: '#D97706',
+                    },
+                    fontFamily: {
+                        outfit: ['Outfit', 'sans-serif'],
+                        noto: ['"Noto Sans JP"', 'sans-serif'],
+                        space: ['"Space Mono"', 'monospace'],
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.03)',
+                        'card-hover': '0 10px 25px -3px rgba(15, 23, 42, 0.08), 0 4px 10px -2px rgba(15, 23, 42, 0.04)',
+                        'plum-glow': '0 4px 14px 0 rgba(157, 23, 77, 0.15)',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Outfit:wght@300;400;500;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            background-color: #F8FAFC;
+            font-family: 'Outfit', sans-serif;
+            color: #0F172A;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .kanji-watermark {
+            position: absolute;
+            font-family: 'Noto Sans JP', sans-serif;
+            font-weight: 900;
+            opacity: 0.04;
+            pointer-events: none;
+            user-select: none;
+            line-height: 1;
+            color: #9D174D;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .custom-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .tab-active {
+            color: #9D174D;
+            font-weight: 700;
+        }
+        .filter-btn-active {
+            background-color: #9D174D;
+            color: #FFFFFF;
+            border-color: #9D174D;
+            box-shadow: 0 4px 12px rgba(157, 23, 77, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen antialiased selection:bg-plum-light selection:text-plum text-sm">
+
+    <!-- Mobile Frame Container -->
+    <div class="max-w-md mx-auto min-h-screen relative pb-32 pt-4 px-4 overflow-hidden bg-slate-50 shadow-xl border-x border-slate-200/80">
+        
+        <!-- Kanji Background Decorative Elements (Prugna Nobile Sfumato) -->
+        <div class="kanji-watermark text-[190px] -right-10 top-16">京都</div>
+        <div class="kanji-watermark text-[170px] -left-12 top-[600px]">祇園</div>
+        <div class="kanji-watermark text-[160px] -right-8 top-[1100px]">鴨川</div>
+
+        <!-- TOP BAR / HEADER -->
+        <header class="relative z-10 mb-6">
+            <!-- Top Utility Bar -->
+            <div class="flex items-center justify-between text-xs font-space mb-3 px-1">
+                <div class="flex items-center space-x-2 bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-full border border-emerald-200">
+                    <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span class="font-bold tracking-wide">LIVE TRIP MODE</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <button onclick="openModal('currencyModal')" class="flex items-center space-x-1.5 px-3 py-1 rounded-full bg-white border border-slate-200 shadow-sm hover:border-plum-border transition text-slate-700 font-medium">
+                        <i data-lucide="calculator" class="w-3.5 h-3.5 text-amber-600"></i>
+                        <span>¥ / ₩</span>
+                    </button>
+                    <button onclick="openModal('driverModal')" class="flex items-center space-x-1.5 px-3 py-1 rounded-full bg-plum-light border border-plum-border text-plum hover:bg-plum hover:text-white transition font-medium">
+                        <i data-lucide="car" class="w-3.5 h-3.5"></i>
+                        <span>Taxi Card</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Dual Clock & Weather Widget -->
+            <div class="bg-white rounded-2xl p-3.5 mb-5 flex items-center justify-between border border-slate-200/90 shadow-soft">
+                <div class="flex items-center space-x-3">
+                    <div class="text-left pr-3 border-r border-slate-200">
+                        <span class="block text-[10px] uppercase font-space text-slate-500 font-semibold tracking-wider">ITA (Casa)</span>
+                        <span class="text-base font-bold font-space text-slate-700" id="clockITA">12:36</span>
+                    </div>
+                    <div>
+                        <span class="block text-[10px] uppercase font-space text-cobalt font-bold tracking-wider">JAP / KOR (Locale)</span>
+                        <span class="text-xl font-bold font-space text-slate-900" id="clockJAP">19:36</span>
+                    </div>
+                </div>
+                <div class="text-right pl-3 border-l border-slate-200">
+                    <div class="flex items-center justify-end space-x-1 text-amber-600 font-bold">
+                        <i data-lucide="sun" class="w-4 h-4 text-amber-500"></i>
+                        <span class="text-base">29°C</span>
+                    </div>
+                    <span class="text-[11px] text-slate-500 font-medium">Kyoto • Soleggiato</span>
+                </div>
+            </div>
+
+            <!-- Editorial Header Title -->
+            <div class="relative px-1">
+                <div class="flex items-center space-x-2 text-plum font-space text-xs font-bold tracking-widest uppercase mb-1">
+                    <span class="bg-plum-light px-2 py-0.5 rounded border border-plum-border">GIORNO 04</span>
+                    <span class="text-slate-300">•</span>
+                    <span class="text-slate-500">28 LUGLIO 2026</span>
+                </div>
+                <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight uppercase leading-none mb-1.5 font-outfit">
+                    KYOTO & GION
+                </h1>
+                <p class="text-xs text-slate-600 font-noto tracking-wide font-normal">
+                    古都の風情 • Il cuore antico del Giappone e i quartieri delle Geishe
+                </p>
+            </div>
+        </header>
+
+        <!-- SELETTORE DEI GIORNI (DAY SELECTOR) -->
+        <div class="relative z-10 mb-6">
+            <div class="flex space-x-2.5 overflow-x-auto custom-scrollbar pb-1 pt-1 px-1">
+                <button class="flex-shrink-0 w-14 py-2.5 rounded-xl border border-slate-200 bg-white text-center shadow-sm hover:border-slate-300 transition">
+                    <span class="block text-[10px] uppercase font-space text-slate-400 font-bold">G02</span>
+                    <span class="block text-xs font-extrabold text-slate-700">26/07</span>
+                </button>
+                <button class="flex-shrink-0 w-14 py-2.5 rounded-xl border border-slate-200 bg-white text-center shadow-sm hover:border-slate-300 transition">
+                    <span class="block text-[10px] uppercase font-space text-slate-400 font-bold">G03</span>
+                    <span class="block text-xs font-extrabold text-slate-700">27/07</span>
+                </button>
+                <!-- Active Day -->
+                <button class="flex-shrink-0 w-16 py-2.5 rounded-xl border-2 border-plum bg-plum text-white text-center shadow-plum-glow transition transform scale-105">
+                    <span class="block text-[10px] uppercase font-space text-plum-border font-bold">G04</span>
+                    <span class="block text-sm font-black text-white">28/07</span>
+                </button>
+                <button class="flex-shrink-0 w-14 py-2.5 rounded-xl border border-slate-200 bg-white text-center shadow-sm hover:border-slate-300 transition">
+                    <span class="block text-[10px] uppercase font-space text-slate-400 font-bold">G05</span>
+                    <span class="block text-xs font-extrabold text-slate-700">29/07</span>
+                </button>
+                <button class="flex-shrink-0 w-14 py-2.5 rounded-xl border border-slate-200 bg-white text-center shadow-sm hover:border-slate-300 transition">
+                    <span class="block text-[10px] uppercase font-space text-slate-400 font-bold">G06</span>
+                    <span class="block text-xs font-extrabold text-slate-700">30/07</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- MAIN VIEW CONTENT -->
+        <main id="mainContent" class="relative z-10 space-y-6">
+
+            <!-- FILTER CHIPS -->
+            <div class="flex items-center space-x-2 overflow-x-auto custom-scrollbar px-1 pb-1">
+                <button class="filter-btn-active px-3 py-1.5 rounded-full text-xs font-bold border transition">Tutto</button>
+                <button class="bg-white border border-slate-200 text-slate-600 hover:border-plum-border hover:text-plum px-3 py-1.5 rounded-full text-xs font-semibold shadow-sm transition">Voli & Treni</button>
+                <button class="bg-white border border-slate-200 text-slate-600 hover:border-plum-border hover:text-plum px-3 py-1.5 rounded-full text-xs font-semibold shadow-sm transition">Templi & Kultura</button>
+                <button class="bg-white border border-slate-200 text-slate-600 hover:border-plum-border hover:text-plum px-3 py-1.5 rounded-full text-xs font-semibold shadow-sm transition">Cibo & Food</button>
+            </div>
+
+            <!-- FLIGHT CARD (FLIGHT / SHINKANSEN INFO) -->
+            <div class="bg-white rounded-2xl border border-slate-200/90 p-4 shadow-soft relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-24 h-24 bg-gradient-to-bl from-cobalt-light to-transparent rounded-bl-full pointer-events-none opacity-60"></div>
+                
+                <div class="flex items-center justify-between mb-3 border-b border-slate-100 pb-2.5">
+                    <div class="flex items-center space-x-2">
+                        <span class="px-2.5 py-0.5 rounded-full bg-cobalt-light text-cobalt-text border border-cobalt-border text-[11px] font-bold font-space">
+                            SHINKANSEN NH-482
+                        </span>
+                        <span class="text-xs text-slate-400">• Tokaido Line</span>
+                    </div>
+                    <span class="px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 text-[10px] font-bold uppercase tracking-wider">Confermato</span>
+                </div>
+
+                <!-- Train Journey Details -->
+                <div class="flex items-center justify-between my-3 px-2">
+                    <div>
+                        <span class="text-2xl font-black text-slate-900 tracking-tight font-space">TYO</span>
+                        <span class="block text-[11px] text-slate-500 font-medium">Tokyo St. (10:15)</span>
+                    </div>
+                    <div class="flex-1 mx-4 flex flex-col items-center">
+                        <span class="text-[10px] text-cobalt font-bold font-space mb-1">2h 15m</span>
+                        <div class="w-full flex items-center">
+                            <div class="w-2 h-2 rounded-full bg-cobalt"></div>
+                            <div class="flex-1 h-0.5 bg-slate-200 relative">
+                                <i data-lucide="train" class="w-3.5 h-3.5 text-cobalt absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></i>
+                            </div>
+                            <div class="w-2 h-2 rounded-full bg-cobalt"></div>
+                        </div>
+                        <span class="text-[10px] text-slate-400 mt-1">Carrozza 5 • Posti 12A-12B</span>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-2xl font-black text-slate-900 tracking-tight font-space">KYT</span>
+                        <span class="block text-[11px] text-slate-500 font-medium">Kyoto St. (12:30)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ITINERARY TIMELINE ITEM 1 (TEMPLE) -->
+            <div class="bg-white rounded-2xl border border-slate-200/90 shadow-soft p-4 relative">
+                <!-- Header Card: Time & Phase Badge -->
+                <div class="flex items-center justify-between mb-3">
+                    <!-- Blu Cobalto Rilassante per gli Orari -->
+                    <div class="flex items-center space-x-2">
+                        <div class="flex items-center space-x-1.5 px-3 py-1 rounded-lg bg-cobalt-light border border-cobalt-border text-cobalt font-space text-xs font-bold">
+                            <i data-lucide="clock" class="w-3.5 h-3.5 text-cobalt"></i>
+                            <span>09:00 - 11:30</span>
+                        </div>
+                        <span class="text-xs font-semibold text-slate-400 font-space">2h 30m</span>
+                    </div>
+                    
+                    <!-- Prugna / Sakura Scuro per il Badge di Fase -->
+                    <span class="px-2.5 py-1 rounded-full bg-plum-light border border-plum-border text-plum text-xs font-bold flex items-center space-x-1">
+                        <i data-lucide="landmark" class="w-3 h-3 text-plum"></i>
+                        <span>FASE MATTINO</span>
+                    </span>
+                </div>
+
+                <!-- Title & Kanji -->
+                <div class="mb-3">
+                    <div class="flex items-baseline justify-between">
+                        <h3 class="text-lg font-bold text-slate-900 leading-snug">Fushimi Inari Taisha</h3>
+                        <span class="font-noto font-bold text-slate-300 text-sm">伏見稲荷大社</span>
+                    </div>
+                    <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+                        Il celebre santuario dei 10.000 Torii rossi dedicati a Inari, dio del riso e dell'abbondanza.
+                    </p>
+                </div>
+
+                <!-- Image / Visual Banner -->
+                <div class="relative h-36 rounded-xl overflow-hidden mb-3 border border-slate-100 bg-slate-100">
+                    <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=800&q=80" alt="Fushimi Inari" class="w-full h-full object-cover">
+                    <div class="absolute bottom-2 left-2 bg-slate-900/70 backdrop-blur-md px-2.5 py-1 rounded-md text-[11px] font-medium text-white flex items-center space-x-1">
+                        <i data-lucide="map-pin" class="w-3 h-3 text-plum-border"></i>
+                        <span>Fushimi Ward, Kyoto</span>
+                    </div>
+                </div>
+
+                <!-- Action Links / Badges -->
+                <div class="flex items-center justify-between pt-2 border-t border-slate-100 text-xs">
+                    <div class="flex items-center space-x-2 text-slate-500 font-medium">
+                        <span class="inline-flex items-center text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded text-[11px] font-bold">
+                            Ingresso Gratuito
+                        </span>
+                        <span>• Consigliatissimo mattino presto</span>
+                    </div>
+                    <button class="text-plum font-bold hover:underline flex items-center space-x-1">
+                        <span>Mappa</span>
+                        <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- FOCUS CULINARIO (CULINARY FOCUS CARD) -->
+            <div class="bg-gradient-to-br from-plum-light/60 via-white to-white rounded-2xl border border-plum-border p-4 shadow-soft relative overflow-hidden">
+                <div class="absolute -right-6 -bottom-6 w-28 h-28 bg-plum-light rounded-full pointer-events-none opacity-40"></div>
+                
+                <!-- Culinary Header -->
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center space-x-2">
+                        <span class="p-1.5 bg-plum text-white rounded-lg shadow-plum-glow">
+                            <i data-lucide="utensils" class="w-4 h-4"></i>
+                        </span>
+                        <div>
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-plum font-space">FOCUS CULINARIO • PRANZO</span>
+                            <h4 class="text-sm font-extrabold text-slate-900 leading-none">Pasto Tipico a Gion</h4>
+                        </div>
+                    </div>
+                    <span class="px-2.5 py-1 rounded-md bg-white border border-plum-border text-plum text-xs font-bold font-space">
+                        12:30 - 13:45
+                    </span>
+                </div>
+
+                <!-- Culinary Details -->
+                <div class="bg-white/80 backdrop-blur-sm rounded-xl p-3 border border-plum-border/40 mb-3">
+                    <div class="flex justify-between items-start mb-1">
+                        <span class="font-bold text-slate-800 text-sm">Gion Karyo (祇園 かりょう)</span>
+                        <span class="text-xs font-bold text-slate-700 font-space">¥4,500 / pers.</span>
+                    </div>
+                    <p class="text-xs text-slate-600 leading-relaxed mb-2">
+                        Cucina Kaiseki tradizionale stagionale servita in un'atmosfera intima. Provate il Tofu Yudofu e lo Matcha Parfait.
+                    </p>
+                    <div class="flex flex-wrap gap-1.5">
+                        <span class="px-2 py-0.5 rounded bg-slate-100 text-slate-700 text-[10px] font-semibold">Kaiseki</span>
+                        <span class="px-2 py-0.5 rounded bg-slate-100 text-slate-700 text-[10px] font-semibold">Kyoto Style</span>
+                        <span class="px-2 py-0.5 rounded bg-plum-light text-plum text-[10px] font-bold">Prenotazione Consigliata</span>
+                    </div>
+                </div>
+
+                <!-- Useful phrases -->
+                <div class="flex items-center justify-between text-xs text-slate-500 px-1">
+                    <span class="font-noto italic text-slate-600">「ごちそうさまでした」 (Gochisousama deshita)</span>
+                    <button class="text-plum font-bold hover:underline text-xs flex items-center space-x-1">
+                        <i data-lucide="volume-2" class="w-3.5 h-3.5"></i>
+                        <span>Audio</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ITINERARY TIMELINE ITEM 2 (GION & HIGASHIYAMA) -->
+            <div class="bg-white rounded-2xl border border-slate-200/90 shadow-soft p-4 relative">
+                <!-- Header Card: Time & Phase Badge -->
+                <div class="flex items-center justify-between mb-3">
+                    <!-- Blu Cobalto Rilassante per gli Orari -->
+                    <div class="flex items-center space-x-2">
+                        <div class="flex items-center space-x-1.5 px-3 py-1 rounded-lg bg-cobalt-light border border-cobalt-border text-cobalt font-space text-xs font-bold">
+                            <i data-lucide="clock" class="w-3.5 h-3.5 text-cobalt"></i>
+                            <span>14:30 - 18:00</span>
+                        </div>
+                        <span class="text-xs font-semibold text-slate-400 font-space">3h 30m</span>
+                    </div>
+                    
+                    <!-- Prugna / Sakura Scuro per il Badge di Fase -->
+                    <span class="px-2.5 py-1 rounded-full bg-plum-light border border-plum-border text-plum text-xs font-bold flex items-center space-x-1">
+                        <i data-lucide="footprints" class="w-3 h-3 text-plum"></i>
+                        <span>POMERIGGIO</span>
+                    </span>
+                </div>
+
+                <!-- Title & Kanji -->
+                <div class="mb-3">
+                    <div class="flex items-baseline justify-between">
+                        <h3 class="text-lg font-bold text-slate-900 leading-snug">Passeggiata a Higashiyama</h3>
+                        <span class="font-noto font-bold text-slate-300 text-sm">東山散策</span>
+                    </div>
+                    <p class="text-xs text-slate-600 mt-1 leading-relaxed">
+                        Esplorazione dei vicoli storici Ninenzaka e Sannenzaka con vista sulla Pagoda Yasaka (Hokan-ji).
+                    </p>
+                </div>
+
+                <!-- Image Grid -->
+                <div class="grid grid-cols-2 gap-2 mb-3">
+                    <div class="h-28 rounded-lg overflow-hidden border border-slate-100 bg-slate-100 relative">
+                        <img src="https://images.unsplash.com/photo-1545569341-9eb8b30979d9?auto=format&fit=crop&w=500&q=80" alt="Ninenzaka" class="w-full h-full object-cover">
+                        <span class="absolute bottom-1 left-1 bg-black/60 backdrop-blur-xs text-[9px] text-white px-1.5 py-0.5 rounded">Ninenzaka</span>
+                    </div>
+                    <div class="h-28 rounded-lg overflow-hidden border border-slate-100 bg-slate-100 relative">
+                        <img src="https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=500&q=80" alt="Pagoda Yasaka" class="w-full h-full object-cover">
+                        <span class="absolute bottom-1 left-1 bg-black/60 backdrop-blur-xs text-[9px] text-white px-1.5 py-0.5 rounded">Yasaka Pagoda</span>
+                    </div>
+                </div>
+
+                <!-- Tips & Notes -->
+                <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-200/60 text-xs text-slate-600 space-y-1">
+                    <div class="flex items-center space-x-1.5 font-bold text-slate-800">
+                        <i data-lucide="sparkles" class="w-3.5 h-3.5 text-plum"></i>
+                        <span>Consigli Pratici:</span>
+                    </div>
+                    <p class="text-[11px] leading-tight">
+                        Fermati al caratteristico Starbucks in una Machiya tradizionale a Ninenzaka. Ottimo spot per foto al tramonto verso le 17:30.
+                    </p>
+                </div>
+            </div>
+
+            <!-- QUICK BUDGET SUMMARY CARD -->
+            <div class="bg-white rounded-2xl border border-slate-200/90 shadow-soft p-4">
+                <div class="flex items-center justify-between mb-3">
+                    <div class="flex items-center space-x-2">
+                        <i data-lucide="wallet" class="w-4 h-4 text-plum"></i>
+                        <h4 class="font-bold text-slate-800 text-sm">Budget Stimato Oggi</h4>
+                    </div>
+                    <span class="text-xs font-space font-bold text-slate-500">Giorno 04</span>
+                </div>
+                <div class="grid grid-cols-3 gap-2 text-center">
+                    <div class="p-2 bg-slate-50 rounded-xl border border-slate-100">
+                        <span class="block text-[10px] text-slate-400 font-bold uppercase">Cibo</span>
+                        <span class="text-xs font-bold text-slate-800 font-space">¥6,500</span>
+                    </div>
+                    <div class="p-2 bg-slate-50 rounded-xl border border-slate-100">
+                        <span class="block text-[10px] text-slate-400 font-bold uppercase">Trasporti</span>
+                        <span class="text-xs font-bold text-slate-800 font-space">¥1,200</span>
+                    </div>
+                    <div class="p-2 bg-plum-light rounded-xl border border-plum-border">
+                        <span class="block text-[10px] text-plum font-bold uppercase">Totale</span>
+                        <span class="text-xs font-extrabold text-plum font-space">¥7,700</span>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- BOTTOM NAVIGATION BAR (SOFISTICATA & ELEGANTE) -->
+        <nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white/95 backdrop-blur-md border-t border-slate-200/90 py-2.5 px-6 z-50 shadow-lg">
+            <div class="flex items-center justify-between">
+                <!-- Nav Item 1: Itinerario (Active) -->
+                <button class="flex flex-col items-center space-y-1 text-plum">
+                    <div class="relative">
+                        <i data-lucide="map-pin" class="w-5 h-5"></i>
+                        <span class="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-plum"></span>
+                    </div>
+                    <span class="text-[11px] font-bold tracking-tight">Itinerario</span>
+                </button>
+                
+                <!-- Nav Item 2: Trasporti -->
+                <button class="flex flex-col items-center space-y-1 text-slate-400 hover:text-slate-700 transition">
+                    <i data-lucide="navigation" class="w-5 h-5"></i>
+                    <span class="text-[11px] font-medium tracking-tight">Mappe</span>
+                </button>
+
+                <!-- Nav Item 3: Spese / Budget -->
+                <button class="flex flex-col items-center space-y-1 text-slate-400 hover:text-slate-700 transition">
+                    <i data-lucide="receipt" class="w-5 h-5"></i>
+                    <span class="text-[11px] font-medium tracking-tight">Spese</span>
+                </button>
+
+                <!-- Nav Item 4: Preferiti / Salvati -->
+                <button class="flex flex-col items-center space-y-1 text-slate-400 hover:text-slate-700 transition">
+                    <i data-lucide="heart" class="w-5 h-5"></i>
+                    <span class="text-[11px] font-medium tracking-tight">Preferiti</span>
+                </button>
+
+                <!-- Nav Item 5: Profilo / Altro -->
+                <button class="flex flex-col items-center space-y-1 text-slate-400 hover:text-slate-700 transition">
+                    <i data-lucide="sliders" class="w-5 h-5"></i>
+                    <span class="text-[11px] font-medium tracking-tight">Info</span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- MODAL CURRENCY CONVERTER -->
+        <div id="currencyModal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-end justify-center hidden" onclick="closeModal('currencyModal')">
+            <div class="bg-white rounded-t-3xl p-6 w-full max-w-md border-t border-slate-200 shadow-2xl animate-in slide-in-from-bottom" onclick="event.stopPropagation()">
+                <div class="w-12 h-1 bg-slate-200 rounded-full mx-auto mb-4"></div>
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-base font-bold text-slate-900">Convertitore Rapido valuta</h3>
+                    <button onclick="closeModal('currencyModal')" class="text-slate-400 hover:text-slate-600">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                <div class="space-y-3">
+                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-200 flex justify-between items-center">
+                        <span class="text-xs font-bold text-slate-500">Yen Giapponese (JPY)</span>
+                        <span class="text-lg font-bold text-slate-900 font-space">¥ 1,000</span>
+                    </div>
+                    <div class="p-3 bg-plum-light rounded-xl border border-plum-border flex justify-between items-center">
+                        <span class="text-xs font-bold text-plum">Euro (EUR)</span>
+                        <span class="text-lg font-bold text-plum font-space">€ 6.20</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL TAXI DRIVER CARD -->
+        <div id="driverModal" class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-end justify-center hidden" onclick="closeModal('driverModal')">
+            <div class="bg-white rounded-t-3xl p-6 w-full max-w-md border-t border-slate-200 shadow-2xl" onclick="event.stopPropagation()">
+                <div class="w-12 h-1 bg-slate-200 rounded-full mx-auto mb-4"></div>
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-base font-bold text-slate-900">Carta per Tassista</h3>
+                    <button onclick="closeModal('driverModal')" class="text-slate-400 hover:text-slate-600">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+                <div class="p-4 bg-amber-50 border border-amber-200 rounded-2xl text-center space-y-2">
+                    <p class="text-xs text-amber-800 font-semibold uppercase">Mostra al tassista:</p>
+                    <p class="text-2xl font-black text-slate-900 font-noto">伏見稲荷大社までお願いします。</p>
+                    <p class="text-xs text-slate-600">(Per favore, mi porti al Fushimi Inari Taisha)</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Lucide Icon initialization & simple script -->
+    <script>
+        lucide.createIcons();
+
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+        }
+        function closeModal(id) {
+            document.getElementById(id).classList.add('hidden');
+        }
+
+        // Clock updating logic
+        function updateClocks() {
+            const now = new Date();
+            
+            // ITA Time (UTC+2 DST assumed for July)
+            const optionsITA = { timeZone: 'Europe/Rome', hour: '2-digit', minute: '2-digit', hour12: false };
+            document.getElementById('clockITA').textContent = new Intl.DateTimeFormat([], optionsITA).format(now);
+            
+            // JAP Time (UTC+9)
+            const optionsJAP = { timeZone: 'Asia/Tokyo', hour: '2-digit', minute: '2-digit', hour12: false };
+            document.getElementById('clockJAP').textContent = new Intl.DateTimeFormat([], optionsJAP).format(now);
+        }
+
+        updateClocks();
+        setInterval(updateClocks, 10000);
+    </script>
+</body>
+</html>

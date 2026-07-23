@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="option-b-night">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Opzione B (Notte): Indaco & Bamboo Zen - Trip App 2026</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      /* Option B: Indaco & Bamboo Zen - MODALITÀ NOTTE (Night Mode OLED) */
+      --bg-primary: #090D16;
+      --bg-card: #131C2E;
+      --bg-card-hover: #1E293B;
+      --bg-glass: rgba(19, 28, 46, 0.88);
+      --border-subtle: rgba(148, 163, 184, 0.12);
+      
+      /* Testo */
+      --text-primary: #F8FAFC;
+      --text-secondary: #94A3B8;
+      --text-muted: #64748B;
+
+      /* Bamboo / Smeraldo Zen Night - Orari, status ok, tempi */
+      --accent-bamboo: #10B981;
+      --accent-bamboo-bg: rgba(16, 185, 129, 0.15);
+      --accent-bamboo-border: rgba(16, 185, 129, 0.3);
+
+      /* Indaco Giapponese Night - Fasi, dettagli, elementi primari e attivi */
+      --accent-indigo: #3B82F6;
+      --accent-indigo-bg: rgba(59, 130, 246, 0.15);
+      --accent-indigo-border: rgba(59, 130, 246, 0.3);
+
+      /* Zafferano Solare Night - Notifiche, cambio valuta, highlight */
+      --accent-saffron: #F59E0B;
+      --accent-saffron-bg: rgba(245, 158, 11, 0.15);
+      --accent-saffron-border: rgba(245, 158, 11, 0.3);
+
+      /* Typography */
+      --font-main: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'Space Mono', monospace;
+      --font-kanji: 'Noto Sans JP', sans-serif;
+
+      /* Shadows & Effects */
+      --shadow-card: 0 4px 20px -2px rgba(0, 0, 0, 0.4), 0 2px 6px -1px rgba(0, 0, 0, 0.2);
+      --shadow-indigo: 0 4px 14px rgba(59, 130, 246, 0.25);
+      --shadow-bamboo: 0 4px 14px rgba(16, 185, 129, 0.25);
+      --shadow-saffron: 0 4px 14px rgba(245, 158, 11, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--font-main);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding-bottom: 95px; /* space for bottom nav */
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.06) 0%, transparent 50%),
+        radial-gradient(circle at 100% 40%, rgba(16, 185, 129, 0.05) 0%, transparent 40%);
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 480px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* Option Header Banner */
+    .palette-banner {
+      background: var(--accent-indigo-bg);
+      border: 1px solid var(--accent-indigo-border);
+      border-radius: 14px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .palette-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .palette-tag {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--accent-indigo);
+    }
+
+    .palette-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .palette-swatches {
+      display: flex;
+      gap: 6px;
+    }
+
+    .swatch {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    /* ==========================================================================
+       HEADER & TOPBAR (Dual Clock & Zen Controls)
+       ========================================================================== */
+    .header-topbar {
+      background: var(--bg-glass);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 14px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: var(--shadow-card);
+      position: sticky;
+      top: 12px;
+      z-index: 50;
+    }
+
+    .clocks-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 12px;
+    }
+
+    .clock-box {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .clock-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .clock-time {
+      font-family: var(--font-mono);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .clock-divider {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--accent-indigo);
+      background: var(--accent-indigo-bg);
+      padding: 4px 10px;
+      border-radius: 12px;
+      border: 1px solid var(--accent-indigo-border);
+    }
+
+    .topbar-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .currency-widget {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--accent-saffron-bg);
+      border: 1px solid var(--accent-saffron-border);
+      padding: 6px 12px;
+      border-radius: 12px;
+    }
+
+    .currency-icon {
+      font-size: 0.9rem;
+    }
+
+    .currency-text {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent-saffron);
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .badge-status {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      background: var(--accent-bamboo-bg);
+      color: var(--accent-bamboo);
+      border: 1px solid var(--accent-bamboo-border);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .dot-online {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: var(--accent-bamboo);
+    }
+
+    /* ==========================================================================
+       DAY SELECTOR (Zen Carousel)
+       ========================================================================== */
+    .day-selector-section {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 4px;
+    }
+
+    .section-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+    }
+
+    .section-counter {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--accent-indigo);
+      background: var(--accent-indigo-bg);
+      padding: 2px 8px;
+      border-radius: 8px;
+    }
+
+    .days-carousel {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      scrollbar-width: none;
+    }
+
+    .days-carousel::-webkit-scrollbar {
+      display: none;
+    }
+
+    .day-pill {
+      min-width: 64px;
+      padding: 10px 12px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .day-pill.active {
+      background: var(--accent-indigo);
+      border-color: var(--accent-indigo);
+      box-shadow: var(--shadow-indigo);
+    }
+
+    .day-pill .num {
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .day-pill .date {
+      font-size: 0.68rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .day-pill.active .num,
+    .day-pill.active .date {
+      color: #FFFFFF;
+    }
+
+    /* ==========================================================================
+       NOTIFICATION BANNER (Zafferano Solare - No Red!)
+       ========================================================================== */
+    .zen-notice-card {
+      background: var(--accent-saffron-bg);
+      border: 1px solid var(--accent-saffron-border);
+      border-radius: 16px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      box-shadow: var(--shadow-saffron);
+    }
+
+    .notice-icon {
+      font-size: 1.2rem;
+      line-height: 1;
+    }
+
+    .notice-content {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .notice-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent-saffron);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .notice-desc {
+      font-size: 0.82rem;
+      color: var(--text-primary);
+      line-height: 1.35;
+    }
+
+    /* ==========================================================================
+       CARD FLIGHT (Indaco & Bamboo Highlights)
+       ========================================================================== */
+    .flight-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 18px;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .flight-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .airline-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .airline-logo {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: var(--accent-indigo-bg);
+      color: var(--accent-indigo);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.8rem;
+    }
+
+    .airline-name {
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .flight-badge {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      font-weight: 700;
+      background: var(--accent-indigo-bg);
+      color: var(--accent-indigo);
+      border: 1px solid var(--accent-indigo-border);
+      padding: 4px 8px;
+      border-radius: 8px;
+    }
+
+    .flight-route {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .city-block {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .city-code {
+      font-family: var(--font-mono);
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--text-primary);
+    }
+
+    .city-name {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+
+    .flight-path {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 16px;
+      gap: 4px;
+    }
+
+    .duration {
+      font-size: 0.7rem;
+      font-weight: 600;
+      color: var(--accent-bamboo);
+      background: var(--accent-bamboo-bg);
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+
+    .path-line {
+      width: 100%;
+      height: 2px;
+      background: var(--border-subtle);
+      position: relative;
+    }
+
+    .path-line::after {
+      content: '✈';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: var(--accent-indigo);
+      font-size: 0.85rem;
+      background: var(--bg-card);
+      padding: 0 4px;
+    }
+
+    .flight-details-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      background: var(--bg-primary);
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .detail-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .detail-label {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .detail-val {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    /* ==========================================================================
+       ITINERARY CARDS WITH KANJI (Indaco & Bamboo Zen Theme)
+       ========================================================================== */
+    .timeline-container {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: relative;
+    }
+
+    .timeline-container::before {
+      content: '';
+      position: absolute;
+      top: 10px;
+      bottom: 10px;
+      left: 19px;
+      width: 2px;
+      background: var(--border-subtle);
+      z-index: 1;
+    }
+
+    .itinerary-item {
+      display: flex;
+      gap: 14px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .timeline-node {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--bg-card);
+      border: 2px solid var(--accent-indigo);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      flex-shrink: 0;
+    }
+
+    .timeline-node.bamboo {
+      border-color: var(--accent-bamboo);
+      background: var(--accent-bamboo-bg);
+    }
+
+    .timeline-node.saffron {
+      border-color: var(--accent-saffron);
+      background: var(--accent-saffron-bg);
+    }
+
+    .card-activity {
+      flex: 1;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 18px;
+      padding: 16px;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .card-activity:hover {
+      border-color: var(--accent-indigo-border);
+      transform: translateY(-2px);
+    }
+
+    .activity-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .time-badge {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--accent-bamboo);
+      background: var(--accent-bamboo-bg);
+      border: 1px solid var(--accent-bamboo-border);
+      padding: 4px 8px;
+      border-radius: 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .phase-badge {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--accent-indigo);
+      background: var(--accent-indigo-bg);
+      border: 1px solid var(--accent-indigo-border);
+      padding: 4px 8px;
+      border-radius: 8px;
+      text-transform: uppercase;
+    }
+
+    .title-kanji-wrap {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .activity-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .kanji-sub {
+      font-family: var(--font-kanji);
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--accent-indigo);
+      opacity: 0.9;
+    }
+
+    .activity-desc {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+
+    .activity-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 8px;
+      margin-top: 2px;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Culinary Focus Highlight Card */
+    .culinary-card {
+      background: linear-gradient(135deg, #131C2E 0%, rgba(59, 130, 246, 0.12) 100%);
+      border: 1px solid var(--accent-indigo-border);
+      border-radius: 20px;
+      padding: 16px;
+      box-shadow: var(--shadow-indigo);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .culinary-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .culinary-tag {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--accent-indigo);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .rating-stars {
+      color: var(--accent-saffron);
+      font-size: 0.8rem;
+    }
+
+    /* ==========================================================================
+       BOTTOM NAVIGATION (Zen Dock)
+       ========================================================================== */
+    .bottom-nav-dock {
+      position: fixed;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 32px);
+      max-width: 440px;
+      background: var(--bg-glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border-subtle);
+      border-radius: 24px;
+      padding: 8px 12px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      z-index: 100;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      padding: 6px 14px;
+      border-radius: 16px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.7rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .nav-item.active {
+      color: var(--accent-indigo);
+      background: var(--accent-indigo-bg);
+    }
+
+    .nav-icon {
+      font-size: 1.25rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+
+    <!-- Option B Theme Banner -->
+    <div class="palette-banner">
+      <div class="palette-info">
+        <span class="palette-tag">Opzione B (Notte OLED)</span>
+        <span class="palette-title">Indaco & Bamboo Zen</span>
+      </div>
+      <div class="palette-swatches">
+        <div class="swatch" style="background: #090D16;" title="Sfondo #090D16"></div>
+        <div class="swatch" style="background: #3B82F6;" title="Indaco Night #3B82F6"></div>
+        <div class="swatch" style="background: #10B981;" title="Bamboo Night #10B981"></div>
+        <div class="swatch" style="background: #F59E0B;" title="Zafferano Night #F59E0B"></div>
+      </div>
+    </div>
+
+    <!-- TopBar Dual Clock & Zen Bar -->
+    <header class="header-topbar">
+      <div class="clocks-container">
+        <div class="clock-box">
+          <span class="clock-label">🇮🇹 Italia</span>
+          <span class="clock-time">14:06</span>
+        </div>
+        <div class="clock-divider">
+          <span>+7h</span>
+        </div>
+        <div class="clock-box" style="text-align: right;">
+          <span class="clock-label" style="justify-content: flex-end;">🇯🇵 Tokyo</span>
+          <span class="clock-time" style="color: var(--accent-indigo);">21:06</span>
+        </div>
+      </div>
+
+      <div class="topbar-actions">
+        <div class="currency-widget">
+          <span class="currency-icon">💴</span>
+          <span class="currency-text">1 EUR = 164.2 JPY</span>
+        </div>
+        <div class="user-profile">
+          <div class="badge-status">
+            <span class="dot-online"></span>
+            <span>Day 03 active</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Zen Notice / Notification Banner (Zafferano Solare - No Alert Red!) -->
+    <div class="zen-notice-card">
+      <div class="notice-icon">🔔</div>
+      <div class="notice-content">
+        <div class="notice-title">Avviso di Viaggio</div>
+        <div class="notice-desc">Imbarco volo JL042 per Tokyo Haneda confermato al Gate 14B. Terminal 2.</div>
+      </div>
+    </div>
+
+    <!-- Day Selector -->
+    <section class="day-selector-section">
+      <div class="section-header">
+        <span class="section-title">Programma Itinerario</span>
+        <span class="section-counter">14 Giorni</span>
+      </div>
+
+      <div class="days-carousel">
+        <div class="day-pill">
+          <span class="num">01</span>
+          <span class="date">21 Lug</span>
+        </div>
+        <div class="day-pill">
+          <span class="num">02</span>
+          <span class="date">22 Lug</span>
+        </div>
+        <div class="day-pill active">
+          <span class="num">03</span>
+          <span class="date">23 Lug</span>
+        </div>
+        <div class="day-pill">
+          <span class="num">04</span>
+          <span class="date">24 Lug</span>
+        </div>
+        <div class="day-pill">
+          <span class="num">05</span>
+          <span class="date">25 Lug</span>
+        </div>
+        <div class="day-pill">
+          <span class="num">06</span>
+          <span class="date">26 Lug</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Flight Card -->
+    <section class="flight-card">
+      <div class="flight-header">
+        <div class="airline-info">
+          <div class="airline-logo">JL</div>
+          <span class="airline-name">Japan Airlines</span>
+        </div>
+        <span class="flight-badge">JL042 • Boeing 787</span>
+      </div>
+
+      <div class="flight-route">
+        <div class="city-block">
+          <span class="city-code">FCO</span>
+          <span class="city-name">Roma Fiumicino</span>
+        </div>
+
+        <div class="flight-path">
+          <span class="duration">12h 45m</span>
+          <div class="path-line"></div>
+        </div>
+
+        <div class="city-block" style="text-align: right;">
+          <span class="city-code">HND</span>
+          <span class="city-name">Tokyo Haneda</span>
+        </div>
+      </div>
+
+      <div class="flight-details-grid">
+        <div class="detail-item">
+          <span class="detail-label">Partenza</span>
+          <span class="detail-val">15:20</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Arrivo</span>
+          <span class="detail-val">11:05+1</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Posto</span>
+          <span class="detail-val">24K (Finestra)</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Itinerary Section with Kanji & Bamboo/Indaco Badges -->
+    <section class="timeline-container">
+      
+      <!-- Event 1: Bamboo Green time -->
+      <div class="itinerary-item">
+        <div class="timeline-node bamboo">⛩️</div>
+        <div class="card-activity">
+          <div class="activity-top">
+            <span class="time-badge">🕒 09:30 - 11:30</span>
+            <span class="phase-badge">Mattino</span>
+          </div>
+          <div class="title-kanji-wrap">
+            <h3 class="activity-title">Santuario Meiji Jingu</h3>
+            <span class="kanji-sub">明治神宮</span>
+          </div>
+          <p class="activity-desc">Passeggiata nella foresta sacra nel cuore di Shibuya. Atmosfera di pace e maestoso Torii in legno di cedro.</p>
+          <div class="activity-meta">
+            <span class="meta-item">📍 Harajuku / Yoyogi</span>
+            <span class="meta-item">🎟️ Ingresso Libero</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Event 2: Culinary Focus Highlight -->
+      <div class="itinerary-item">
+        <div class="timeline-node saffron">🍜</div>
+        <div class="culinary-card">
+          <div class="culinary-header">
+            <span class="culinary-tag">🥢 Focus Culinario • Pranzo</span>
+            <span class="rating-stars">★ 4.9 (Afuri Ramen)</span>
+          </div>
+          <div class="title-kanji-wrap">
+            <h3 class="activity-title">Afuri Yuzu Ramen</h3>
+            <span class="kanji-sub">阿夫利</span>
+          </div>
+          <p class="activity-desc">Famoso ramen al brodo leggero aromatizzato allo yuzu e chashu grigliato su carbonella binchotan.</p>
+          <div class="activity-meta">
+            <span class="meta-item" style="color: var(--accent-saffron); font-weight: 600;">🕒 12:15 - 13:30</span>
+            <span class="meta-item">💰 ~1,400 JPY</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Event 3: Indaco Phase -->
+      <div class="itinerary-item">
+        <div class="timeline-node">🛍️</div>
+        <div class="card-activity">
+          <div class="activity-top">
+            <span class="time-badge">🕒 14:30 - 17:00</span>
+            <span class="phase-badge">Pomeriggio</span>
+          </div>
+          <div class="title-kanji-wrap">
+            <h3 class="activity-title">Esplorazione Omotesando</h3>
+            <span class="kanji-sub">表参道</span>
+          </div>
+          <p class="activity-desc">Architettura contemporanea, boutique di design nipponico e tazza di matcha da ChaCha Ginza.</p>
+          <div class="activity-meta">
+            <span class="meta-item">📍 Jingumae</span>
+            <span class="meta-item">☕ Matcha Break</span>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Bottom Nav Dock -->
+    <nav class="bottom-nav-dock">
+      <a href="#" class="nav-item active">
+        <span class="nav-icon">🗺️</span>
+        <span>Itinerario</span>
+      </a>
+      <a href="#" class="nav-item">
+        <span class="nav-icon">✈️</span>
+        <span>Voli</span>
+      </a>
+      <a href="#" class="nav-item">
+        <span class="nav-icon">💴</span>
+        <span>Spese</span>
+      </a>
+      <a href="#" class="nav-item">
+        <span class="nav-icon">⛩️</span>
+        <span>Guida</span>
+      </a>
+    </nav>
+
+  </div>
+
+</body>
+</html>

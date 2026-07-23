@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Coins, CheckSquare, Sun, Moon } from 'lucide-react';
+import { Coins, CheckSquare, Sun, Moon, MapPin } from 'lucide-react';
 import { useViaggioStore } from '../../store/store';
 
 export const TopBar: React.FC = () => {
   const toggleCurrencyModal = useViaggioStore((state) => state.toggleCurrencyModal);
   const toggleTodoDrawer = useViaggioStore((state) => state.toggleTodoDrawer);
+  const openCheckInModal = useViaggioStore((state) => state.openCheckInModal);
   const theme = useViaggioStore((state) => state.theme);
   const setTheme = useViaggioStore((state) => state.setTheme);
   const [times, setTimes] = useState<{ cet: string; asia: string }>({ cet: '', asia: '' });
@@ -37,7 +38,7 @@ export const TopBar: React.FC = () => {
   }, []);
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-[var(--bg-card)] backdrop-blur-md border-b border-[var(--border-subtle)] px-4 py-2.5 flex items-center justify-between shadow-md">
+    <header className="sticky top-0 z-40 w-full bg-[var(--bg-card)] backdrop-blur-md border-b border-[var(--border-subtle)] px-4 py-2 flex items-center justify-between shadow-md">
       {/* Clock section */}
       <div className="flex items-center space-x-3 text-xs font-mono">
         <div className="flex flex-col">
@@ -53,35 +54,44 @@ export const TopBar: React.FC = () => {
 
       {/* Right controls */}
       <div className="flex items-center space-x-1.5">
-        {/* Theme Toggle Button */}
+        {/* Check-in Modal Trigger */}
         <button
           type="button"
-          onClick={() => setTheme(theme === 'night' ? 'day' : 'night')}
-          className="p-1.5 rounded-full bg-[var(--bg-card)] border border-[var(--border-subtle)] text-[var(--text-primary)] hover:border-[var(--accent-gold)] transition cursor-pointer"
-          title={theme === 'night' ? 'Attiva Modalità Giorno' : 'Attiva Modalità Notte'}
+          onClick={() => openCheckInModal()}
+          className="min-w-[44px] min-h-[44px] p-2.5 rounded-xl bg-[var(--bg-card)] border border-[var(--border-subtle)] text-emerald-600 dark:text-emerald-400 hover:border-emerald-500 transition-all active:scale-95 flex items-center justify-center cursor-pointer shadow-xs"
+          title="📍 Registra Check-in"
         >
-          {theme === 'night' ? <Sun className="w-4 h-4 text-[var(--accent-gold)]" /> : <Moon className="w-4 h-4 text-sky-400" />}
+          <MapPin className="w-4 h-4 stroke-[2.5]" />
         </button>
 
         {/* Todo Drawer Trigger */}
         <button
           type="button"
           onClick={toggleTodoDrawer}
-          className="flex items-center space-x-1 bg-[var(--bg-card)] border border-[var(--border-subtle)] text-[var(--text-primary)] hover:opacity-90 px-2.5 py-1.5 rounded-xl transition-all active:scale-95 text-xs font-semibold shadow-xs cursor-pointer"
+          className="min-w-[44px] min-h-[44px] p-2.5 rounded-xl bg-[var(--bg-card)] border border-[var(--border-subtle)] text-[var(--text-primary)] hover:border-[var(--accent-gold)] transition-all active:scale-95 flex items-center justify-center cursor-pointer shadow-xs"
           title="Tutti i Todo & Promemoria"
         >
-          <CheckSquare className="w-3.5 h-3.5 text-[var(--accent-gold)]" />
-          <span>Todo</span>
+          <CheckSquare className="w-4 h-4 text-[var(--accent-gold)]" />
         </button>
 
         {/* Currency Converter Trigger */}
         <button
           type="button"
           onClick={toggleCurrencyModal}
-          className="flex items-center space-x-1 bg-[var(--bg-card)] border border-[var(--border-subtle)] text-[var(--text-primary)] hover:opacity-90 px-2.5 py-1.5 rounded-xl transition-all active:scale-95 text-xs font-semibold shadow-xs cursor-pointer"
+          className="min-w-[44px] min-h-[44px] p-2.5 rounded-xl bg-[var(--bg-card)] border border-[var(--border-subtle)] text-[var(--text-primary)] hover:border-[var(--accent-gold)] transition-all active:scale-95 flex items-center justify-center cursor-pointer shadow-xs"
+          title="Convertitore Valuta"
         >
-          <Coins className="w-3.5 h-3.5 text-[var(--accent-gold)]" />
-          <span>Cambio</span>
+          <Coins className="w-4 h-4 text-[var(--accent-gold)]" />
+        </button>
+
+        {/* Theme Toggle Button */}
+        <button
+          type="button"
+          onClick={() => setTheme(theme === 'night' ? 'day' : 'night')}
+          className="min-w-[44px] min-h-[44px] p-2.5 rounded-xl bg-[var(--bg-card)] border border-[var(--border-subtle)] text-[var(--text-primary)] hover:border-[var(--accent-gold)] transition-all active:scale-95 flex items-center justify-center cursor-pointer shadow-xs"
+          title={theme === 'night' ? 'Attiva Modalità Giorno' : 'Attiva Modalità Notte'}
+        >
+          {theme === 'night' ? <Sun className="w-4 h-4 text-[var(--accent-gold)]" /> : <Moon className="w-4 h-4 text-sky-400" />}
         </button>
       </div>
     </header>

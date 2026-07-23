@@ -1,0 +1,2072 @@
+{
+  "meta": {
+    "titolo": "Viaggio Giappone & Corea 2026",
+    "versione": "4.0-v2",
+    "passeggeri": [
+      "Maurizio Del Monte",
+      "Paola Cennerelli"
+    ],
+    "tassi_cambio": {
+      "JPY_EUR": 0.006,
+      "KRW_EUR": 0.00068
+    }
+  },
+  "alloggi": [
+    {
+      "id": "H1",
+      "citta": "Seoul",
+      "nome": "Wecostay Insadong",
+      "nome_locale": "위코스테이 인사동",
+      "indirizzo_en": "5, Supyo-Ro 18-Gil, Jongno-Gu, Seoul",
+      "indirizzo_locale": "서울특별시 종로구 수표로18길 5",
+      "check_in": "2026-07-28",
+      "check_out": "2026-08-01",
+      "notti": 4,
+      "stazione": "Jongno 3-ga (L1, L3, L5)",
+      "stato_pagamento": "Pagato",
+      "note": "Lavatrice in camera, No colazione",
+      "paese": "KR",
+      "latitudine": 37.5665,
+      "longitudine": 126.978,
+      "linee_metro": [
+        "L1",
+        "L3",
+        "L5"
+      ],
+      "features": [
+        "Lavatrice in camera",
+        "No colazione"
+      ]
+    },
+    {
+      "id": "H2",
+      "citta": "Tokyo",
+      "nome": "Maison Jeunesse",
+      "nome_locale": "メゾン・ジュネス",
+      "indirizzo_en": "Kitashinjuku 1-6-6, Shinjuku, Tokyo",
+      "indirizzo_locale": "東京都新宿区北新宿1丁目6-6",
+      "check_in": "2026-08-01",
+      "check_out": "2026-08-10",
+      "notti": 9,
+      "stazione": "Shin-Okubo / Okubo (JR)",
+      "stato_pagamento": "Pagato",
+      "note": "Lavatrice in camera, No colazione",
+      "paese": "JP",
+      "latitudine": 35.6762,
+      "longitudine": 139.6503,
+      "linee_metro": [
+        "JR"
+      ],
+      "features": [
+        "Lavatrice in camera",
+        "No colazione"
+      ]
+    },
+    {
+      "id": "H3",
+      "citta": "Kanazawa",
+      "nome": "Hotel Vista Kanazawa",
+      "nome_locale": "ホテルビスタ金沢",
+      "indirizzo_en": "2-13-27 Hirooka, Kanazawa",
+      "indirizzo_locale": "石川県金沢市広岡2-13-27",
+      "check_in": "2026-08-10",
+      "check_out": "2026-08-12",
+      "notti": 2,
+      "stazione": "Kanazawa Station (West Exit)",
+      "stato_pagamento": "Pagato",
+      "note": "Onsen pubblico (usare copri-tatuaggi), Colazione Inclusa",
+      "paese": "JP",
+      "latitudine": 36.5613,
+      "longitudine": 136.6562,
+      "linee_metro": [
+        "West Exit"
+      ],
+      "features": [
+        "Onsen pubblico (usare copri-tatuaggi)",
+        "Colazione Inclusa"
+      ]
+    },
+    {
+      "id": "H4",
+      "citta": "Takayama",
+      "nome": "Takayama Ouan",
+      "nome_locale": "飛騨高山温泉 飛騨の宿 桜庵",
+      "indirizzo_en": "4-313 Hanasato-machi, Takayama",
+      "indirizzo_locale": "岐阜県高山市花里町4-313",
+      "check_in": "2026-08-12",
+      "check_out": "2026-08-14",
+      "notti": 2,
+      "stazione": "Takayama Station",
+      "stato_pagamento": "Pagato",
+      "note": "Onsen naturale (3 vasche private gratis), Colazione Inclusa, Ramen notturno gratis (23:00-24:00)",
+      "paese": "JP",
+      "latitudine": 36.1408,
+      "longitudine": 137.2513,
+      "features": [
+        "Onsen naturale (3 vasche private gratis)",
+        "Colazione Inclusa",
+        "Ramen notturno gratis (23:00-24:00)"
+      ]
+    },
+    {
+      "id": "H5",
+      "citta": "Gujo",
+      "nome": "Jeenie's Inn Fukado Shinshita",
+      "nome_locale": "ジーニーズ イン 深戸新下",
+      "indirizzo_en": "Yamato-cho, Fukado, Gujo",
+      "indirizzo_locale": "岐阜県郡上市大和町深戸",
+      "check_in": "2026-08-14",
+      "check_out": "2026-08-16",
+      "notti": 2,
+      "stazione": "Fukado Station (2 min walk)",
+      "stato_pagamento": "Pagato",
+      "note": "Lavatrice/Asciugatrice, Bagno condiviso, No colazione",
+      "paese": "JP",
+      "latitudine": 35.7486,
+      "longitudine": 136.9544,
+      "linee_metro": [
+        "2 min walk"
+      ],
+      "features": [
+        "Lavatrice/Asciugatrice",
+        "Bagno condiviso",
+        "No colazione"
+      ]
+    },
+    {
+      "id": "H6",
+      "citta": "Osaka",
+      "nome": "Hotel S-Presso West",
+      "nome_locale": "ホテル エスプレッソ ウェスト",
+      "indirizzo_en": "3-10-15 Motomachi, Naniwa Ward, Osaka",
+      "indirizzo_locale": "大阪府大阪市浪速区元町3丁目10-15",
+      "check_in": "2026-08-16",
+      "check_out": "2026-08-20",
+      "notti": 4,
+      "stazione": "Namba Station (Nankai/Metro)",
+      "stato_pagamento": "Pagato",
+      "note": "Lavatrice in camera, No colazione, Consegna bagagli directa in stanza",
+      "paese": "JP",
+      "latitudine": 34.6937,
+      "longitudine": 135.5023,
+      "linee_metro": [
+        "Nankai",
+        "Metro"
+      ],
+      "features": [
+        "Lavatrice in camera",
+        "No colazione",
+        "Consegna bagagli directa in stanza"
+      ]
+    }
+  ],
+  "trasporti": {
+    "voli": [
+      {
+        "id": "V1",
+        "data": "2026-07-27",
+        "aeroporto_partenza": "FCO",
+        "aeroporto_arrivo": "PEK",
+        "citta_partenza": "Roma",
+        "citta_arrivo": "Pechino",
+        "ora_partenza": "20:30",
+        "ora_arrivo": "12:45",
+        "giorno_arrivo_offset": 1,
+        "durata": "10h 15m",
+        "compagnia": "Air China CA 940",
+        "numero_volo": "CA 940",
+        "pnr": "NGK0BB",
+        "stato": "Confermato"
+      },
+      {
+        "id": "V2",
+        "data": "2026-07-28",
+        "aeroporto_partenza": "PEK",
+        "aeroporto_arrivo": "ICN",
+        "citta_partenza": "Pechino",
+        "citta_arrivo": "Seoul",
+        "ora_partenza": "18:50",
+        "ora_arrivo": "21:45",
+        "giorno_arrivo_offset": 0,
+        "durata": "1h 55m",
+        "compagnia": "Air China CA 709",
+        "numero_volo": "CA 709",
+        "pnr": "NGK0BB",
+        "stato": "Confermato",
+        "note": "Layover PEK: 6h 05m"
+      },
+      {
+        "id": "V3",
+        "data": "2026-08-01",
+        "aeroporto_partenza": "GMP",
+        "aeroporto_arrivo": "HND",
+        "citta_partenza": "Seoul",
+        "citta_arrivo": "Tokyo",
+        "ora_partenza": "12:40",
+        "ora_arrivo": "14:55",
+        "giorno_arrivo_offset": 0,
+        "durata": "2h 15m",
+        "compagnia": "Japan Airlines JL 92",
+        "numero_volo": "JL 92",
+        "pnr": "FJMY10",
+        "stato": "Confermato",
+        "note": "Attenzione: Aeroporto Gimpo (GMP)"
+      },
+      {
+        "id": "V4",
+        "data": "2026-08-20",
+        "aeroporto_partenza": "KIX",
+        "aeroporto_arrivo": "PEK",
+        "citta_partenza": "Osaka",
+        "citta_arrivo": "Pechino",
+        "ora_partenza": "09:05",
+        "ora_arrivo": "11:25",
+        "giorno_arrivo_offset": 0,
+        "durata": "3h 20m",
+        "compagnia": "Air China CA 162",
+        "numero_volo": "CA 162",
+        "pnr": "NGK0BB",
+        "stato": "Confermato",
+        "note": "Sveglia ore 05:00"
+      },
+      {
+        "id": "V5",
+        "data": "2026-08-20",
+        "aeroporto_partenza": "PEK",
+        "aeroporto_arrivo": "FCO",
+        "citta_partenza": "Pechino",
+        "citta_arrivo": "Roma",
+        "ora_partenza": "13:20",
+        "ora_arrivo": "18:30",
+        "giorno_arrivo_offset": 0,
+        "durata": "11h 10m",
+        "compagnia": "Air China CA 939",
+        "numero_volo": "CA 939",
+        "pnr": "NGK0BB",
+        "stato": "Confermato",
+        "note": "Layover PEK: 1h 55m (Stretto!) Terminal 3-E"
+      }
+    ],
+    "treni": [
+      {
+        "id": "T1",
+        "data": "2026-08-10",
+        "stazione_partenza": "Omiya",
+        "stazione_arrivo": "Kanazawa",
+        "citta_partenza": "Omiya",
+        "citta_arrivo": "Kanazawa",
+        "ora_partenza": "10:21",
+        "ora_arrivo": "12:30",
+        "carrozza": "6",
+        "posti": [
+          "Carrozza 6, Posti 5-A, 5-B"
+        ],
+        "note": "Ritirare i biglietti cartacei a Shinjuku",
+        "mezzo": "Shinkansen Kagayaki 527",
+        "pnr": "E32724",
+        "codice_ritiro": "28382311931521238"
+      }
+    ],
+    "bus": [
+      {
+        "id": "B1",
+        "data": "2026-08-12",
+        "stazione_partenza": "Kanazawa",
+        "stazione_arrivo": "Takayama",
+        "citta_partenza": "Kanazawa",
+        "citta_arrivo": "Takayama",
+        "ora_partenza": "11:10",
+        "ora_arrivo": "13:25",
+        "carrozza": "01",
+        "posti": [
+          "Carrozza 01, Posti 3-A, 3-B"
+        ],
+        "note": "Partenza West Exit Bus Stop No. 4",
+        "vettore": "Nohi Bus",
+        "codice": "07122010861"
+      },
+      {
+        "id": "B2",
+        "data": "2026-08-14",
+        "stazione_partenza": "Takayama",
+        "stazione_arrivo": "Gujo Hachiman IC",
+        "citta_partenza": "Takayama",
+        "citta_arrivo": "Gujo Hachiman IC",
+        "ora_partenza": "12:00",
+        "ora_arrivo": "13:21",
+        "carrozza": "1",
+        "posti": [
+          "Bus 13212, Carrozza 1, Posti 01A (P), 01B (M)"
+        ],
+        "note": "Pick-up in auto da Jeenie",
+        "vettore": "Nohi Bus (Linea Nagoya)",
+        "codice": "116572765"
+      },
+      {
+        "id": "B3",
+        "data": "2026-08-16",
+        "stazione_partenza": "Gujo Hachiman IC",
+        "stazione_arrivo": "Osaka Namba",
+        "citta_partenza": "Gujo Hachiman IC",
+        "citta_arrivo": "Osaka Namba",
+        "ora_partenza": "11:26",
+        "ora_arrivo": "15:57",
+        "carrozza": "01",
+        "posti": [
+          "Carrozza 01, Posti 10 & 9"
+        ],
+        "note": "Arrivo a Namba OCAT Bldg.",
+        "vettore": "Kintetsu Bus",
+        "codice": "07162002992"
+      }
+    ]
+  },
+  "emergenze": {
+    "assicurazione": {
+      "compagnia": "Columbus Assicurazioni",
+      "polizza": "604213963",
+      "telefono_h24": "+39 02 3600 5814",
+      "sito_web": "https://www.columbusassicurazioni.it/"
+    },
+    "corea": {
+      "polizia": "112",
+      "ambulanza": "119",
+      "hotline_turismo": "1330",
+      "ambasciata": "+82 10 2242 0491",
+      "centralino_ambasciata": "+82 2 750 0200"
+    },
+    "giappone": {
+      "polizia": "110",
+      "ambulanza": "119",
+      "hotline_jnto": "050-3816-2720",
+      "ambasciata_tokyo": "+81 90 3908 1006",
+      "centralino_ambasciata_tokyo": "+81 3 3453 5291",
+      "consolato_osaka": "+81 90 3350 1561"
+    }
+  },
+  "itinerario": [
+    {
+      "giorno": 0,
+      "data": "2026-07-28",
+      "citta": "Seoul",
+      "paese": "KR",
+      "fase": "🇰🇷 Seoul",
+      "titolo": "Atterraggio e Benvenuti a Seoul",
+      "focus_culinario": "Decompressione e cibo leggero vicino Insadong",
+      "tabella_oraria": [
+        {
+          "ora": "21:45",
+          "tipo": "trasporto",
+          "attivita": "Atterraggio a Incheon (ICN)",
+          "dettagli": "Terminal 1, immigrazione e ritiro bagagli (~22:30)",
+          "maps_provider": "naver",
+          "maps_query": "Atterraggio a Incheon (ICN)"
+        },
+        {
+          "ora": "22:45",
+          "tipo": "trasporto",
+          "attivita": "Biglietto Airport Bus 6002",
+          "dettagli": "Emettitrici 1F. Bus 6002 per Jongno 3-ga (₩17.000)",
+          "maps_provider": "naver",
+          "maps_query": "Biglietto Airport Bus 6002"
+        },
+        {
+          "ora": "23:09",
+          "tipo": "trasporto",
+          "attivita": "Imbarco Bus Limousine",
+          "dettagli": "Consegna bagagli con ricevuta di stiva",
+          "maps_provider": "naver",
+          "maps_query": "Imbarco Bus Limousine"
+        },
+        {
+          "ora": "00:20",
+          "tipo": "attivita",
+          "attivita": "Arrivo a Jongno 3-ga",
+          "dettagli": "Camminata di 4 min (300m) verso Wecostay Insadong",
+          "maps_provider": "naver",
+          "maps_query": "Arrivo a Jongno 3-ga"
+        }
+      ],
+      "todo_list": [
+        {
+          "testo": "Scaricare Naver Map e Papago sul telefono",
+          "fatto": true
+        },
+        {
+          "testo": "Acquistare biglietto Bus Limousine 6002 prima dell'imbarco",
+          "fatto": false
+        }
+      ]
+    },
+    {
+      "giorno": 1,
+      "data": "2026-07-29",
+      "citta": "Seoul",
+      "paese": "KR",
+      "fase": "🇰🇷 Seoul",
+      "titolo": "Design, Architettura Corporate & Street Food",
+      "focus_culinario": "Cena street food a Gwangjang Market (Bindaetteok, Mayak Gimbap, Yukhoe)",
+      "tabella_oraria": [
+        {
+          "ora": "09:00",
+          "ora_fine": "09:30",
+          "tipo": "compito",
+          "attivita": "Acquisto T-Money Card",
+          "dettagli": "Convenience store vicino casa, ricarica ₩15.000/pp",
+          "maps_provider": "naver",
+          "maps_query": "Acquisto T-Money Card"
+        },
+        {
+          "ora": "10:00",
+          "ora_fine": "12:30",
+          "tipo": "attivita",
+          "attivita": "Amorepacific Headquarters",
+          "dettagli": "Architettura Chipperfield, concept store Tonework (Sinyongsan Exit 1/2)",
+          "maps_provider": "naver",
+          "maps_query": "Amorepacific Headquarters"
+        },
+        {
+          "ora": "12:30",
+          "ora_fine": "14:00",
+          "tipo": "pasto",
+          "attivita": "Pranzo Yongmun Market",
+          "dettagli": "Mercato locale senza turisti (Kalguksu, Bindaetteok)",
+          "maps_provider": "naver",
+          "maps_query": "Pranzo Yongmun Market"
+        },
+        {
+          "ora": "14:30",
+          "ora_fine": "18:00",
+          "tipo": "attivita",
+          "attivita": "The Hyundai Seoul",
+          "dettagli": "Sounds Forest 5° piano, rifugio climatizzato",
+          "maps_provider": "naver",
+          "maps_query": "The Hyundai Seoul"
+        },
+        {
+          "ora": "18:00",
+          "ora_fine": "20:00",
+          "tipo": "attivita",
+          "attivita": "Rientro & Cheonggyecheon",
+          "dettagli": "Passeggiata serale lungo il torrente illuminato",
+          "maps_provider": "naver",
+          "maps_query": "Rientro & Cheonggyecheon"
+        },
+        {
+          "ora": "20:00",
+          "ora_fine": "22:00",
+          "tipo": "pasto",
+          "attivita": "Cena Gwangjang Market",
+          "dettagli": "Mercato storico (Bindaetteok, Mayak Gimbap, Yukhoe)",
+          "maps_provider": "naver",
+          "maps_query": "Cena Gwangjang Market"
+        }
+      ],
+      "todo_list": [
+        {
+          "testo": "Comprare e caricare le tessere T-Money fisiche",
+          "fatto": false
+        },
+        {
+          "testo": "Usare Naver Map per il percorso a piedi da Amorepacific",
+          "fatto": false
+        }
+      ]
+    },
+    {
+      "giorno": 2,
+      "data": "2026-07-30",
+      "citta": "Seoul",
+      "paese": "KR",
+      "fase": "🇰🇷 Seoul",
+      "titolo": "Estetica Coreana, Design, Distopia & Neon",
+      "focus_culinario": "Jirisan Black Pork BBQ da Sancheong Sutbul Garden Euljiro",
+      "tabella_oraria": [
+        {
+          "ora": "09:30",
+          "ora_fine": "12:30",
+          "tipo": "attivita",
+          "attivita": "Seongsu-dong Tour",
+          "dettagli": "LCDC, Daelim Changgo, Ader Error Space, Tamburins",
+          "maps_provider": "naver",
+          "maps_query": "Seongsu-dong Tour"
+        },
+        {
+          "ora": "12:30",
+          "ora_fine": "14:00",
+          "tipo": "pasto",
+          "attivita": "Pranzo Grandmother's Recipe",
+          "dettagli": "Cucina domestica coreana servita su vassoi di design",
+          "maps_provider": "naver",
+          "maps_query": "Pranzo Grandmother's Recipe"
+        },
+        {
+          "ora": "14:30",
+          "ora_fine": "17:30",
+          "tipo": "attivita",
+          "attivita": "Haus Nowhere Dosan",
+          "dettagli": "Gentle Monster, sculture cinetiche + Nudake Cafe (Peak Cake)",
+          "maps_provider": "naver",
+          "maps_query": "Haus Nowhere Dosan"
+        },
+        {
+          "ora": "18:00",
+          "ora_fine": "20:00",
+          "tipo": "attivita",
+          "attivita": "Dongdaemun Design Plaza (DDP)",
+          "dettagli": "Architettura Zaha Hadid al crepuscolo",
+          "maps_provider": "naver",
+          "maps_query": "Dongdaemun Design Plaza (DDP)"
+        },
+        {
+          "ora": "20:00",
+          "ora_fine": "22:00",
+          "tipo": "pasto",
+          "attivita": "Cena Sancheong Sutbul Garden",
+          "dettagli": "Maiale nero Jirisan grigliato. Usa CatchTable per la coda",
+          "maps_provider": "naver",
+          "maps_query": "Cena Sancheong Sutbul Garden"
+        },
+        {
+          "ora": "22:00",
+          "ora_fine": "23:00",
+          "tipo": "attivita",
+          "attivita": "Euljiro & Ikseon-dong",
+          "dettagli": "Vicoli cyberpunk e passeggiata tra le lanterne Hanok",
+          "maps_provider": "naver",
+          "maps_query": "Euljiro & Ikseon-dong"
+        }
+      ],
+      "todo_list": [
+        {
+          "testo": "Mettiti in coda su CatchTable per Sancheong Sutbul Garden",
+          "fatto": false
+        }
+      ]
+    },
+    {
+      "giorno": 3,
+      "data": "2026-07-31",
+      "citta": "Seoul",
+      "paese": "KR",
+      "fase": "🇰🇷 Seoul",
+      "titolo": "Arte Contemporanea, K-Pop & Indie Culture",
+      "focus_culinario": "Shin Migyeong Hongdae Dakgalbi (pollo piccante e formaggio fuso)",
+      "tabella_oraria": [
+        {
+          "ora": "10:00",
+          "ora_fine": "12:00",
+          "tipo": "attivita",
+          "attivita": "Leeum Museum of Art",
+          "dettagli": "Prenotato ore 10:00. Edifici Botta, Koolhaas, Nouvel",
+          "maps_provider": "naver",
+          "maps_query": "Leeum Museum of Art"
+        },
+        {
+          "ora": "12:00",
+          "ora_fine": "14:00",
+          "tipo": "pasto",
+          "attivita": "Pranzo Parc (Hannam)",
+          "dettagli": "Cucina casalinga biologica servita su vassoio singolo",
+          "maps_provider": "naver",
+          "maps_query": "Pranzo Parc (Hannam)"
+        },
+        {
+          "ora": "14:30",
+          "ora_fine": "16:30",
+          "tipo": "attivita",
+          "attivita": "HIKR Ground",
+          "dettagli": "Centro K-Culture e installazioni artistiche (AC)",
+          "maps_provider": "naver",
+          "maps_query": "HIKR Ground"
+        },
+        {
+          "ora": "18:30",
+          "ora_fine": "21:30",
+          "tipo": "trasporto",
+          "attivita": "Hongdae Busking & Cena",
+          "dettagli": "Band di strada e cena con Dakgalbi al formaggio",
+          "maps_provider": "naver",
+          "maps_query": "Hongdae Busking & Cena"
+        }
+      ],
+      "todo_list": [
+        {
+          "testo": "Controllare prenotazione Leeum Museum M1 ore 10:00",
+          "fatto": true
+        },
+        {
+          "testo": "Preparare gli zaini per il check-out di domani",
+          "fatto": false
+        }
+      ]
+    },
+    {
+      "giorno": 4,
+      "data": "2026-08-01",
+      "citta": "Tokyo",
+      "paese": "JP",
+      "fase": "🇯🇵 Tokyo",
+      "titolo": "Haneda -> Shinjuku -> Nakameguro Awa Odori",
+      "focus_culinario": "Street food del festival Nakameguro (Yakitori, Takoyaki, Kakigori)",
+      "tabella_oraria": [
+        {
+          "ora": "09:30",
+          "ora_fine": "10:15",
+          "tipo": "trasporto",
+          "attivita": "Metro per Gimpo (GMP)",
+          "dettagli": "Linea 5 diretta da Jongno 3-ga. Usa T-Money residua",
+          "maps_provider": "google",
+          "maps_query": "Metro per Gimpo (GMP)"
+        },
+        {
+          "ora": "12:40",
+          "ora_fine": "14:55",
+          "tipo": "trasporto",
+          "attivita": "Volo JL 92 GMP -> HND",
+          "dettagli": "Volo domestico Japan Airlines per Tokyo Haneda",
+          "maps_provider": "google",
+          "maps_query": "Volo JL 92 GMP -> HND"
+        },
+        {
+          "ora": "15:45",
+          "ora_fine": "16:30",
+          "tipo": "trasporto",
+          "attivita": "Limousine Bus Haneda -> Shinjuku",
+          "dettagli": "Biglietto ¥1.400. Scendere a Shinjuku West Exit",
+          "maps_provider": "google",
+          "maps_query": "Limousine Bus Haneda -> Shinjuku"
+        },
+        {
+          "ora": "16:30",
+          "ora_fine": "16:45",
+          "tipo": "trasporto",
+          "attivita": "Taxi per Maison Jeunesse",
+          "dettagli": "Mostrare al tassista: 北新宿1丁目6-6 (Costo ¥800-1.100)",
+          "maps_provider": "google",
+          "maps_query": "Taxi per Maison Jeunesse"
+        },
+        {
+          "ora": "18:00",
+          "ora_fine": "20:30",
+          "tipo": "festival",
+          "attivita": "Nakameguro Awa Odori",
+          "dettagli": "Festival con 400 anni di storia lungo il fiume",
+          "maps_provider": "google",
+          "maps_query": "Nakameguro Awa Odori"
+        },
+        {
+          "ora": "20:30",
+          "ora_fine": "22:00",
+          "tipo": "pasto",
+          "attivita": "OPZ: Cena a Shinjuku & JINS Glasses",
+          "dettagli": "In caso di stanchezza post-volo: saltare Nakameguro, cena in izakaya a Shinjuku e occhiali da JINS",
+          "maps_provider": "google",
+          "maps_query": "Shinjuku Station"
+        }
+      ],
+      "todo_list": [
+        {
+          "testo": "Salvare QR code di Visit Japan Web per Haneda",
+          "fatto": false
+        },
+        {
+          "testo": "Acquistare Suica fisica alle emettitrici JR di Shin-Okubo",
+          "fatto": false
+        }
+      ]
+    },
+    {
+      "giorno": 5,
+      "data": "2026-08-02",
+      "citta": "Tokyo",
+      "paese": "JP",
+      "fase": "🇯🇵 Tokyo",
+      "titolo": "Foresta Sacra, Cerimonia del Tè & Rock Bon Odori",
+      "focus_culinario": "Luxury Bento da Isetan Depachika (Pranzo) e yatai street food a Nakano",
+      "tabella_oraria": [
+        {
+          "ora": "08:30",
+          "ora_fine": "09:15",
+          "tipo": "compito",
+          "attivita": "Sopralluogo Yamato Hyakunincho",
+          "dettagli": "Conferma apertura domenicale del 9 agosto per spedizione bagagli",
+          "maps_provider": "google",
+          "maps_query": "Sopralluogo Yamato Hyakunincho"
+        },
+        {
+          "ora": "09:30",
+          "ora_fine": "11:00",
+          "tipo": "attivita",
+          "attivita": "Meiji Jingu",
+          "dettagli": "Foresta e santuario shintoista solenne",
+          "maps_provider": "google",
+          "maps_query": "Meiji Jingu"
+        },
+        {
+          "ora": "11:15",
+          "ora_fine": "12:00",
+          "tipo": "attivita",
+          "attivita": "Hanazono Shrine Antique Market",
+          "dettagli": "Mercatino delle pulci e antiquariato (se attivo)",
+          "maps_provider": "google",
+          "maps_query": "Hanazono Shrine"
+        },
+        {
+          "ora": "12:00",
+          "ora_fine": "14:00",
+          "tipo": "pasto",
+          "attivita": "Isetan Depachika Shinjuku",
+          "dettagli": "Seminterrato gastronomico gourmet, acquisto bento",
+          "maps_provider": "google",
+          "maps_query": "Isetan Depachika Shinjuku"
+        },
+        {
+          "ora": "14:00",
+          "ora_fine": "16:00",
+          "tipo": "trasporto",
+          "attivita": "Ritiro Biglietti Shinkansen",
+          "dettagli": "Sportello JR EAST Travel Service Center a Shinjuku",
+          "maps_provider": "google",
+          "maps_query": "Ritiro Biglietti Shinkansen"
+        },
+        {
+          "ora": "16:00",
+          "ora_fine": "17:30",
+          "tipo": "attivita",
+          "attivita": "Shinjuku Gyoen & Rakuutei",
+          "dettagli": "Tè matcha e wagashi su tatami alla casa da tè Rakuutei (¥1.000)",
+          "maps_provider": "google",
+          "maps_query": "Shinjuku Gyoen & Rakuutei"
+        },
+        {
+          "ora": "18:00",
+          "ora_fine": "21:00",
+          "tipo": "festival",
+          "attivita": "Nakano Bon Dance Festival",
+          "dettagli": "Festival estivo che fonde Bon Odori e rock/DJ set",
+          "maps_provider": "google",
+          "maps_query": "Nakano Bon Dance Festival"
+        }
+      ],
+      "todo_list": [
+        {
+          "testo": "Ritirare i biglietti cartacei Shinkansen allo sportello JR East",
+          "fatto": false
+        }
+      ]
+    },
+    {
+      "giorno": 6,
+      "data": "2026-08-03",
+      "citta": "Tokyo",
+      "paese": "JP",
+      "fase": "🇯🇵 Tokyo",
+      "titolo": "Shimokitazawa Slow Day Indie",
+      "focus_culinario": "Soup Curry leggero e Bignè Totoro fatti a mano da Shiro-Hige",
+      "tabella_oraria": [
+        {
+          "ora": "10:30",
+          "ora_fine": "12:30",
+          "tipo": "attivita",
+          "attivita": "Shopping Vintage Shimokitazawa",
+          "dettagli": "Vintage American Casual (New York Joe Exchange)",
+          "maps_provider": "google",
+          "maps_query": "Shopping Vintage Shimokitazawa"
+        },
+        {
+          "ora": "12:30",
+          "ora_fine": "14:30",
+          "tipo": "pasto",
+          "attivita": "Pranzo Soup Curry",
+          "dettagli": "Specialità speziata del quartiere (ricerca su Tabelog)",
+          "maps_provider": "google",
+          "maps_query": "Pranzo Soup Curry"
+        },
+        {
+          "ora": "14:30",
+          "ora_fine": "16:30",
+          "tipo": "attivita",
+          "attivita": "Shiro-Hige's Cream Puff Factory",
+          "dettagli": "Setagaya-Daita, bignè a forma di Totoro autorizzati da Miyazaki",
+          "maps_provider": "google",
+          "maps_query": "Shiro-Hige's Cream Puff Factory"
+        },
+        {
+          "ora": "16:30",
+          "ora_fine": "18:30",
+          "tipo": "attivita",
+          "attivita": "Caffè e Vinili",
+          "dettagli": "Flash Disc Ranch e City Country City",
+          "maps_provider": "google",
+          "maps_query": "Caffè e Vinili"
+        },
+        {
+          "ora": "20:30",
+          "ora_fine": "22:30",
+          "tipo": "attivita",
+          "attivita": "King Biscuit Jazz Bar",
+          "dettagli": "Storico jazz/blues bar a Shinjuku",
+          "maps_provider": "google",
+          "maps_query": "King Biscuit Jazz Bar"
+        }
+      ],
+      "todo_list": []
+    },
+    {
+      "giorno": 7,
+      "data": "2026-08-04",
+      "citta": "Tokyo",
+      "paese": "JP",
+      "fase": "🇯🇵 Tokyo",
+      "titolo": "Architettura, Antiquariato Showa & Izakaya sotto i binari",
+      "focus_culinario": "Satou Menchi-katsu (Kichijoji) e Izakaya sotto i binari a Koenji",
+      "tabella_oraria": [
+        {
+          "ora": "09:30",
+          "ora_fine": "13:30",
+          "tipo": "attivita",
+          "attivita": "Edo-Tokyo Open Air Museum",
+          "dettagli": "Edifici Showa che hanno ispirato La Città Incantata (¥400)",
+          "maps_provider": "google",
+          "maps_query": "Edo-Tokyo Open Air Museum"
+        },
+        {
+          "ora": "14:00",
+          "ora_fine": "15:30",
+          "tipo": "attivita",
+          "attivita": "Kichijoji & Satou",
+          "dettagli": "Crocchette di carne wagyu fritte Satou Menchi-katsu",
+          "maps_provider": "google",
+          "maps_query": "Kichijoji & Satou"
+        },
+        {
+          "ora": "15:30",
+          "ora_fine": "17:00",
+          "tipo": "attivita",
+          "attivita": "Nishi-Ogikubo Antique Street",
+          "dettagli": "Botteghe d'antiquariato Showa e giocattoli d'epoca",
+          "maps_provider": "google",
+          "maps_query": "Nishi-Ogikubo Antique Street"
+        },
+        {
+          "ora": "17:00",
+          "ora_fine": "19:00",
+          "tipo": "attivita",
+          "attivita": "Koenji Vintage & Punk",
+          "dettagli": "Quartiere bohémien, dischi e moda usata",
+          "maps_provider": "google",
+          "maps_query": "Koenji Vintage & Punk"
+        },
+        {
+          "ora": "19:00",
+          "ora_fine": "21:00",
+          "tipo": "attivita",
+          "attivita": "Izakaya under tracks (Koenji)",
+          "dettagli": "Gardo-shita: spiedini yakitori grigliati su carbone binchotan",
+          "maps_provider": "google",
+          "maps_query": "Izakaya under tracks (Koenji)"
+        }
+      ],
+      "todo_list": []
+    },
+    {
+      "giorno": 8,
+      "data": "2026-08-05",
+      "citta": "Tokyo",
+      "paese": "JP",
+      "fase": "🇯🇵 Tokyo",
+      "titolo": "Arte Immersiva, Ron Mueck & Veduta Notturna",
+      "focus_culinario": "Pranzo gourmet e dashi artigianale ad Azabudai Hills Market",
+      "tabella_oraria": [
+        {
+          "ora": "09:00",
+          "ora_fine": "13:00",
+          "tipo": "attivita",
+          "attivita": "teamLab Borderless",
+          "dettagli": "Prenotato ore 09:00 (Codice: AAAVRRLHXVKT-0001)",
+          "maps_provider": "google",
+          "maps_query": "teamLab Borderless"
+        },
+        {
+          "ora": "13:00",
+          "ora_fine": "15:30",
+          "tipo": "pasto",
+          "attivita": "Pranzo Azabudai Hills",
+          "dettagli": "Mercato gastronomico Azabudai Hills Market",
+          "maps_provider": "google",
+          "maps_query": "Pranzo Azabudai Hills"
+        },
+        {
+          "ora": "15:45",
+          "ora_fine": "19:45",
+          "tipo": "attivita",
+          "attivita": "Mori Art Museum (Ron Mueck)",
+          "dettagli": "Prenotato ore 16:00 (Ticket ID Maurizio: 2370-0029, Ticket ID Paola: 2370-0012)",
+          "maps_provider": "google",
+          "maps_query": "Mori Art Museum (Ron Mueck)"
+        },
+        {
+          "ora": "19:45",
+          "ora_fine": "20:30",
+          "tipo": "attivita",
+          "attivita": "Tokyo City View",
+          "dettagli": "Osservatorio 52° piano incluso nel biglietto combo Mori",
+          "maps_provider": "google",
+          "maps_query": "Tokyo City View"
+        }
+      ],
+      "todo_list": [
+        {
+          "testo": "Presentarsi a teamLab Borderless entro le 09:00",
+          "fatto": true
+        },
+        {
+          "testo": "Mostrare e-ticket Ron Mueck alle 16:00 alla Mori Tower",
+          "fatto": true
+        }
+      ]
+    },
+    {
+      "giorno": 9,
+      "data": "2026-08-06",
+      "citta": "Tokyo",
+      "paese": "JP",
+      "fase": "🇯🇵 Tokyo",
+      "titolo": "Giardini Storici, Archeologia del Cibo & Architettura Organica",
+      "focus_culinario": "Monjayaki fai-da-te a Tsukishima e matcha alla sala da tè Nakajima-no-Ochaya",
+      "tabella_oraria": [
+        {
+          "ora": "09:00",
+          "ora_fine": "11:00",
+          "tipo": "attivita",
+          "attivita": "Hama-rikyu Gardens",
+          "dettagli": "Antico giardino feudale + matcha a Nakajima-no-Ochaya",
+          "maps_provider": "google",
+          "maps_query": "Hama-rikyu Gardens"
+        },
+        {
+          "ora": "11:30",
+          "ora_fine": "13:00",
+          "tipo": "trasporto",
+          "attivita": "Tsukishima Monja Street",
+          "dettagli": "Pranzo con Monjayaki cotto sulla piastra al tavolo",
+          "maps_provider": "google",
+          "maps_query": "Tsukishima Monja Street"
+        },
+        {
+          "ora": "13:30",
+          "ora_fine": "17:00",
+          "tipo": "attivita",
+          "attivita": "MoN Takanawa",
+          "dettagli": "Museum of Narratives di Kengo Kuma in legno sostenibile",
+          "maps_provider": "google",
+          "maps_query": "MoN Takanawa"
+        },
+        {
+          "ora": "17:00",
+          "ora_fine": "19:15",
+          "tipo": "attivita",
+          "attivita": "Zojoji Temple & Tokyo Tower",
+          "dettagli": "Tempio storico con la torre illuminata sullo sfondo",
+          "maps_provider": "google",
+          "maps_query": "Zojoji Temple & Tokyo Tower"
+        }
+      ],
+      "todo_list": []
+    },
+    {
+      "giorno": 10,
+      "data": "2026-08-07",
+      "citta": "Tokyo",
+      "paese": "JP",
+      "fase": "🇯🇵 Tokyo",
+      "titolo": "Jimbocho Book Town, Prelievo Contanti & Anime Bon Odori",
+      "focus_culinario": "Street food del matsuri a Kanda Myojin (Tako Senbei, Yakisoba)",
+      "tabella_oraria": [
+        {
+          "ora": "09:30",
+          "ora_fine": "12:30",
+          "tipo": "compito",
+          "attivita": "Shopping Shinjuku & PRELIEVO",
+          "dettagli": "Prelievo OBBLIGATORIO ¥70.000-80.000/pp da 7-Eleven",
+          "maps_provider": "google",
+          "maps_query": "Shopping Shinjuku & PRELIEVO"
+        },
+        {
+          "ora": "14:20",
+          "ora_fine": "16:30",
+          "tipo": "attivita",
+          "attivita": "Jimbocho Book Town",
+          "dettagli": "Librerie usate e botteghe di stampe xilografiche Ukiyo-e",
+          "maps_provider": "google",
+          "maps_query": "Jimbocho Book Town"
+        },
+        {
+          "ora": "17:00",
+          "ora_fine": "21:00",
+          "tipo": "festival",
+          "attivita": "Kanda Myojin Noryo Matsuri",
+          "dettagli": "Festival estivo pop/anime. Acquisto IT Omamori per smartphone",
+          "maps_provider": "google",
+          "maps_query": "Kanda Myojin Noryo Matsuri"
+        }
+      ],
+      "todo_list": [
+        {
+          "testo": "Effettuare il prelievo contanti da 7-Eleven prima delle montagne",
+          "fatto": false
+        }
+      ]
+    },
+    {
+      "giorno": 11,
+      "data": "2026-08-08",
+      "citta": "Tokyo",
+      "paese": "JP",
+      "fase": "🇯🇵 Tokyo",
+      "titolo": "La Tokyo Storica, Udon d'Autore & Lanterne Tanabata",
+      "focus_culinario": "Tamago Sando (Kayaba Coffee), Kamachiku Udon e street food ad Asagaya",
+      "tabella_oraria": [
+        {
+          "ora": "09:30",
+          "ora_fine": "11:30",
+          "tipo": "pasto",
+          "attivita": "Yanaka Shitamachi",
+          "dettagli": "Quartiere storico + colazione Tamago Sando da Kayaba Coffee",
+          "maps_provider": "google",
+          "maps_query": "Yanaka Shitamachi"
+        },
+        {
+          "ora": "11:30",
+          "ora_fine": "13:00",
+          "tipo": "pasto",
+          "attivita": "Kamachiku Udon",
+          "dettagli": "Udon artigianali in un antico magazzino del 1915",
+          "maps_provider": "google",
+          "maps_query": "Kamachiku Udon"
+        },
+        {
+          "ora": "13:30",
+          "ora_fine": "15:30",
+          "tipo": "attivita",
+          "attivita": "Nezu Museum (Omotesando)",
+          "dettagli": "Museo d'arte con immenso giardino zen collinare",
+          "maps_provider": "google",
+          "maps_query": "Nezu Museum (Omotesando)"
+        },
+        {
+          "ora": "13:30",
+          "ora_fine": "15:30",
+          "tipo": "attivita",
+          "attivita": "OPZ: Asakura Museum of Sculpture",
+          "dettagli": "Alternativa a Nezu Museum. Portare calzini puliti per tatami",
+          "maps_provider": "google",
+          "maps_query": "Asakura Museum of Sculpture"
+        },
+        {
+          "ora": "19:00",
+          "ora_fine": "21:30",
+          "tipo": "festival",
+          "attivita": "Asagaya Tanabata Matsuri",
+          "dettagli": "Sfilata di gigantesche sculture in cartapesta fatte a mano",
+          "maps_provider": "google",
+          "maps_query": "Asagaya Tanabata Matsuri"
+        }
+      ],
+      "todo_list": [
+        {
+          "testo": "Portare calzini puliti nello zaino per i templi/musei su tatami",
+          "fatto": false
+        }
+      ]
+    },
+    {
+      "giorno": 12,
+      "data": "2026-08-09",
+      "citta": "Tokyo",
+      "paese": "JP",
+      "fase": "🇯🇵 Tokyo",
+      "titolo": "Spedizione Bagagli, Tempio dei Gatti & La 'Piccola Europa'",
+      "focus_culinario": "Budino all'uovo Toyonchi no Tamago e matcha da Kosoan",
+      "tabella_oraria": [
+        {
+          "ora": "08:30",
+          "ora_fine": "09:30",
+          "tipo": "compito",
+          "attivita": "SPEDIZIONE BAGAGLI (Yamato)",
+          "dettagli": "Consegna valigie a Yamato Hyakunincho per Osaka S-Presso West",
+          "maps_provider": "google",
+          "maps_query": "SPEDIZIONE BAGAGLI (Yamato)"
+        },
+        {
+          "ora": "10:00",
+          "ora_fine": "11:30",
+          "tipo": "attivita",
+          "attivita": "Gotokuji Temple",
+          "dettagli": "Il tempio dei gatti portafortuna Maneki-Neko",
+          "maps_provider": "google",
+          "maps_query": "Gotokuji Temple"
+        },
+        {
+          "ora": "12:00",
+          "ora_fine": "14:00",
+          "tipo": "attivita",
+          "attivita": "Musashi-Koyama Palm",
+          "dettagli": "Shotengai coperto lunghissimo + budino Toyonchi no Tamago",
+          "maps_provider": "google",
+          "maps_query": "Musashi-Koyama Palm"
+        },
+        {
+          "ora": "15:30",
+          "ora_fine": "18:30",
+          "tipo": "attivita",
+          "attivita": "Jiyugaoka & Kosoan",
+          "dettagli": "Quartiere 'Little Europe' + matcha da Kosoan in antica casa in legno",
+          "maps_provider": "google",
+          "maps_query": "Jiyugaoka & Kosoan"
+        }
+      ],
+      "todo_list": [
+        {
+          "testo": "Spedire le valigie grandi da Yamato Hyakunincho a Osaka",
+          "fatto": true
+        },
+        {
+          "testo": "Inviare mail all'hotel di Osaka per autorizzare la ricezione dei bagagli",
+          "fatto": false
+        }
+      ]
+    },
+    {
+      "giorno": 13,
+      "data": "2026-08-10",
+      "citta": "Kanazawa",
+      "paese": "JP",
+      "fase": "🏔️ Alpi Giapponesi",
+      "titolo": "Shinkansen verso Kanazawa & Il Quartiere dei Samurai",
+      "focus_culinario": "Kanazawa Oden o Katsu-don a Katamachi",
+      "tabella_oraria": [
+        {
+          "ora": "10:21",
+          "ora_fine": "12:30",
+          "tipo": "trasporto",
+          "attivita": "Shinkansen Kagayaki 527",
+          "dettagli": "Omiya -> Kanazawa (Carrozza 6, Posti 5-A, 5-B, PNR: E32724)",
+          "maps_provider": "google",
+          "maps_query": "Shinkansen Kagayaki 527"
+        },
+        {
+          "ora": "15:00",
+          "ora_fine": "16:30",
+          "tipo": "attivita",
+          "attivita": "Nagamachi Samurai District",
+          "dettagli": "Canali d'acqua, muri di terra battuta e Nomura Samurai House",
+          "maps_provider": "google",
+          "maps_query": "Nagamachi Samurai District"
+        },
+        {
+          "ora": "16:30",
+          "ora_fine": "19:00",
+          "tipo": "attivita",
+          "attivita": "Higashi Chaya District",
+          "dettagli": "Quartiere storico delle geishe tra case in legno e lanterne",
+          "maps_provider": "google",
+          "maps_query": "Higashi Chaya District"
+        },
+        {
+          "ora": "21:30",
+          "ora_fine": "23:00",
+          "tipo": "alloggio",
+          "attivita": "Onsen Hotel Vista Kanazawa",
+          "dettagli": "Bagno termale pubblico (usare tattoo cover stickers)",
+          "maps_provider": "google",
+          "maps_query": "Onsen Hotel Vista Kanazawa"
+        }
+      ],
+      "todo_list": []
+    },
+    {
+      "giorno": 14,
+      "data": "2026-08-11",
+      "citta": "Kanazawa",
+      "paese": "JP",
+      "fase": "🏔️ Alpi Giapponesi",
+      "titolo": "Giardini Imperiali all'Alba & Design Zen Contemporaneo",
+      "focus_culinario": "Brunch di pesce fresco cotto al momento da Omicho Market",
+      "tabella_oraria": [
+        {
+          "ora": "07:00",
+          "ora_fine": "08:30",
+          "tipo": "attivita",
+          "attivita": "Kenroku-en all'alba",
+          "dettagli": "Uno dei tre giardini più belli del Giappone (¥320)",
+          "maps_provider": "google",
+          "maps_query": "Kenroku-en all'alba"
+        },
+        {
+          "ora": "10:45",
+          "ora_fine": "12:30",
+          "tipo": "pasto",
+          "attivita": "Omicho Market",
+          "dettagli": "Storico mercato del pesce e street food",
+          "maps_provider": "google",
+          "maps_query": "Omicho Market"
+        },
+        {
+          "ora": "13:45",
+          "ora_fine": "15:00",
+          "tipo": "attivita",
+          "attivita": "D.T. Suzuki Museum",
+          "dettagli": "Architettura zen di specchi d'acqua e cemento meditativo",
+          "maps_provider": "google",
+          "maps_query": "D.T. Suzuki Museum"
+        },
+        {
+          "ora": "15:00",
+          "ora_fine": "16:45",
+          "tipo": "attivita",
+          "attivita": "21st Century Museum",
+          "dettagli": "Mostra 'Ti intralci per strada?' ore 15:00 (Ticket ID: 160760XS1250)",
+          "maps_provider": "google",
+          "maps_query": "21st Century Museum"
+        }
+      ],
+      "todo_list": [
+        {
+          "testo": "Presentarsi al 21st Century Museum alle 15:00 con Ticket ID 160760XS1250",
+          "fatto": true
+        }
+      ]
+    },
+    {
+      "giorno": 15,
+      "data": "2026-08-12",
+      "citta": "Takayama",
+      "paese": "JP",
+      "fase": "🏔️ Alpi Giapponesi",
+      "titolo": "Attraverso le Alpi, Takayama & Hida Beef Yakiniku",
+      "focus_culinario": "Hida Beef Yakiniku (Maruaki / Ajikura Tengoku) e Yonaki Soba gratis in hotel",
+      "tabella_oraria": [
+        {
+          "ora": "11:10",
+          "ora_fine": "13:25",
+          "tipo": "trasporto",
+          "attivita": "Nohi Bus Kanazawa -> Takayama",
+          "dettagli": "West Exit Stop 4 (Carrozza 1, Posti 3-A/3-B, PNR: 07122010861)",
+          "maps_provider": "google",
+          "maps_query": "Nohi Bus Kanazawa -> Takayama"
+        },
+        {
+          "ora": "17:00",
+          "ora_fine": "19:00",
+          "tipo": "attivita",
+          "attivita": "Sanmachi Suji (Centro Storico)",
+          "dettagli": "Case dei mercanti illuminate dalle lanterne calde",
+          "maps_provider": "google",
+          "maps_query": "Sanmachi Suji (Centro Storico)"
+        },
+        {
+          "ora": "19:30",
+          "ora_fine": "21:30",
+          "tipo": "pasto",
+          "attivita": "Cena Hida Beef Yakiniku",
+          "dettagli": "Maruaki o Ajikura Tengoku (iscriversi in lista alle 17:30)",
+          "maps_provider": "google",
+          "maps_query": "Cena Hida Beef Yakiniku"
+        },
+        {
+          "ora": "21:30",
+          "ora_fine": "23:00",
+          "tipo": "pasto",
+          "attivita": "Onsen Privato Takayama Ouan",
+          "dettagli": "3 vasche private esterne (kashikiri) gratis + ramen notturno in lobby",
+          "maps_provider": "google",
+          "maps_query": "Onsen Privato Takayama Ouan"
+        }
+      ],
+      "todo_list": []
+    },
+    {
+      "giorno": 16,
+      "data": "2026-08-13",
+      "citta": "Takayama",
+      "paese": "JP",
+      "fase": "🏔️ Alpi Giapponesi",
+      "titolo": "Mercati Mattutini, Villaggi di Paglia & Templi nella Foresta",
+      "focus_culinario": "Degustazione sake con tazzina ochoko e sushi di Hida su cracker di riso",
+      "tabella_oraria": [
+        {
+          "ora": "08:30",
+          "ora_fine": "11:00",
+          "tipo": "pasto",
+          "attivita": "Miyagawa Morning Market",
+          "dettagli": "Mercato lungo il fiume, degustazione sake nei distributori Funasaka",
+          "maps_provider": "google",
+          "maps_query": "Miyagawa Morning Market"
+        },
+        {
+          "ora": "11:00",
+          "ora_fine": "12:30",
+          "tipo": "attivita",
+          "attivita": "Hida Folk Village",
+          "dettagli": "Case tradizionali in legno con tetti di paglia Gassho-zukuri (¥700)",
+          "maps_provider": "google",
+          "maps_query": "Hida Folk Village"
+        },
+        {
+          "ora": "12:30",
+          "ora_fine": "13:30",
+          "tipo": "attivita",
+          "attivita": "Takayama Jinya",
+          "dettagli": "Antico palazzo del governo dello Shogun climatizzato",
+          "maps_provider": "google",
+          "maps_query": "Takayama Jinya"
+        },
+        {
+          "ora": "14:30",
+          "ora_fine": "17:00",
+          "tipo": "attivita",
+          "attivita": "Higashiyama Walking Course",
+          "dettagli": "Percorso nella foresta tra templi buddisti silenziosi",
+          "maps_provider": "google",
+          "maps_query": "Higashiyama Walking Course"
+        }
+      ],
+      "todo_list": []
+    },
+    {
+      "giorno": 17,
+      "data": "2026-08-14",
+      "citta": "Gujo",
+      "paese": "JP",
+      "fase": "🏔️ Alpi Giapponesi",
+      "titolo": "L'Inizio del Gujo Odori & La Notte Bianca dell'Obon ⭐",
+      "focus_culinario": "Keichan Chicken e spiedini di pesce Ayu grigliati al carbone",
+      "tabella_oraria": [
+        {
+          "ora": "12:00",
+          "ora_fine": "13:21",
+          "tipo": "trasporto",
+          "attivita": "Nohi Bus Takayama -> Gujo IC",
+          "dettagli": "Bus 13212 (Posti 01A/01B, PNR: 116572765)",
+          "maps_provider": "google",
+          "maps_query": "Nohi Bus Takayama -> Gujo IC"
+        },
+        {
+          "ora": "13:30",
+          "ora_fine": "15:30",
+          "tipo": "trasporto",
+          "attivita": "Pick-up Jeenie & Accoglienza",
+          "dettagli": "Trasferimento privato a Jeenie's Inn Fukado",
+          "maps_provider": "google",
+          "maps_query": "Pick-up Jeenie & Accoglienza"
+        },
+        {
+          "ora": "17:00",
+          "ora_fine": "19:30",
+          "tipo": "pasto",
+          "attivita": "Centro Gujo & Noleggio Geta",
+          "dettagli": "Acquisto/Noleggio zoccoli di legno geta e cena alle yatai",
+          "maps_provider": "google",
+          "maps_query": "Centro Gujo & Noleggio Geta"
+        },
+        {
+          "ora": "20:00",
+          "ora_fine": "02:00+",
+          "tipo": "festival",
+          "attivita": "TETSUYA ODORI (Notte Bianca #1)",
+          "dettagli": "Danze popolari in cerchio per le strade. Rientro con treni speciali Nagaragawa",
+          "maps_provider": "google",
+          "maps_query": "TETSUYA ODORI (Notte Bianca #1)"
+        }
+      ],
+      "todo_list": [
+        {
+          "testo": "Avere banconote da ¥1.000 e spicci per le bancarelle yatai",
+          "fatto": false
+        },
+        {
+          "testo": "Fotografare l'orario dei treni notturni speciali a Fukado",
+          "fatto": false
+        }
+      ]
+    },
+    {
+      "giorno": 18,
+      "data": "2026-08-15",
+      "citta": "Gujo",
+      "paese": "JP",
+      "fase": "🏔️ Alpi Giapponesi",
+      "titolo": "Recupero, Tuffi dal Ponte & Il Castello di Gujo",
+      "focus_culinario": "Soba fresca di grano saraceno e dolci artigianali in centro",
+      "tabella_oraria": [
+        {
+          "ora": "11:00",
+          "ora_fine": "12:30",
+          "tipo": "attivita",
+          "attivita": "Igawa Komichi (Igawa Lane)",
+          "dettagli": "Canale di acqua sorgiva con carpe Koi e mulino Sogi-suisha",
+          "maps_provider": "google",
+          "maps_query": "Igawa Komichi (Igawa Lane)"
+        },
+        {
+          "ora": "12:30",
+          "ora_fine": "14:30",
+          "tipo": "attivita",
+          "attivita": "Yanaka-dori & Cibo Fake",
+          "dettagli": "Botteghe di campioni alimentari in cera (Sample Village Iwasaki)",
+          "maps_provider": "google",
+          "maps_query": "Yanaka-dori & Cibo Fake"
+        },
+        {
+          "ora": "14:30",
+          "ora_fine": "16:00",
+          "tipo": "attivita",
+          "attivita": "Tuffi dal Ponte Yoshida",
+          "dettagli": "I tradizionali tuffi estivi dei ragazzi locali nel fiume",
+          "maps_provider": "google",
+          "maps_query": "Tuffi dal Ponte Yoshida"
+        },
+        {
+          "ora": "16:00",
+          "ora_fine": "18:00",
+          "tipo": "attivita",
+          "attivita": "Gujo Hachiman Castle",
+          "dettagli": "Castello in legno panoramico sulla gola montana",
+          "maps_provider": "google",
+          "maps_query": "Gujo Hachiman Castle"
+        },
+        {
+          "ora": "20:00",
+          "ora_fine": "23:00",
+          "tipo": "attivita",
+          "attivita": "SKIP: Tetsuya Odori #2",
+          "dettagli": "Riposo in alloggio per recupero sonno profondo pre-viaggio",
+          "maps_provider": "google",
+          "maps_query": "Jeenie's Inn Fukado"
+        }
+      ],
+      "todo_list": [
+        {
+          "testo": "Far prenotare a Jeenie un taxi per l'indomani alle 10:30",
+          "fatto": false
+        }
+      ]
+    },
+    {
+      "giorno": 19,
+      "data": "2026-08-16",
+      "citta": "Osaka",
+      "paese": "JP",
+      "fase": "🐙 Osaka",
+      "titolo": "Rientro ad Osaka & I Neon Cyberpunk di Dotonbori",
+      "focus_culinario": "Takoyaki sul canale di Dotonbori e spiedini Kushikatsu a Ura-Namba",
+      "tabella_oraria": [
+        {
+          "ora": "10:30",
+          "ora_fine": "11:10",
+          "tipo": "trasporto",
+          "attivita": "Taxi per Gujo IC",
+          "dettagli": "Trasferimento con il taxi prenotato da Jeenie (¥1.000-1.500)",
+          "maps_provider": "google",
+          "maps_query": "Taxi per Gujo IC"
+        },
+        {
+          "ora": "11:26",
+          "ora_fine": "15:57",
+          "tipo": "trasporto",
+          "attivita": "Kintetsu Bus Gujo IC -> Osaka",
+          "dettagli": "Arrivo a Namba OCAT (Posti 10 & 9, PNR: 07162002992). Traffico Obon!",
+          "maps_provider": "google",
+          "maps_query": "Kintetsu Bus Gujo IC -> Osaka"
+        },
+        {
+          "ora": "16:30",
+          "ora_fine": "17:00",
+          "tipo": "alloggio",
+          "attivita": "Check-in Hotel S-Presso West",
+          "dettagli": "Le valigie Yamato inviate da Tokyo saranno già in appartamento",
+          "maps_provider": "google",
+          "maps_query": "Check-in Hotel S-Presso West"
+        },
+        {
+          "ora": "19:00",
+          "ora_fine": "19:45",
+          "tipo": "attivita",
+          "attivita": "Hozenji Yokocho",
+          "dettagli": "Vicolo storico con statua Fudo Myoo ricoperta di muschio",
+          "maps_provider": "google",
+          "maps_query": "Hozenji Yokocho"
+        },
+        {
+          "ora": "19:45",
+          "ora_fine": "21:00",
+          "tipo": "attivita",
+          "attivita": "Dotonbori & Glico Man",
+          "dettagli": "Neon cyberpunk e granchio meccanico rotante",
+          "maps_provider": "google",
+          "maps_query": "Dotonbori & Glico Man"
+        }
+      ],
+      "todo_list": []
+    },
+    {
+      "giorno": 20,
+      "data": "2026-08-17",
+      "citta": "Osaka",
+      "paese": "JP",
+      "fase": "🐙 Osaka",
+      "titolo": "Nara Full Day: Cervi Sacri & Foresta UNESCO",
+      "focus_culinario": "Pranzo a Naramachi e Yakiniku/Horumon BBQ sotto le rotaie a Tsuruhashi",
+      "tabella_oraria": [
+        {
+          "ora": "08:30",
+          "ora_fine": "09:15",
+          "tipo": "trasporto",
+          "attivita": "Treno Kintetsu Namba -> Nara",
+          "dettagli": "Rapid Express sulla Kintetsu Line (40 min)",
+          "maps_provider": "google",
+          "maps_query": "Treno Kintetsu Namba -> Nara"
+        },
+        {
+          "ora": "09:20",
+          "ora_fine": "09:35",
+          "tipo": "trasporto",
+          "attivita": "Bus per Kasuga Taisha",
+          "dettagli": "Bus dal terminal Kintetsu Nara per evitare la salita a piedi",
+          "maps_provider": "google",
+          "maps_query": "Bus per Kasuga Taisha"
+        },
+        {
+          "ora": "09:40",
+          "ora_fine": "12:00",
+          "tipo": "attivita",
+          "attivita": "Kasugayama Primeval Forest",
+          "dettagli": "Foresta vergine UNESCO. Bere molto Pocari Sweat (caldo 35°C!)",
+          "maps_provider": "google",
+          "maps_query": "Kasugayama Primeval Forest"
+        },
+        {
+          "ora": "13:30",
+          "ora_fine": "15:30",
+          "tipo": "attivita",
+          "attivita": "Naramachi & Koshi-no-Ie",
+          "dettagli": "Visita gratuita alla residenza mercantile restaurata",
+          "maps_provider": "google",
+          "maps_query": "Naramachi & Koshi-no-Ie"
+        },
+        {
+          "ora": "15:30",
+          "ora_fine": "17:30",
+          "tipo": "attivita",
+          "attivita": "Parco di Nara & Cervi",
+          "dettagli": "Interazione con i cervi sacri e Shika-senbei",
+          "maps_provider": "google",
+          "maps_query": "Parco di Nara & Cervi"
+        },
+        {
+          "ora": "18:00",
+          "ora_fine": "19:30",
+          "tipo": "pasto",
+          "attivita": "Cena Yakiniku a Tsuruhashi",
+          "dettagli": "Little Korea di Osaka, vicoli fumosi con barbecue Yakiniku",
+          "maps_provider": "google",
+          "maps_query": "Cena Yakiniku a Tsuruhashi"
+        }
+      ],
+      "todo_list": [
+        {
+          "testo": "Acquistare integratori Pocari Sweat prima della foresta",
+          "fatto": false
+        }
+      ]
+    },
+    {
+      "giorno": 21,
+      "data": "2026-08-18",
+      "citta": "Osaka",
+      "paese": "JP",
+      "fase": "🐙 Osaka",
+      "titolo": "Arte Sotterranea, Shopping Vintage & Tramonto a 300 Metri",
+      "focus_culinario": "Pranzo all'aperto sul fiume Okawa e cena tipica a Tennoji",
+      "tabella_oraria": [
+        {
+          "ora": "10:00",
+          "ora_fine": "12:00",
+          "tipo": "attivita",
+          "attivita": "National Museum of Art (NMAO)",
+          "dettagli": "Capolavoro sotterraneo in acciaio di César Pelli",
+          "maps_provider": "google",
+          "maps_query": "National Museum of Art (NMAO)"
+        },
+        {
+          "ora": "13:30",
+          "ora_fine": "16:30",
+          "tipo": "attivita",
+          "attivita": "Nakazakicho Vintage Tour",
+          "dettagli": "Vicoli tra vecchie case nagaya convertite in negozi vintage e caffè",
+          "maps_provider": "google",
+          "maps_query": "Nakazakicho Vintage Tour"
+        },
+        {
+          "ora": "18:00",
+          "ora_fine": "20:00",
+          "tipo": "attivita",
+          "attivita": "Abeno Harukas 300",
+          "dettagli": "Tramonto infuocato a 300 metri d'altezza sulla baia di Osaka",
+          "maps_provider": "google",
+          "maps_query": "Abeno Harukas 300"
+        }
+      ],
+      "todo_list": [
+        {
+          "testo": "Verificare orari del tramonto per salire ad Abeno Harukas in tempo",
+          "fatto": false
+        }
+      ]
+    },
+    {
+      "giorno": 22,
+      "data": "2026-08-19",
+      "citta": "Osaka",
+      "paese": "JP",
+      "fase": "🐙 Osaka",
+      "titolo": "Il Tempio del Leone, Santuari Shintoisti & Retrogaming",
+      "focus_culinario": "Spiedini di pesce fresco a Kuromon e cena d'addio riservata con Tabelog",
+      "tabella_oraria": [
+        {
+          "ora": "08:30",
+          "ora_fine": "09:00",
+          "tipo": "attivita",
+          "attivita": "Namba Yasaka Shrine",
+          "dettagli": "Gigantesca testa di leone in pietra alta 12 metri",
+          "maps_provider": "google",
+          "maps_query": "Namba Yasaka Shrine"
+        },
+        {
+          "ora": "09:15",
+          "ora_fine": "11:00",
+          "tipo": "pasto",
+          "attivita": "Kuromon Market / Sumiyoshi",
+          "dettagli": "OPZ A: Kuromon per street food | OPZ B: Sumiyoshi Taisha per quiete sul ponte rosso",
+          "maps_provider": "google",
+          "maps_query": "Kuromon Market / Sumiyoshi"
+        },
+        {
+          "ora": "11:30",
+          "ora_fine": "15:30",
+          "tipo": "attivita",
+          "attivita": "Den Den Town & Orange Street",
+          "dettagli": "OPZ A: Waterfront e Acquario Kaiyukan | OPZ B: Den Den Town retrogaming (Super Nintendo) e Orange Street design",
+          "maps_provider": "google",
+          "maps_query": "Den Den Town & Orange Street"
+        },
+        {
+          "ora": "19:30",
+          "ora_fine": "21:30",
+          "tipo": "trasporto",
+          "attivita": "CENA D'ADDIO AD OSAKA",
+          "dettagli": "No code a Ichiran! Tavolo riservato su Tabelog in un Izakaya a Namba",
+          "maps_provider": "google",
+          "maps_query": "CENA D'ADDIO AD OSAKA"
+        }
+      ],
+      "todo_list": [
+        {
+          "testo": "Chiudere gli zaini e preparare passaporti per il volo di domani",
+          "fatto": false
+        }
+      ]
+    },
+    {
+      "giorno": 23,
+      "data": "2026-08-20",
+      "citta": "Roma",
+      "paese": "JP",
+      "fase": "✈️ Rientro",
+      "titolo": "Volo di Rientro all'Alba & Transito PEK",
+      "focus_culinario": "Pasto a bordo Air China",
+      "tabella_oraria": [
+        {
+          "ora": "05:00",
+          "tipo": "alloggio",
+          "attivita": "Sveglia rigorosa",
+          "dettagli": "Preparazione finale e check-out entro le 05:35",
+          "maps_provider": "google",
+          "maps_query": "Sveglia rigorosa"
+        },
+        {
+          "ora": "06:00",
+          "tipo": "attivita",
+          "attivita": "Nankai Rapi:t Namba -> KIX",
+          "dettagli": "Arrivo all'aeroporto di Kansai ore 06:40 (Terminal 1)",
+          "maps_provider": "google",
+          "maps_query": "Nankai Rapi:t Namba -> KIX"
+        },
+        {
+          "ora": "09:05",
+          "ora_fine": "11:25",
+          "tipo": "trasporto",
+          "attivita": "Volo CA 162 KIX -> PEK",
+          "dettagli": "Durata 3h 20m. Richiedere adesivo Priority Connection",
+          "maps_provider": "google",
+          "maps_query": "Volo CA 162 KIX -> PEK"
+        },
+        {
+          "ora": "11:25",
+          "ora_fine": "13:20",
+          "tipo": "attivita",
+          "attivita": "TRANSITO PECHINO (1h 55m)",
+          "dettagli": "Terminal 3-E. Seguire cartelli blu International Transfer. Power bank <100Wh!",
+          "maps_provider": "google",
+          "maps_query": "TRANSITO PECHINO (1h 55m)"
+        },
+        {
+          "ora": "13:20",
+          "ora_fine": "18:30",
+          "tipo": "trasporto",
+          "attivita": "Volo CA 939 PEK -> FCO",
+          "dettagli": "Arrivo a Roma FCO in serata",
+          "maps_provider": "google",
+          "maps_query": "Volo CA 939 PEK -> FCO"
+        }
+      ],
+      "todo_list": [
+        {
+          "testo": "Acquistare biglietti Nankai Rapi:t nei giorni precedenti",
+          "fatto": true
+        },
+        {
+          "testo": "Rileggere il Protocollo Transito Pechino prima dell'atterraggio",
+          "fatto": false
+        }
+      ]
+    }
+  ],
+  "protocolli": {
+    "onsen": {
+      "titolo": "♨️ Protocollo Onsen & Tattoo Cover",
+      "regole": [
+        "Spogliarsi totalmente nello spogliatoio (costume vietato). Portare solo il piccolo asciugamano tenugui.",
+        "Lavarsi e sciacquarsi accuratamente seduti sugli sgabelli di plastica prima di entrare in acqua.",
+        "Entrare lentamente in vasca senza mai immergere l'asciugamano nell'acqua termale.",
+        "Hotel Vista Kanazawa: usare i tattoo cover stickers impermeabili acquistabili da Matsumoto Kiyoshi.",
+        "Takayama Ouan: 3 vasche private esterne (kashikiri) prenotabili gratis alla reception per chi ha tatuaggi."
+      ]
+    },
+    "monjayaki": {
+      "titolo": "🍳 Tecnica della Diga (Dote) per il Monjayaki",
+      "passaggi": [
+        "Versare sulla piastra calda solo gli ingredienti solidi trattenendo il brodo liquido nella ciotola.",
+        "Sminuzzare e grigliare gli ingredienti solidi con le due spatole metalliche (hera).",
+        "Formare una ciambella circolare chiusa (la diga / dote) con un ampio spazio al centro.",
+        "Versare lentamente metà del brodo al centro della diga e attendere che addensi.",
+        "Mescolare il liquido con le pareti della diga, poi aggiungere il brodo rimasto e appiattire.",
+        "Mangiare direttamente dalla piastra con le mini-spatoline (koko-hera) grattando la crosticina (okage)."
+      ]
+    },
+    "pechino_transito": {
+      "titolo": "✈️ Protocollo Transito Stretto a Pechino PEK (1h 55m)",
+      "istruzioni": [
+        "Al check-in di Osaka KIX richiedere Thru-check dei bagagli fino a Roma FCO e adesivo Priority Connection.",
+        "All'atterraggio al Terminal 3-E seguire esclusivamente i cartelli blu International Transfer / 24-Hour Transit (國際轉機).",
+        "Controllo sicurezza: i Power Bank devono avere la capacità stampata chiaramente dal produttore e NON superare i 100Wh (27.000 mAh), altrimenti vengono confiscati.",
+        "Presentare passaporto e seconda carta d'imbarco al varco transiti per il timbro rapido."
+      ]
+    },
+    "geta_gujo": {
+      "titolo": "👟 Uso dei Geta in Legno al Gujo Odori",
+      "consigli": [
+        "I geta tradizionali da ballo devono calzare corti (il tallone sporge di 1-2 cm dal bordo di legno).",
+        "Applicare cerotti protettivi in silicone tra l'alluce e il secondo dito per prevenire le vesciche da sfregamento dell'infradito (hanao).",
+        "Tenere sempre un paio di sneakers leggere nello zaino di ricambio se i piedi diventano doloranti."
+      ]
+    },
+    "matcha_rakuutei": {
+      "titolo": "🍵 Etichetta Degustazione Matcha (Shinjuku Gyoen / Rakuutei)",
+      "regole": [
+        "Togliersi le scarpe prima di salire sul tatami (sistemarle ordinate verso l'esterno).",
+        "Mangiare tutto il dolcetto wagashi prima di bere il tè per bilanciare l'amaro del matcha.",
+        "Prendere la tazza con la mano destra e appoggiarla sul palmo della mano sinistra.",
+        "Ruotare la tazza in senso orario di 90 gradi per evitare di bere dal lato frontale decorato.",
+        "Bevete in 2-3 sorseggi completando l'ultimo con un leggero rumore di aspirazione (suikomi).",
+        "Pulire il bordo con le dita della mano destra, ruotare la tazza in senso antiorario e posarla sul tatami."
+      ]
+    }
+  },
+  "frasario": [
+    {
+      "categoria": "Cortesia",
+      "it": "Buongiorno (mattina)",
+      "jp": "おはようございます",
+      "pronuncia": "Ohayō gozaimasu",
+      "kr": "안녕하세요",
+      "kr_pronuncia": "Annyeonghaseyo"
+    },
+    {
+      "categoria": "Cortesia",
+      "it": "Buongiorno / Buonasera (giorno)",
+      "jp": "こんにちは",
+      "pronuncia": "Konnichiwa",
+      "kr": "안녕하세요",
+      "kr_pronuncia": "Annyeonghaseyo"
+    },
+    {
+      "categoria": "Cortesia",
+      "it": "Buonasera (sera)",
+      "jp": "こんばんは",
+      "pronuncia": "Konbanwa",
+      "kr": "안녕하세요",
+      "kr_pronuncia": "Annyeonghaseyo"
+    },
+    {
+      "categoria": "Cortesia",
+      "it": "Grazie (educato)",
+      "jp": "ありがとうございます",
+      "pronuncia": "Arigatō gozaimasu",
+      "kr": "감사합니다",
+      "kr_pronuncia": "Gamsahamnida"
+    },
+    {
+      "categoria": "Cortesia",
+      "it": "Mi scusi / Permesso",
+      "jp": "すみません",
+      "pronuncia": "Sumimasen",
+      "kr": "실례합니다",
+      "kr_pronuncia": "Sillyehamnida"
+    },
+    {
+      "categoria": "Cortesia",
+      "it": "Prego / Di niente",
+      "jp": "どういたしまして",
+      "pronuncia": "Dō itashimashite",
+      "kr": "천만에요",
+      "kr_pronuncia": "Cheonmaneyo"
+    },
+    {
+      "categoria": "Cortesia",
+      "it": "Arrivederci",
+      "jp": "さようなら",
+      "pronuncia": "Sayōnara",
+      "kr": "안녕히 계세요",
+      "kr_pronuncia": "Annyeonghi gyeseyo"
+    },
+    {
+      "categoria": "Cortesia",
+      "it": "Sì / No",
+      "jp": "はい / いいえ",
+      "pronuncia": "Hai / Iie",
+      "kr": "네 / 아니요",
+      "kr_pronuncia": "Ne / Aniyo"
+    },
+    {
+      "categoria": "Cibo",
+      "it": "Il conto, per favore",
+      "jp": "お会計お願いします",
+      "pronuncia": "Okaikei onegaishimasu",
+      "kr": "계산해 주세요",
+      "kr_pronuncia": "Gyesanhae juseyo"
+    },
+    {
+      "categoria": "Cibo",
+      "it": "Questo, per favore",
+      "jp": "これをください",
+      "pronuncia": "Kore o kudasai",
+      "kr": "이것 주세요",
+      "kr_pronuncia": "Igeot juseyo"
+    },
+    {
+      "categoria": "Cibo",
+      "it": "Acqua, per favore",
+      "jp": "お水をください",
+      "pronuncia": "Omizu o kudasai",
+      "kr": "물 주세요",
+      "kr_pronuncia": "Mul juseyo"
+    },
+    {
+      "categoria": "Cibo",
+      "it": "Delizioso!",
+      "jp": "おいしい！",
+      "pronuncia": "Oishii!",
+      "kr": "맛있어요!",
+      "kr_pronuncia": "Masisseoyo!"
+    },
+    {
+      "categoria": "Cibo",
+      "it": "Menu in inglese, per favore",
+      "jp": "英語のメニューはありますか？",
+      "pronuncia": "Eigo no menyū wa arimasu ka?",
+      "kr": "영어 메뉴판 있나요?",
+      "kr_pronuncia": "Yeongeot menyupan innayo?"
+    },
+    {
+      "categoria": "Cibo",
+      "it": "Buon appetito!",
+      "jp": "いただきます！",
+      "pronuncia": "Itadakimasu!",
+      "kr": "잘 먹겠습니다!",
+      "kr_pronuncia": "Jal meokgetseumnida!"
+    },
+    {
+      "categoria": "Cibo",
+      "it": "Non posso mangiare carne/piccante",
+      "jp": "肉/辛いものは食べられません",
+      "pronuncia": "Niku/Karai mono wa taberaremasen",
+      "kr": "고기/매운 것 못 먹어요",
+      "kr_pronuncia": "Gogi/Maeun geot mot meogeoyo"
+    },
+    {
+      "categoria": "Cibo",
+      "it": "Un altro, per favore",
+      "jp": "もうひとつください",
+      "pronuncia": "Mō hitotsu kudasai",
+      "kr": "하나 더 주세요",
+      "kr_pronuncia": "Hana deo juseyo"
+    },
+    {
+      "categoria": "Trasporti",
+      "it": "Dov'è la stazione?",
+      "jp": "駅はどこですか？",
+      "pronuncia": "Eki wa doko desu ka?",
+      "kr": "역이 어디예요?",
+      "kr_pronuncia": "Yeogi eodiyeyo?"
+    },
+    {
+      "categoria": "Trasporti",
+      "it": "Dov'è il bagno?",
+      "jp": "トイレはどこですか？",
+      "pronuncia": "Toire wa doko desu ka?",
+      "kr": "화장실이 어디예요?",
+      "kr_pronuncia": "Hwajangsiri eodiyeyo?"
+    },
+    {
+      "categoria": "Trasporti",
+      "it": "Quanto costa?",
+      "jp": "いくらですか？",
+      "pronuncia": "Ikura desu ka?",
+      "kr": "얼마예요?",
+      "kr_pronuncia": "Eolmayeyo?"
+    },
+    {
+      "categoria": "Trasporti",
+      "it": "Va a [nome luogo]?",
+      "jp": "[場所]に行きますか？",
+      "pronuncia": "[Basho] ni ikimasu ka?",
+      "kr": "[장소]에 가나요?",
+      "kr_pronuncia": "[Jangso]e ganayo?"
+    },
+    {
+      "categoria": "Trasporti",
+      "it": "Mi porti a questo indirizzo (Taxi)",
+      "jp": "この住所までお願いします",
+      "pronuncia": "Kono jūsho made onegaishimasu",
+      "kr": "이 주소로 가주세요",
+      "kr_pronuncia": "I jusoro gajuseyo"
+    },
+    {
+      "categoria": "Trasporti",
+      "it": "Fermi qui, per favore",
+      "jp": "ここで止めてください",
+      "pronuncia": "Koko de tomete kudasai",
+      "kr": "여기서 세워주세요",
+      "kr_pronuncia": "Yeogiseo sewojuseyo"
+    },
+    {
+      "categoria": "Trasporti",
+      "it": "Biglietto unico per favore",
+      "jp": "片道切符を一枚お願いします",
+      "pronuncia": "Katamichi kippu o ichimai onegaishimasu",
+      "kr": "편도 티켓 한 장 주세요",
+      "kr_pronuncia": "Pyeondo tiket han jang juseyo"
+    },
+    {
+      "categoria": "Trasporti",
+      "it": "Dov'è la fermata dell'autobus?",
+      "jp": "バス停はどこですか？",
+      "pronuncia": "Basutei wa doko desu ka?",
+      "kr": "버스 정류장이 어디예요?",
+      "kr_pronuncia": "Beoseu jeongryujangi eodiyeyo?"
+    },
+    {
+      "categoria": "Emergenze",
+      "it": "Aiuto!",
+      "jp": "助けて！",
+      "pronuncia": "Tasukete!",
+      "kr": "도와주세요!",
+      "kr_pronuncia": "Dowajuseyo!"
+    },
+    {
+      "categoria": "Emergenze",
+      "it": "Chiamate un medico",
+      "jp": "医者を呼んでください",
+      "pronuncia": "Isha o yonde kudasai",
+      "kr": "의사를 불러주세요",
+      "kr_pronuncia": "Uisareul bulleojuseyo"
+    },
+    {
+      "categoria": "Emergenze",
+      "it": "Chiamate la polizia",
+      "jp": "警察を呼んでください",
+      "pronuncia": "Keisatsu o yonde kudasai",
+      "kr": "경찰을 불러주세요",
+      "kr_pronuncia": "Gyeongchareul bulleojuseyo"
+    },
+    {
+      "categoria": "Emergenze",
+      "it": "Ho perso il mio portafoglio / passaporto",
+      "jp": "財布/パスポートをなくしました",
+      "pronuncia": "Saifu/Pasupōto o nakushimashita",
+      "kr": "지갑/여권을 잃어버렸어요",
+      "kr_pronuncia": "Jigap/Yeogwoneul ireobeoryeosseoyo"
+    },
+    {
+      "categoria": "Emergenze",
+      "it": "Non mi sento bene",
+      "jp": "気分が悪いです",
+      "pronuncia": "Kibun ga warui desu",
+      "kr": "몸이 안 좋아요",
+      "kr_pronuncia": "Momi an joayo"
+    },
+    {
+      "categoria": "Emergenze",
+      "it": "Dov'è l'ospedale?",
+      "jp": "病院はどこですか？",
+      "pronuncia": "Byōin wa doko desu ka?",
+      "kr": "병원이 어디예요?",
+      "kr_pronuncia": "Byeongwoni eodiyeyo?"
+    }
+  ],
+  "biglietti": [
+    {
+      "id": "BGL1",
+      "giorno": 8,
+      "data": "2026-08-05",
+      "nome": "teamLab Borderless",
+      "nome_locale": "チームラボボーダレス",
+      "codice": "AAAVRRLHXVKT-0001",
+      "ora_ingresso": "09:00",
+      "note": "Azabudai Hills. Presentarsi entro le 09:00."
+    },
+    {
+      "id": "BGL2",
+      "giorno": 8,
+      "data": "2026-08-05",
+      "nome": "Mori Art Museum (Ron Mueck)",
+      "nome_locale": "森美術館",
+      "codice": "2370-0029 (Maurizio) / 2370-0012 (Paola)",
+      "ora_ingresso": "16:00",
+      "note": "Roppongi Hills Mori Tower 53F."
+    },
+    {
+      "id": "BGL3",
+      "giorno": 14,
+      "data": "2026-08-11",
+      "nome": "21st Century Museum",
+      "nome_locale": "金沢21世紀美術館",
+      "codice": "160760XS1250",
+      "ora_ingresso": "15:00",
+      "note": "Kanazawa. Mostra d'arte contemporanea."
+    }
+  ]
+}

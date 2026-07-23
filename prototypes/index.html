@@ -120,7 +120,8 @@
         <div class="flex items-center space-x-2 bg-slate-950 p-1.5 rounded-xl border border-slate-800 text-xs font-semibold">
           <button onclick="setIframe('variant-a-glassmorphism.html')" id="btn-a" class="px-3 py-1.5 rounded-lg bg-amber-500 text-slate-950 transition-all">Prototipo A</button>
           <button onclick="setIframe('variant-b-tactical-passbook.html')" id="btn-b" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition-all">Prototipo B</button>
-          <button onclick="setIframe('variant-c-east-asian-editorial.html')" id="btn-c" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition-all">Prototipo C</button>
+          <button onclick="setIframe('variant-c-east-asian-editorial.html')" id="btn-c" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition-all">Variante C Originale</button>
+          <button onclick="setIframe('prototype-option-c.html')" id="btn-opt-c" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition-all">Option C (Prugna & Sakura)</button>
         </div>
       </div>
 
@@ -129,7 +130,7 @@
           <!-- Phone Notch -->
           <div class="absolute top-5 left-1/2 -translate-x-1/2 w-28 h-4 bg-slate-900 rounded-full z-50"></div>
           <!-- iframe -->
-          <iframe id="preview-iframe" src="variant-a-glassmorphism.html" class="w-full h-full rounded-[38px] bg-slate-950 border-0"></iframe>
+          <iframe id="preview-iframe" src="prototype-option-c.html" class="w-full h-full rounded-[38px] bg-slate-950 border-0"></iframe>
         </div>
       </div>
     </div>
@@ -140,9 +141,9 @@
 
     function setIframe(url) {
       document.getElementById('preview-iframe').src = url;
-      ['btn-a', 'btn-b', 'btn-c'].forEach(id => {
+      ['btn-a', 'btn-b', 'btn-c', 'btn-opt-c'].forEach(id => {
         const btn = document.getElementById(id);
-        btn.className = "px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition-all";
+        if(btn) btn.className = "px-3 py-1.5 rounded-lg text-slate-400 hover:text-slate-200 transition-all";
       });
 
       if (url.includes('variant-a')) {
@@ -151,6 +152,8 @@
         document.getElementById('btn-b').className = "px-3 py-1.5 rounded-lg bg-sky-500 text-slate-950 font-bold transition-all";
       } else if (url.includes('variant-c')) {
         document.getElementById('btn-c').className = "px-3 py-1.5 rounded-lg bg-rose-500 text-slate-950 font-bold transition-all";
+      } else if (url.includes('option-c')) {
+        document.getElementById('btn-opt-c').className = "px-3 py-1.5 rounded-lg bg-pink-600 text-white font-bold transition-all";
       }
     }
   </script>

@@ -286,3 +286,45 @@ export interface TravelLog {
   note?: string;
   updatedAt?: number;
 }
+
+export interface DailyJournal {
+  giorno: number;
+  date: string;
+  rating?: number;    // 1-5 stars
+  highlight?: string; // highlight moment of the day
+  notes?: string;     // nightly journal / notes
+  updatedAt?: number;
+}
+
+// ─────────────────────────────────────────────
+// Check-in & Offline Photos
+// ─────────────────────────────────────────────
+
+export interface CheckInPhoto {
+  id: string;
+  checkinId: string;
+  blob: Blob;
+  timestamp: number;
+}
+
+export interface CheckIn {
+  id: string;
+  giorno: number;
+  timestamp: number;
+  luogo_nome?: string;
+  locationName?: string;
+  coords?: {
+    lat: number;
+    lng: number;
+  };
+  lat?: number;
+  lng?: number;
+  accuracy?: number;
+  commento?: string;
+  comment?: string;
+  rating?: number;
+  photoIds?: string[];
+  photos?: string[];
+  item_id?: string;
+  scheduleItemId?: string;
+}

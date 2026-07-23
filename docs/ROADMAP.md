@@ -1,6 +1,23 @@
-# Roadmap Funzionale & Backlog (v4.0 Completed)
+# Roadmap Funzionale & Backlog (v5.0 Completed)
 
 Raccolta delle funzionalità implementate e future evoluzioni dell'applicazione PWA Trip App 2026.
+
+---
+
+## ✅ Funzionalità Completate (v5.0 - Luglio 2026)
+
+- [x] **Diario di Bordo Serale**: Sezione "🌙 Diario di Bordo" in fondo a ciascun giorno con valutazione a 5 stelle interattive, momento highlight e riflessioni della giornata salvate offline in IndexedDB (`journals` store v4).
+- [x] **Copia Diario (Format Testo / Markdown Exporter)**: Generazione ed esportazione negli appunti di sistema del diario completo in formato Markdown (itinerario, check-in, diari serali, note).
+- [x] **Check-in Foursquare Offline**: Registro geolocalizzato dei luoghi visitati con GPS nativo, ora esatta, rating, note e gestione foto.
+- [x] **Compressione Foto Client-Side Canvas**: Compressione automatica delle foto allegate dalla fotocamera/galleria a max 1200px / JPEG 70% (~100KB) salvate in IndexedDB (`checkin_photos`).
+- [x] **Modifica Check-in Esistenti**: Modal di modifica per aggiornare luoghi, note, rating ed allegare foto anche a posteriore sul rullino della giornata.
+- [x] **Timeline dei Check-in**: Pagina/Vista cronologica di tutti i check-in e galleria foto del viaggio con ordinamento recente/vecchio e filtri per giorno.
+- [x] **Esportazione Mappa GeoJSON & KML**: Generazione automatica di file `FeatureCollection` GeoJSON e KML (con fallback coordinate città per luoghi senza GPS) pronti per l'importazione in Google My Maps, Mapbox, Felt e Google Earth.
+- [x] **TopBar Header Snellito**: Pulsante `📍 Check-in` integrato nell'header globale con icone compattate per Todo e Cambio Valuta.
+- [x] **Itinerario Header Snellito & Filtro `Export 📥`**: Sezione strumenti di export spostata a fondo pagina con scroll automatico guidato dal chip `Export 📥`.
+- [x] **Navigazione Giorno Inline ◀ GIORNO XX ▶**: Frecce di navigazione touch-friendly integrate sulla riga della data nel tab *Oggi*.
+- [x] **Eliminazione Sicura con Conferma**: Dialog di conferma prima dell'eliminazione irreversibile dei Check-in.
+- [x] **Deprecazione Reazioni 1-Tap**: Sostituzione delle vecchie reazioni 1-tap in favore dei Check-in e del Diario di Bordo.
 
 ---
 
@@ -14,7 +31,6 @@ Raccolta delle funzionalità implementate e future evoluzioni dell'applicazione 
 - [x] **Taxi Card Tradotta**: Visualizzazione sia del nome tradotto (es. Coreano/Giapponese) che dell'indirizzo locale per i tassisti.
 - [x] **Drawer Checklist & Promemoria (TopBar)**: Drawer globale da TopBar per accedere e gestire tutti i todo per ogni giorno con filtro passati.
 - [x] **Giorno 0 con Volo Precedente**: Inserimento del volo V1 (giorno precedente) nel pannello espanso del Giorno 0.
-- [x] **Feedback 1-Tap su Singolo Item**: Reazioni ❤️👍😐👎 a livello di singola attività della giornata salvate in IndexedDB.
 - [x] **Deep-linking Mappe Mobile**: Composizione URL nativi (`maps://`, `geo:`, universal links) per bypassare il browser.
 - [x] **Link Mappa Schede Alloggio**: Pulsanti dedicati 📍 Mappa per tutti gli alloggi.
 - [x] **Filtro Trasporti Passati**: Toggle per nascondere/mostrare voli e treni delle date trascorse.
@@ -24,15 +40,3 @@ Raccolta delle funzionalità implementate e future evoluzioni dell'applicazione 
 - [x] **Google Drive Voucher in Trasporti**: Card per il backup dei voucher fruibile anche nel tab Trasporti.
 - [x] **Offline Insights (`insights.json`)**: File curato di supporto per visualizzare consigli utili offline nelle attività.
 
----
-
-## 🎯 Prossime Funzionalità Pianificate (v5.0+)
-
-### 📱 1. QR Code Gallery Offline per Biglietti & Voucher
-- **Descrizione**: Sezione dedicata per visualizzare offline le foto/screenshot dei QR Code dei biglietti (teamLab, Mori Art Museum, Bus Nohi).
-
-### 🔊 2. Sintesi Vocale Offline (Web Speech API) per Frasario
-- **Descrizione**: Pulsante `🔊 Pronuncia` accanto a ciascuna frase del Frasario utilizzando l'engine Web Speech sintetizzato nativo dello smartphone.
-
-### 📊 3. Spese di Viaggio & Budget Tracker
-- **Descrizione**: Piccola sezione per annotare le uscite giornaliere (Cibo, Souvenir, Trasporti) in Yen/Won con calcolo automatico in Euro.

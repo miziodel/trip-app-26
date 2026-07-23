@@ -1,6 +1,6 @@
 import { openDB } from 'idb';
 import type { DBSchema, IDBPDatabase } from 'idb';
-import type { ViaggioData, TravelLog } from '../types/viaggio';
+import type { ViaggioData, TravelLog, DailyJournal, CheckIn, CheckInPhoto } from '../types/viaggio';
 
 export interface CustomRates {
   JPY_EUR: number;
@@ -10,7 +10,7 @@ export interface CustomRates {
 interface ViaggioDBSchema extends DBSchema {
   config: {
     key: string;
-    value: ViaggioData | Record<number, boolean[]>;
+    value: ViaggioData | Record<number, boolean[]> | 'day' | 'night';
   };
   logs: {
     key: string;
@@ -24,10 +24,22 @@ interface ViaggioDBSchema extends DBSchema {
     key: string;
     value: Record<number, string[]>;
   };
+  journals: {
+    key: number;
+    value: DailyJournal;
+  };
+  checkins: {
+    key: string;
+    value: CheckIn;
+  };
+  checkin_photos: {
+    key: string;
+    value: CheckInPhoto;
+  };
 }
 
 const DB_NAME = 'viaggio-db';
-const DB_VERSION = 2;
+const DB_VERSION = 4;
 
 let dbPromise: Promise<IDBPDatabase<ViaggioDBSchema>> | null = null;
 
@@ -47,6 +59,21 @@ export function getDB(): Promise<IDBPDatabase<ViaggioDBSchema>> {
         if (!db.objectStoreNames.contains('customTodos')) {
           db.createObjectStore('customTodos');
         }
+        if (!db.objectStoreNames.contains('journals')) {
+          db.createObjectStore('journals');
+        }
+        if (!db.objectStoreNames.contains('checkins')) {
+          db.createObjectStore('checkins');
+        }
+        if (!db.objectStoreNames.contains('checkin_photos')) {
+          db.createObjectStore('checkin_photos');
+        }
+      },
+      blocked() {
+        console.warn('IndexedDB upgrade blocked by another tab. Force closing...');
+      },
+      blocking() {
+        console.warn('IndexedDB blocking another connection. Closing...');
       },
     });
   }
@@ -75,7 +102,6 @@ export async function getTodos(): Promise<Record<number, boolean[]> | undefined>
   return todos as Record<number, boolean[]> | undefined;
 }
 
-
 export async function saveLogs(logs: Record<string, TravelLog>): Promise<void> {
   const db = await getDB();
   await db.put('logs', logs, 'logs');
@@ -98,6 +124,33 @@ export async function getLogs(): Promise<Record<string, TravelLog>> {
   const db = await getDB();
   const logs = await db.get('logs', 'logs');
   return (logs as Record<string, TravelLog>) || {};
+}
+
+export async function saveJournal(journal: DailyJournal): Promise<void> {
+  const db = await getDB();
+  await db.put('journals', journal, journal.giorno);
+}
+
+export async function saveJournals(journals: Record<number, DailyJournal>): Promise<void> {
+  const db = await getDB();
+  const tx = db.transaction('journals', 'readwrite');
+  for (const key of Object.keys(journals)) {
+    const giornoNum = Number(key);
+    await tx.store.put(journals[giornoNum], giornoNum);
+  }
+  await tx.done;
+}
+
+export async function getJournals(): Promise<Record<number, DailyJournal>> {
+  const db = await getDB();
+  const allJournals = await db.getAll('journals');
+  const result: Record<number, DailyJournal> = {};
+  for (const j of allJournals) {
+    if (j && typeof j.giorno === 'number') {
+      result[j.giorno] = j;
+    }
+  }
+  return result;
 }
 
 export async function saveCustomRates(rates: CustomRates): Promise<void> {
@@ -133,13 +186,50 @@ export async function getTheme(): Promise<'day' | 'night' | undefined> {
   return theme as ('day' | 'night') | undefined;
 }
 
+export async function saveCheckIn(checkin: CheckIn): Promise<void> {
+  const db = await getDB();
+  await db.put('checkins', checkin, checkin.id);
+}
+
+export async function getCheckIns(): Promise<CheckIn[]> {
+  const db = await getDB();
+  return db.getAll('checkins');
+}
+
+export async function deleteCheckIn(id: string): Promise<void> {
+  const db = await getDB();
+  await db.delete('checkins', id);
+}
+
+export async function updateCheckIn(checkInId: string, updates: Partial<CheckIn>): Promise<void> {
+  const db = await getDB();
+  const existing = await db.get('checkins', checkInId);
+  if (!existing) return;
+  const updated = { ...existing, ...updates };
+  await db.put('checkins', updated, checkInId);
+}
+
+export async function saveCheckInPhoto(photo: CheckInPhoto): Promise<void> {
+  const db = await getDB();
+  await db.put('checkin_photos', photo, photo.id);
+}
+
+export async function getCheckInPhotos(): Promise<CheckInPhoto[]> {
+  const db = await getDB();
+  return db.getAll('checkin_photos');
+}
+
+export async function deleteCheckInPhoto(id: string): Promise<void> {
+  const db = await getDB();
+  await db.delete('checkin_photos', id);
+}
+
 export async function clearAllData(): Promise<void> {
   const db = await getDB();
-  const stores = ['config', 'logs', 'customRates', 'customTodos'] as const;
+  const stores = ['config', 'logs', 'customRates', 'customTodos', 'journals', 'checkins', 'checkin_photos'] as const;
   for (const store of stores) {
     if (db.objectStoreNames.contains(store)) {
       await db.clear(store);
     }
   }
 }
-

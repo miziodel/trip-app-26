@@ -8,6 +8,9 @@ vi.mock('../../src/store/db', () => ({
   getLogs: vi.fn().mockResolvedValue({}),
   saveLogs: vi.fn().mockResolvedValue(undefined),
   saveLog: vi.fn().mockResolvedValue(undefined),
+  getJournals: vi.fn().mockResolvedValue({}),
+  saveJournal: vi.fn().mockResolvedValue(undefined),
+  saveJournals: vi.fn().mockResolvedValue(undefined),
   getCustomRates: vi.fn().mockResolvedValue(undefined),
   saveCustomRates: vi.fn().mockResolvedValue(undefined),
   getCustomTodos: vi.fn().mockResolvedValue(undefined),
@@ -20,6 +23,7 @@ vi.mock('../../src/store/db', () => ({
 import sampleData from '../../../viaggio-sample.json';
 import { isTransitActiveNow } from '../../src/utils/transitUtils';
 import { useViaggioStore } from '../../src/store/store';
+import { generateFullJournalMarkdown, generateDayMarkdown } from '../../src/utils/exportUtils';
 
 describe('BDD Scenario: Feature 4 - Convertitore Valuta EUR ↔ JPY / KRW', () => {
   it('Given tasso JPY_EUR, When converte 5000 JPY, Then calcola correttamente gli Euro', () => {
@@ -144,5 +148,61 @@ describe('BDD Scenario: Feature 8 - Interazione Accordion e Navigazione a Oggi',
     expect(activeTab).toBe('oggi');
   });
 });
+
+describe('BDD Scenario: Feature 6 - Diario di Bordo Serale & Note Daily', () => {
+  it('Given l\'utente nel Tab OGGI o ITINERARIO, When inserisce rating, highlight e note serali, Then i dati vengono salvati nello store ed in IndexedDB', async () => {
+    const store = useViaggioStore.getState();
+    await store.updateJournal(1, '2026-07-28', {
+      rating: 5,
+      highlight: 'Passeggiata serale ad Shibuya',
+      notes: 'Tokyo di notte è meravigliosa',
+    });
+
+    const journal = useViaggioStore.getState().dailyJournals[1];
+    expect(journal).toBeDefined();
+    expect(journal.rating).toBe(5);
+    expect(journal.highlight).toBe('Passeggiata serale ad Shibuya');
+    expect(journal.notes).toBe('Tokyo di notte è meravigliosa');
+  });
+});
+
+describe('BDD Scenario: Feature 9 - Copia Diario in Formato Testo (Markdown Exporter)', () => {
+  it('Given l\'itinerario ed il diario di bordo serale salvato, When si genera il Markdown completo, Then il testo include titoli, rating, highlight, note e check-in', () => {
+    const mockJournals = {
+      1: {
+        giorno: 1,
+        date: '2026-07-28',
+        rating: 5,
+        highlight: 'Shibuya Crossing',
+        notes: 'Primo giorno fantastico',
+      },
+    };
+    const mockCheckIns = [
+      {
+        id: 'c1',
+        giorno: 1,
+        timestamp: 1770000000000,
+        luogo_nome: 'Shibuya Sky',
+        rating: 5,
+        commento: 'Panoramica eccezionale',
+        coords: { lat: 35.6595, lng: 139.7005 },
+        photoIds: ['p1', 'p2'],
+      },
+    ];
+
+    const fullMarkdown = generateFullJournalMarkdown(sampleData as any, mockJournals, mockCheckIns);
+    expect(fullMarkdown).toContain('# 📓 Viaggio Demo Giappone & Corea 2026');
+    expect(fullMarkdown).toContain('Giorno 1');
+    expect(fullMarkdown).toContain('Diario di Bordo Serale');
+    expect(fullMarkdown).toContain('⭐⭐⭐⭐⭐ (5/5)');
+    expect(fullMarkdown).toContain('Shibuya Crossing');
+    expect(fullMarkdown).toContain('Primo giorno fantastico');
+    expect(fullMarkdown).toContain('Check-in Registrati');
+    expect(fullMarkdown).toContain('📍 Check-in: Shibuya Sky');
+    expect(fullMarkdown).toContain('Panoramica eccezionale');
+    expect(fullMarkdown).toContain('2 foto allegate');
+  });
+});
+
 
 

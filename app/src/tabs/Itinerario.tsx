@@ -2,12 +2,23 @@ import React, { useState } from 'react';
 import { useViaggioStore } from '../store/store';
 import { ScheduleCard } from '../components/ui/ScheduleCard';
 import { CopyableText } from '../components/ui/CopyableText';
+import { NightlyJournalCard } from '../components/ui/NightlyJournalCard';
+import { CheckInCard } from '../components/ui/CheckInCard';
+import { CheckInTimeline } from '../components/ui/CheckInTimeline';
 import { formatDate } from '../utils/dateUtils';
+import {
+  generateFullJournalMarkdown,
+  copyToClipboard,
+  exportCheckInsGeoJSON,
+  exportCheckInsKML,
+  exportFullBackupJSON,
+} from '../utils/exportUtils';
 import {
   Map,
   ChevronDown,
   ChevronUp,
   Download,
+  Copy,
   ExternalLink,
   Plane,
   Hotel,
@@ -17,6 +28,7 @@ import {
   CheckSquare,
   Square,
   Calendar,
+  MapPin,
 } from 'lucide-react';
 
 const TYPE_DOT_COLORS: Record<string, string> = {
@@ -34,14 +46,18 @@ export const ItinerarioTab: React.FC = () => {
   const setActiveTab = useViaggioStore((state) => state.setActiveTab);
   const setSelectedDay = useViaggioStore((state) => state.setSelectedDay);
   const openTaxiCard = useViaggioStore((state) => state.openTaxiCard);
-  const userLogs = useViaggioStore((state) => state.userLogs);
-  const updateLog = useViaggioStore((state) => state.updateLog);
+  const dailyJournals = useViaggioStore((state) => state.dailyJournals);
+  const updateJournal = useViaggioStore((state) => state.updateJournal);
   const userTodos = useViaggioStore((state) => state.userTodos);
   const updateTodo = useViaggioStore((state) => state.updateTodo);
   const customTodos = useViaggioStore((state) => state.customTodos);
   const addCustomTodo = useViaggioStore((state) => state.addCustomTodo);
   const removeCustomTodo = useViaggioStore((state) => state.removeCustomTodo);
   const showToast = useViaggioStore((state) => state.showToast);
+
+  const checkIns = useViaggioStore((state) => state.checkIns);
+  const openCheckInModal = useViaggioStore((state) => state.openCheckInModal);
+  const deleteCheckIn = useViaggioStore((state) => state.deleteCheckIn);
 
   // Dynamic initial state calculation based on current date and time
   const getInitialExpandedState = () => {
@@ -96,10 +112,30 @@ export const ItinerarioTab: React.FC = () => {
 
   if (!data || !data.itinerario) return null;
 
-  const cityFilters = ['Tutti', 'Seoul', 'Tokyo', 'Alpi Giapponesi', 'Osaka'];
+  const cityFilters = ['Tutti', 'Seoul', 'Tokyo', 'Alpi Giapponesi', 'Osaka', 'Timeline 📍', 'Export 📥'];
+
+  const handleCityClick = (city: string) => {
+    if (city === 'Timeline 📍') {
+      const el = document.getElementById('checkin-timeline-section');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+      return;
+    }
+    if (city === 'Export 📥') {
+      const el = document.getElementById('export-section');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+      }
+      return;
+    }
+    setSelectedCityFilter(city);
+  };
 
   const filteredItinerario = data.itinerario.filter((giorno) => {
-    if (selectedCityFilter === 'Tutti') return true;
+    if (selectedCityFilter === 'Tutti' || selectedCityFilter === 'Timeline 📍' || selectedCityFilter === 'Export 📥') return true;
     if (selectedCityFilter === 'Seoul') return giorno.citta.toLowerCase().includes('seoul');
     if (selectedCityFilter === 'Tokyo') return giorno.citta.toLowerCase().includes('tokyo');
     if (selectedCityFilter === 'Osaka') return giorno.citta.toLowerCase().includes('osaka');
@@ -131,22 +167,20 @@ export const ItinerarioTab: React.FC = () => {
     setCustomTodoInputs((prev) => ({ ...prev, [giornoNum]: '' }));
   };
 
-  const handleExportTravelLog = () => {
+  const handleCopyTextJournal = async () => {
+    if (!data) return;
+    const markdownText = generateFullJournalMarkdown(data, dailyJournals, checkIns);
+    const success = await copyToClipboard(markdownText);
+    if (success) {
+      showToast('Diario copiato negli appunti! 📋');
+    } else {
+      showToast('Impossibile copiare il testo');
+    }
+  };
+
+  const handleExportTravelLog = async () => {
     try {
-      const exportObject = {
-        meta: data.meta,
-        exportDate: new Date().toISOString(),
-        logs: userLogs,
-      };
-
-      const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(exportObject, null, 2));
-      const downloadAnchor = document.createElement('a');
-      downloadAnchor.setAttribute('href', dataStr);
-      downloadAnchor.setAttribute('download', `diario-di-viaggio-2026-${Date.now()}.json`);
-      document.body.appendChild(downloadAnchor);
-      downloadAnchor.click();
-      downloadAnchor.remove();
-
+      await exportFullBackupJSON(data, dailyJournals, checkIns);
       showToast('Diario di Viaggio esportato! 📥');
     } catch (err) {
       console.error('Failed to export travel log:', err);
@@ -156,24 +190,13 @@ export const ItinerarioTab: React.FC = () => {
 
   return (
     <div className="pb-24 pt-4 px-4 max-w-md mx-auto space-y-4 animate-in fade-in duration-300">
-      {/* Header & Export Button */}
-      <div className="flex items-center justify-between bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-2xl p-4 shadow-md">
-        <div>
-          <h2 className="text-lg font-black text-[var(--text-primary)] flex items-center gap-2">
-            <Map className="w-5 h-5 text-amber-500 dark:text-amber-400" />
-            <span>Itinerario Completo</span>
-          </h2>
-          <p className="text-xs text-[var(--text-secondary)]">28 Luglio - 20 Agosto 2026</p>
-        </div>
-
-        <button
-          type="button"
-          onClick={handleExportTravelLog}
-          className="py-2.5 px-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl flex items-center gap-1.5 text-xs shadow transition-all active:scale-95"
-        >
-          <Download className="w-4 h-4 stroke-[2.5]" />
-          <span>Esporta</span>
-        </button>
+      {/* Header */}
+      <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-2xl p-4 shadow-md">
+        <h2 className="text-lg font-black text-[var(--text-primary)] flex items-center gap-2">
+          <Map className="w-5 h-5 text-amber-500 dark:text-amber-400" />
+          <span>Itinerario Completo</span>
+        </h2>
+        <p className="text-xs text-[var(--text-secondary)]">28 Luglio - 20 Agosto 2026</p>
       </div>
 
       {/* City Filter Pills */}
@@ -182,8 +205,8 @@ export const ItinerarioTab: React.FC = () => {
           <button
             key={city}
             type="button"
-            onClick={() => setSelectedCityFilter(city)}
-            className={`py-1.5 px-3.5 rounded-full text-xs font-bold whitespace-nowrap transition-all border ${
+            onClick={() => handleCityClick(city)}
+            className={`py-1.5 px-3.5 rounded-full text-xs font-bold whitespace-nowrap transition-all border cursor-pointer ${
               selectedCityFilter === city
                 ? 'bg-amber-400 text-slate-950 border-amber-400 shadow'
                 : 'bg-[var(--bg-card)] text-[var(--text-secondary)] border-[var(--border-subtle)] hover:text-[var(--text-primary)]'
@@ -360,16 +383,19 @@ export const ItinerarioTab: React.FC = () => {
                               index={sIdx}
                               isOpen={isCardOpen}
                               onToggle={() => toggleScheduleCard(giorno.giorno, sIdx)}
-                              userReaction={userLogs[cardKey]?.reaction}
-                              userNote={userLogs[cardKey]?.note}
-                              onSaveReaction={(reaction) => updateLog(cardKey, reaction, undefined)}
-                              onSaveNote={(note) => updateLog(cardKey, undefined, note)}
                               onOpenTaxiCard={(name, address, nameLocale) =>
                                 openTaxiCard({
                                   name,
                                   addressEn: address,
                                   nameLocale,
                                   addressLocale: address,
+                                })
+                              }
+                              onCheckIn={(locationName) =>
+                                openCheckInModal({
+                                  defaultLocationName: locationName,
+                                  defaultGiorno: giorno.giorno,
+                                  scheduleItemId: cardKey,
                                 })
                               }
                               currentCity={giorno.citta}
@@ -380,6 +406,26 @@ export const ItinerarioTab: React.FC = () => {
                       })}
                     </div>
                   </div>
+
+                  {/* Day Check-ins list if present */}
+                  {(() => {
+                    const dayCheckIns = Object.values(checkIns || {}).filter((c) => c.giorno === giorno.giorno);
+                    if (dayCheckIns.length === 0) return null;
+
+                    return (
+                      <div className="bg-[var(--bg-card)] p-3 rounded-xl border border-[var(--border-subtle)] space-y-3">
+                        <h4 className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider flex items-center gap-1.5">
+                          <MapPin className="w-3.5 h-3.5 text-torii" />
+                          <span>Check-in Registrati ({dayCheckIns.length})</span>
+                        </h4>
+                        <div className="space-y-3">
+                          {dayCheckIns.map((c) => (
+                            <CheckInCard key={c.id} checkIn={c} onDelete={deleteCheckIn} />
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })()}
 
                   {/* Integrated Overnight Accommodation */}
                   {dayAccommodation && (
@@ -498,11 +544,90 @@ export const ItinerarioTab: React.FC = () => {
                       </button>
                     </form>
                   </div>
+
+                  {/* Diario di Bordo Serale */}
+                  <NightlyJournalCard
+                    giorno={giorno.giorno}
+                    date={giorno.data}
+                    journal={dailyJournals[giorno.giorno]}
+                    onUpdate={updateJournal}
+                  />
                 </div>
               )}
             </div>
           );
         })}
+      </div>
+
+      {/* Timeline Check-in Section */}
+      <CheckInTimeline />
+
+      {/* Strumenti di Esportazione & Backup Card */}
+      <div id="export-section" className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-2xl p-4 shadow-md space-y-3">
+        <div>
+          <h3 className="text-sm font-bold text-[var(--text-primary)] flex items-center gap-2">
+            <Download className="w-4 h-4 text-amber-500 dark:text-amber-400" />
+            <span>Strumenti di Esportazione & Backup</span>
+          </h3>
+          <p className="text-xs text-[var(--text-secondary)]">Esporta il tuo diario di viaggio, log e check-in in vari formati.</p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <button
+            type="button"
+            onClick={handleCopyTextJournal}
+            className="py-2.5 px-3 bg-purple-600 hover:bg-purple-500 text-white font-bold rounded-xl flex items-center justify-center gap-2 text-xs shadow transition-all active:scale-95 min-h-[44px] cursor-pointer"
+            title="Copia l'intero diario in formato testo (Markdown)"
+          >
+            <Copy className="w-4 h-4 stroke-[2.5]" />
+            <span>📋 Copia Diario (Testo)</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={handleExportTravelLog}
+            className="py-2.5 px-3 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold rounded-xl flex items-center justify-center gap-2 text-xs shadow transition-all active:scale-95 min-h-[44px] cursor-pointer"
+          >
+            <Download className="w-4 h-4 stroke-[2.5]" />
+            <span>📥 Esporta JSON</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              const checkInsList = Object.values(checkIns || {});
+              if (checkInsList.length === 0) {
+                showToast('Nessun check-in da esportare');
+                return;
+              }
+              exportCheckInsGeoJSON(checkInsList, data.itinerario);
+              showToast('Check-in esportati in GeoJSON! 🗺️');
+            }}
+            className="py-2.5 px-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl flex items-center justify-center gap-2 text-xs shadow transition-all active:scale-95 min-h-[44px] cursor-pointer"
+            title="Esporta tutti i check-in registrati in formato GeoJSON"
+          >
+            <MapPin className="w-4 h-4 stroke-[2.5]" />
+            <span>🗺️ Esporta GeoJSON</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              const checkInsList = Object.values(checkIns || {});
+              if (checkInsList.length === 0) {
+                showToast('Nessun check-in da esportare');
+                return;
+              }
+              exportCheckInsKML(checkInsList, data.itinerario);
+              showToast('Check-in esportati in KML! 📍');
+            }}
+            className="py-2.5 px-3 bg-sky-600 hover:bg-sky-500 text-white font-bold rounded-xl flex items-center justify-center gap-2 text-xs shadow transition-all active:scale-95 min-h-[44px] cursor-pointer"
+            title="Esporta tutti i check-in registrati in formato KML per Google Earth"
+          >
+            <MapPin className="w-4 h-4 stroke-[2.5]" />
+            <span>📍 Esporta KML</span>
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -8,12 +8,21 @@ vi.mock('../../src/store/db', () => ({
   getLogs: vi.fn().mockResolvedValue({}),
   saveLogs: vi.fn().mockResolvedValue(undefined),
   saveLog: vi.fn().mockResolvedValue(undefined),
+  getJournals: vi.fn().mockResolvedValue({}),
+  saveJournal: vi.fn().mockResolvedValue(undefined),
+  saveJournals: vi.fn().mockResolvedValue(undefined),
   getCustomRates: vi.fn().mockResolvedValue(undefined),
   saveCustomRates: vi.fn().mockResolvedValue(undefined),
   getCustomTodos: vi.fn().mockResolvedValue(undefined),
   saveCustomTodos: vi.fn().mockResolvedValue(undefined),
   getTheme: vi.fn().mockResolvedValue(undefined),
   saveTheme: vi.fn().mockResolvedValue(undefined),
+  getCheckIns: vi.fn().mockResolvedValue([]),
+  saveCheckIn: vi.fn().mockResolvedValue(undefined),
+  deleteCheckIn: vi.fn().mockResolvedValue(undefined),
+  getCheckInPhotos: vi.fn().mockResolvedValue([]),
+  saveCheckInPhoto: vi.fn().mockResolvedValue(undefined),
+  deleteCheckInPhoto: vi.fn().mockResolvedValue(undefined),
   clearAllData: vi.fn().mockResolvedValue(undefined),
 }));
 
@@ -92,4 +101,21 @@ describe('ViaggioStore - customRates, customTodos, clearDatabase, loadInitialDat
     useViaggioStore.getState().closeTaxiCard();
     expect(useViaggioStore.getState().activeTaxiCard).toBeNull();
   });
+
+  it('updateJournal salva rating, highlight e note serali in dailyJournals', async () => {
+    await useViaggioStore.getState().updateJournal(1, '2026-07-28', {
+      rating: 5,
+      highlight: 'Arrivo a Tokyo e prima ramen night',
+      notes: 'Giornata stancante ma bellissima',
+    });
+
+    const journal = useViaggioStore.getState().dailyJournals[1];
+    expect(journal).toBeDefined();
+    expect(journal.giorno).toBe(1);
+    expect(journal.date).toBe('2026-07-28');
+    expect(journal.rating).toBe(5);
+    expect(journal.highlight).toBe('Arrivo a Tokyo e prima ramen night');
+    expect(journal.notes).toBe('Giornata stancante ma bellissima');
+  });
 });
+

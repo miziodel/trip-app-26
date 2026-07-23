@@ -149,19 +149,70 @@ Feature: Palette Colori Giorno e Notte Dinamica
 
 ---
 
-## Feature 8: Apertura Intelligente dell'Itinerario
+## Feature 6: Diario di Bordo Serale & Note Daily
 
 ```gherkin
-Feature: Compressione Automatica dell'Itinerario Completo
-  Come utente che naviga l'Itinerario Completo
-  Voglio vedere aperto di default soltanto il giorno e l'orario del momento attuale
-  Per non essere sopraffatto da decine di schede aperte contemporaneamente
+Feature: Diario di Bordo Serale
+  Come utente a fine giornata
+  Voglio valutare la giornata (1-5 stelle), salvare il momento highlight ed inserire le note serali
+  Per conservare un ricordo vivido delle esperienze vissute giorno per giorno
 
-  Scenario: Interazione con l'accordion del giorno e navigazione condizionale
-    Given l'utente si trova nel Tab ITINERARIO
-    When tocca qualsiasi punto dell'intestazione della card del giorno
-    Then l'accordion del giorno si espande o si comprime rimanendo all'interno della vista ITINERARIO
-    When l'utente tocca specificamente il pulsante CTA "Apri in Oggi ➔"
-    Then l'applicazione naviga al Tab OGGI mostrando i dettagli del giorno selezionato
+  Scenario: Inserimento e salvataggio del diario di bordo serale
+    Given l'utente si trova nel Tab OGGI o ITINERARIO per il Giorno corrente
+    When seleziona una valutazione (es. 5 stelle), inserisce l'highlight "Tramonto a Fushimi Inari" e le note "Cena fantastica a Gion"
+    Then i dati del diario vengono salvati in IndexedDB nella store "journals"
+    And l'interfaccia si aggiorna mostrando il rating e i ricordi salvati
 ```
+
+---
+
+## Feature 9: Copia Diario in Formato Testo (Markdown Exporter)
+
+```gherkin
+Feature: Copia Diario in Formato Testo
+  Come utente
+  Voglio copiare l'intero diario di viaggio o le singole giornate in formato Markdown / Testo negli appunti
+  Per poter incollare i miei ricordi su WhatsApp, Telegram, Notion o Apple Notes
+
+  Scenario: Copia dell'intero diario di viaggio negli appunti
+    Given l'utente si trova nel Tab ITINERARIO
+    When tocca il pulsante "📋 Copia Diario (Testo)"
+    Then viene generato il testo completo in formato Markdown contenente itinerario, rating, highlight, note serali e log
+    And il testo viene copiato negli appunti tramite navigator.clipboard o fallback execCommand
+    And viene mostrato un messaggio di conferma "Diario copiato negli appunti! 📋"
+
+---
+
+## Feature 10: Check-in Foursquare Offline & GeoJSON Map Export
+
+```gherkin
+Feature: Check-in Offline con Foto Compresse e Timestamp Matching
+  Come utente in viaggio offline
+  Voglio effettuare check-in geolocalizzati, allegare foto compresse e fare match automatico con i timestamp
+  Per poter esportare la mappa del mio viaggio in formato GeoJSON, KML o Markdown
+
+  Scenario: Check-in offline con foto compressa in IndexedDB
+    Given l'utente si trova offline ed esplora una scheda di un luogo (es. "Fushimi Inari")
+    When tocca il pulsante "📍 Check-in Ora" e seleziona una foto dalla galleria
+    Then la foto viene compressa via HTML Canvas a dimensione massima 1200px e qualità JPEG 0.7 (~100KB)
+    And il Blob della foto compressa viene salvato nello store IndexedDB "checkin_photos"
+    And il record di check-in viene salvato nello store IndexedDB "checkins" con coordinate GPS e timestamp
+    And la UI della scheda mostra il badge "📍 Visitato" ed il thumbnail della foto allegata
+
+  Scenario: Match automatico foto da timestamp EXIF
+    Given un check-in salvato alle ore 14:30 del "2026-07-23"
+    When l'utente apre il pannello "Match Foto Galleria" e carica una serie di foto scattate durante la giornata
+    Then l'app analizza i metadata EXIF DateTimeOriginal di ciascuna foto
+    And associa automaticamente le foto scattate nella finestra temporale ±30 minuti (es. 14:15 - 14:45) al check-in di Fushimi Inari
+    And aggiorna i photoIds nel record di check-in in IndexedDB
+
+  Scenario: Esportazione delle tappe in formato GeoJSON / KML / Markdown
+    Given l'utente ha salvato diversi check-in geolocalizzati durante il viaggio
+    When apre il menu di esportazione e seleziona "🗺️ Esporta GeoJSON"
+    Then viene generato e scaricato un file FeatureCollection GeoJSON con le coordinate e le note delle tappe
+    When seleziona "📋 Esporta Markdown con Foto"
+    Then viene generato un documento Markdown contenente le note, i dati di check-in ed i thumbnail in Data URI base64
+```
+```
+
 
