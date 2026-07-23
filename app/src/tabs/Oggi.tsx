@@ -233,16 +233,16 @@ export const OggiTab: React.FC = () => {
           {dayFlights.map((flight) => (
             <div
               key={flight.id}
-              className="bg-[var(--bg-card)] border border-blue-500/30 text-[var(--text-primary)] rounded-xl p-3 space-y-2 text-xs shadow-sm"
+              className="bg-[var(--bg-card)] border border-[var(--accent-torii)]/40 text-[var(--text-primary)] rounded-xl p-3 space-y-2 text-xs shadow-sm"
             >
               <div className="flex items-center justify-between">
                 <span className="font-bold text-[var(--text-primary)] flex items-center gap-1.5">
-                  <Plane className="w-4 h-4 text-blue-500" />
+                  <Plane className="w-4 h-4 text-[var(--accent-torii)]" />
                   <span>
                     {flight.compagnia} {flight.numero_volo} ({flight.citta_partenza} → {flight.citta_arrivo})
                   </span>
                 </span>
-                <span className="px-2 py-0.5 bg-blue-500/20 text-blue-600 dark:text-blue-300 rounded font-semibold text-[10px] border border-blue-500/30">
+                <span className="px-2 py-0.5 bg-[var(--accent-torii)] text-white rounded font-bold text-[10px]">
                   {flight.stato}
                 </span>
               </div>
@@ -252,7 +252,7 @@ export const OggiTab: React.FC = () => {
                 <span>⏳ Durata: <strong className="text-[var(--text-primary)] font-bold">{flight.durata}</strong></span>
               </div>
 
-              <div className="flex items-center justify-between pt-1 border-t border-blue-500/20">
+              <div className="flex items-center justify-between pt-1 border-t border-[var(--accent-torii)]/20">
                 <CopyableText text={flight.pnr} toastMessage="PNR copiato! 🎟️" className="text-[var(--text-primary)] font-mono font-bold">
                   🎟️ PNR: <strong className="underline text-[var(--text-primary)] font-extrabold">{flight.pnr}</strong>
                 </CopyableText>

@@ -213,6 +213,49 @@ Feature: Check-in Offline con Foto Compresse e Timestamp Matching
     When seleziona "📋 Esporta Markdown con Foto"
     Then viene generato un documento Markdown contenente le note, i dati di check-in ed i thumbnail in Data URI base64
 ```
+
+---
+
+## Feature 11: Sincronizzazione Offline-First dei Check-in verso GiPSigo
+
+```gherkin
+Feature: Sincronizzazione Offline-First dei Check-in verso GiPSigo
+  Come utente in viaggio
+  Voglio che i miei check-in salvati offline vengano sincronizzati verso il server GiPSigo
+  Per mantenere aggiornato il tracciamento del mio itinerario anche in mobilità senza rischiare di perdere dati
+
+  Scenario: Configurazione dinamica delle credenziali GiPSigo
+    Given l'utente si trova nella schermata delle impostazioni di sincronizzazione
+    When inserisce l'API Key (es. "gips_live_abc123") e il Trip Token (es. "trip_kr_jp_2026")
+    And tocca il pulsante "Salva Credenziali GiPSigo"
+    Then le credenziali vengono salvate nello store IndexedDB locale "config"
+    And l'interfaccia mostra lo stato "GiPSigo Configurato" ed il pulsante per testare la connessione
+
+  Scenario: Registrazione check-in in modalità offline-first
+    Given l'utente effettua un check-in in una tappa (es. "N Seoul Tower")
+    When tocca il pulsante "📍 Check-in Ora"
+    Then il check-in viene salvato SEMPRE prima nello store IndexedDB locale "checkins"
+    And la voce viene contrassegnata con il flag syncedToGiPSigo: false
+    And il check-in entra nella coda di sincronizzazione pendente
+    And l'indicatore di sync aggiorna il conteggio dei check-in pendenti
+
+  Scenario: Sincronizzazione automatica al ripristino della connessione internet
+    Given l'utente ha uno o più check-in salvati con syncedToGiPSigo: false in IndexedDB
+    And viene rilevato il ripristino della connessione internet (evento online)
+    When il servizio di sincronizzazione in background viene attivato
+    Then l'app invia gli elementi pendenti in batch (fino a un massimo di 500 elementi per richiesta) tramite POST JSON a "external_checkin.php"
+    And include le credenziali API Key e Trip Token memorizzate
+    And alla conferma con esito positivo dal server
+    Then ciascun record in IndexedDB viene aggiornato impostando syncedToGiPSigo: true ed il timestamp syncedAt corrente
+
+  Scenario: Sincronizzazione manuale dal pulsante Sync GiPSigo
+    Given l'utente visualizza il pulsante "Sync GiPSigo" recante l'indicatore dei check-in pendenti (es. "(3)")
+    When l'utente tocca il pulsante "Sync GiPSigo"
+    Then l'app avvia la trasmissione in batch (max 500) dei check-in non ancora sincronizzati (syncedToGiPSigo: false) a "external_checkin.php"
+    And mostra uno spinner di caricamento durante l'operazione
+    And aggiorna i record in IndexedDB impostando syncedToGiPSigo: true e syncedAt al termine con esito positivo
+    And azzera l'indicatore dei check-in pendenti sul pulsante
 ```
+
 
 

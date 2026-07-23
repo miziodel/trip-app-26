@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { ViaggioData, TravelLog, DailyJournal, CheckIn, CheckInPhoto } from '../types/viaggio';
+import type { ViaggioData, TravelLog, DailyJournal, CheckIn, CheckInPhoto, GiPSigoConfig } from '../types/viaggio';
 import {
   getViaggioData,
   saveViaggioData,
@@ -22,6 +22,9 @@ import {
   saveCheckInPhoto,
   deleteCheckInPhoto,
   clearAllData,
+  markCheckInsSynced as dbMarkCheckInsSynced,
+  saveGiPSigoConfig,
+  getGiPSigoConfig,
 } from './db';
 import type { CustomRates } from './db';
 
@@ -63,6 +66,7 @@ export interface ViaggioState {
 
   checkIns: Record<string, CheckIn>;
   checkInPhotos: Record<string, string>; // data URIs or blob URLs
+  gipsigoConfig: GiPSigoConfig | null;
 
   // Actions
   setViaggioData: (data: ViaggioData) => Promise<void>;
@@ -89,6 +93,9 @@ export interface ViaggioState {
   removeCheckIn: (id: string) => Promise<void>;
   deleteCheckIn: (id: string) => Promise<void>;
   attachPhotosToCheckIn: (checkinId: string, photoBlobs: Blob[]) => Promise<void>;
+
+  updateGiPSigoConfig: (config: Partial<GiPSigoConfig>) => Promise<void>;
+  markCheckInsSyncedGiPSigo: (checkInIds: string[]) => Promise<void>;
 
   clearDatabase: () => Promise<void>;
   loadInitialData: () => Promise<void>;
@@ -123,6 +130,7 @@ export const useViaggioStore = create<ViaggioState>((set, get) => ({
   isLoading: true,
   checkIns: {},
   checkInPhotos: {},
+  gipsigoConfig: null,
 
   setViaggioData: async (data: ViaggioData) => {
     await saveViaggioData(data);
@@ -559,6 +567,12 @@ export const useViaggioStore = create<ViaggioState>((set, get) => ({
 
       const selectedDay = data ? calculateCurrentTripDay(data.itinerario) : 0;
 
+      // Load GiPSigo config from IndexedDB
+      let gipsigoConfig: GiPSigoConfig | null = null;
+      try {
+        gipsigoConfig = (await getGiPSigoConfig()) || null;
+      } catch (_) { /* silent */ }
+
       set({
         data: data || null,
         userTodos,
@@ -570,6 +584,7 @@ export const useViaggioStore = create<ViaggioState>((set, get) => ({
         checkIns: checkInsMap,
         checkInPhotos: checkInPhotosMap,
         selectedDay,
+        gipsigoConfig,
         isLoading: false,
       });
     } catch (err) {
@@ -579,5 +594,36 @@ export const useViaggioStore = create<ViaggioState>((set, get) => ({
         isLoading: false,
       });
     }
+  },
+
+  updateGiPSigoConfig: async (updates: Partial<GiPSigoConfig>) => {
+    const current = get().gipsigoConfig;
+    const merged: GiPSigoConfig = {
+      enabled: false,
+      apiKey: '',
+      tripToken: '',
+      endpointUrl: '',
+      ...current,
+      ...updates,
+    };
+    await saveGiPSigoConfig(merged);
+    set({ gipsigoConfig: merged });
+  },
+
+  markCheckInsSyncedGiPSigo: async (checkInIds: string[]) => {
+    await dbMarkCheckInsSynced(checkInIds);
+    const now = Date.now();
+    set((state) => {
+      const updated = { ...state.checkIns };
+      for (const id of checkInIds) {
+        if (updated[id]) {
+          updated[id] = { ...updated[id], syncedToGiPSigo: true, syncedAt: now };
+        }
+      }
+      const config = state.gipsigoConfig
+        ? { ...state.gipsigoConfig, lastSyncAt: now }
+        : null;
+      return { checkIns: updated, gipsigoConfig: config };
+    });
   },
 }));

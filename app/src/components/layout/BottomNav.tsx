@@ -44,13 +44,6 @@ export const BottomNav: React.FC = () => {
             >
               <div className="relative">
                 <Icon className={`w-5 h-5 transition-transform ${isActive ? 'scale-110' : ''}`} />
-                {isActive && (
-                  <span
-                    className={`absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full ${
-                      isSos ? 'bg-rose-500' : 'bg-[var(--accent-torii)]'
-                    }`}
-                  />
-                )}
               </div>
               <span className="text-[11px] mt-1 tracking-tight">{item.label}</span>
             </button>

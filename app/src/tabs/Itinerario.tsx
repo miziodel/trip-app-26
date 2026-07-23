@@ -301,11 +301,11 @@ export const ItinerarioTab: React.FC = () => {
                       {dayFlights.map((flight) => (
                         <div
                           key={flight.id}
-                          className="bg-sky-500/10 border border-sky-500/30 rounded-xl p-3 space-y-2 text-xs"
+                          className="bg-[var(--bg-card)] border border-[var(--accent-torii)]/40 rounded-xl p-3 space-y-2 text-xs shadow-sm"
                         >
                           <div className="flex items-center justify-between">
-                            <span className="font-bold text-sky-600 dark:text-sky-300 flex items-center gap-1.5">
-                              <Plane className="w-4 h-4 text-sky-500 dark:text-sky-400" />
+                            <span className="font-bold text-[var(--text-primary)] flex items-center gap-1.5">
+                              <Plane className="w-4 h-4 text-[var(--accent-torii)]" />
                               <span>
                                 {flight.compagnia} {flight.numero_volo} ({flight.citta_partenza} → {flight.citta_arrivo})
                                 {flight.data === '2026-07-27' && (
@@ -315,7 +315,7 @@ export const ItinerarioTab: React.FC = () => {
                                 )}
                               </span>
                             </span>
-                            <span className="px-2 py-0.5 bg-sky-500/20 text-sky-700 dark:text-sky-300 rounded font-semibold text-[10px] border border-sky-500/30">
+                            <span className="px-2 py-0.5 bg-[var(--accent-torii)] text-white rounded font-bold text-[10px]">
                               {flight.stato}
                             </span>
                           </div>
@@ -325,8 +325,8 @@ export const ItinerarioTab: React.FC = () => {
                             <span>⏳ Durata: {flight.durata}</span>
                           </div>
 
-                          <div className="flex items-center justify-between pt-1 border-t border-sky-500/20">
-                            <CopyableText text={flight.pnr} toastMessage="PNR copiato! 🎟️" className="text-sky-600 dark:text-sky-300 font-mono">
+                          <div className="flex items-center justify-between pt-1 border-t border-[var(--accent-torii)]/20">
+                            <CopyableText text={flight.pnr} toastMessage="PNR copiato! 🎟️" className="text-[var(--text-primary)] font-mono font-bold">
                               🎟️ PNR: <strong className="underline">{flight.pnr}</strong>
                             </CopyableText>
 

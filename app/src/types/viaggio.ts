@@ -307,6 +307,14 @@ export interface CheckInPhoto {
   timestamp: number;
 }
 
+export interface GiPSigoConfig {
+  enabled: boolean;
+  apiKey: string;
+  tripToken: string;
+  endpointUrl: string;
+  lastSyncAt?: number;
+}
+
 export interface CheckIn {
   id: string;
   giorno: number;
@@ -327,4 +335,8 @@ export interface CheckIn {
   photos?: string[];
   item_id?: string;
   scheduleItemId?: string;
+  /** Sync con GiPSigo — false = in coda, true = sincronizzato */
+  syncedToGiPSigo?: boolean;
+  /** Timestamp (ms) dell'ultima sincronizzazione riuscita con GiPSigo */
+  syncedAt?: number;
 }

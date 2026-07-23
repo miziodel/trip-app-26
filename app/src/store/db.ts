@@ -1,6 +1,6 @@
 import { openDB } from 'idb';
 import type { DBSchema, IDBPDatabase } from 'idb';
-import type { ViaggioData, TravelLog, DailyJournal, CheckIn, CheckInPhoto } from '../types/viaggio';
+import type { ViaggioData, TravelLog, DailyJournal, CheckIn, CheckInPhoto, GiPSigoConfig } from '../types/viaggio';
 
 export interface CustomRates {
   JPY_EUR: number;
@@ -10,7 +10,7 @@ export interface CustomRates {
 interface ViaggioDBSchema extends DBSchema {
   config: {
     key: string;
-    value: ViaggioData | Record<number, boolean[]> | 'day' | 'night';
+    value: ViaggioData | Record<number, boolean[]> | 'day' | 'night' | GiPSigoConfig;
   };
   logs: {
     key: string;
@@ -207,6 +207,38 @@ export async function updateCheckIn(checkInId: string, updates: Partial<CheckIn>
   if (!existing) return;
   const updated = { ...existing, ...updates };
   await db.put('checkins', updated, checkInId);
+}
+
+export async function markCheckInsSynced(checkInIds: string[]): Promise<void> {
+  const db = await getDB();
+  const tx = db.transaction('checkins', 'readwrite');
+  const now = Date.now();
+  for (const id of checkInIds) {
+    const existing = await tx.store.get(id);
+    if (existing) {
+      existing.syncedToGiPSigo = true;
+      existing.syncedAt = now;
+      await tx.store.put(existing, id);
+    }
+  }
+  await tx.done;
+}
+
+export async function getPendingCheckIns(): Promise<CheckIn[]> {
+  const db = await getDB();
+  const all = await db.getAll('checkins');
+  return all.filter((c) => !c.syncedToGiPSigo);
+}
+
+export async function saveGiPSigoConfig(config: GiPSigoConfig): Promise<void> {
+  const db = await getDB();
+  await db.put('config', config, 'gipsigo_config');
+}
+
+export async function getGiPSigoConfig(): Promise<GiPSigoConfig | undefined> {
+  const db = await getDB();
+  const config = await db.get('config', 'gipsigo_config');
+  return config as GiPSigoConfig | undefined;
 }
 
 export async function saveCheckInPhoto(photo: CheckInPhoto): Promise<void> {

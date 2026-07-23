@@ -126,7 +126,7 @@ export const TrasportiTab: React.FC = () => {
                   className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-2xl p-4 space-y-2 shadow-md"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-xs font-mono font-bold text-sky-500 dark:text-sky-400">{volo.id} • {volo.data}</span>
+                    <span className="text-xs font-mono font-bold text-[var(--accent-torii)]">{volo.id} • {volo.data}</span>
                     <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 border border-emerald-500/30">
                       {volo.stato}
                     </span>
