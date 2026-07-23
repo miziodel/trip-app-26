@@ -170,6 +170,9 @@ export const OggiTab: React.FC = () => {
         </h1>
         <p className="text-xs text-[var(--text-secondary)] font-noto tracking-wide">
           {currentDayData.fase}
+          {!currentDayData.fase.toLowerCase().includes(currentDayData.citta.toLowerCase()) && (
+            <span> • Tappa a {currentDayData.citta}</span>
+          )}
         </p>
       </div>
 
