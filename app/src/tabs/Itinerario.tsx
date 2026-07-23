@@ -36,7 +36,7 @@ const TYPE_DOT_COLORS: Record<string, string> = {
   attivita: 'bg-emerald-500',
   pasto: 'bg-amber-500',
   alloggio: 'bg-purple-500',
-  festival: 'bg-rose-500',
+  festival: 'bg-[var(--accent-torii)]',
   compito: 'bg-yellow-500',
   info: 'bg-slate-500',
 };
@@ -508,7 +508,7 @@ export const ItinerarioTab: React.FC = () => {
                             <button
                               type="button"
                               onClick={() => removeCustomTodo(giorno.giorno, cIdx)}
-                              className="p-1 rounded hover:bg-rose-500/20 text-[var(--text-secondary)] hover:text-rose-500 transition-colors flex-shrink-0"
+                              className="p-1 rounded hover:bg-[var(--accent-torii)]/20 text-[var(--text-secondary)] hover:text-[var(--accent-torii)] transition-colors flex-shrink-0"
                               title="Rimuovi"
                             >
                               <X className="w-3.5 h-3.5" />

@@ -17,7 +17,7 @@ interface ScheduleCardProps {
 export const TIMELINE_DOT_COLORS: Record<TipoAttivita, string> = {
   trasporto: 'bg-sky-500',
   pasto: 'bg-amber-500',
-  festival: 'bg-rose-500',
+  festival: 'bg-[var(--accent-torii)]',
   alloggio: 'bg-purple-500',
   compito: 'bg-yellow-500',
   attivita: 'bg-emerald-500',
@@ -29,7 +29,7 @@ const TYPE_BADGES: Record<TipoAttivita, { label: string; icon: string; bg: strin
   attivita: { label: 'Visita', icon: '📍', bg: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' },
   pasto: { label: 'Pasto', icon: '🍜', bg: 'bg-amber-500/20 text-amber-300 border-amber-500/30' },
   alloggio: { label: 'Hotel', icon: '🏨', bg: 'bg-purple-500/20 text-purple-300 border-purple-500/30' },
-  festival: { label: 'Event', icon: '🎏', bg: 'bg-rose-500/20 text-rose-300 border-rose-500/30' },
+  festival: { label: 'Event', icon: '🎏', bg: 'bg-[var(--accent-torii)]/20 text-[var(--accent-torii)] border-[var(--accent-torii)]/30' },
   compito: { label: 'Task', icon: '⚡', bg: 'bg-yellow-500/20 text-yellow-300 border-yellow-500/30' },
   info: { label: 'Info', icon: 'ℹ️', bg: 'bg-slate-500/20 text-slate-300 border-slate-500/30' }
 };
@@ -85,7 +85,7 @@ export const ScheduleCard: React.FC<ScheduleCardProps> = ({
         <div className="flex items-center justify-between gap-2">
           <div className="flex items-center gap-2.5 min-w-0 flex-wrap">
             <span className={`w-2.5 h-2.5 rounded-full ${dotColor} shrink-0`} />
-            <span className="font-mono text-base font-bold text-[var(--accent-torii)] shrink-0">
+            <span className="font-mono text-base font-bold text-[var(--accent-bamboo)] shrink-0">
               {item.ora}
               {item.ora_fine && <span className="text-xs text-[var(--text-muted)] font-normal"> - {item.ora_fine}</span>}
             </span>

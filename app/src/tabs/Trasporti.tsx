@@ -148,7 +148,7 @@ export const TrasportiTab: React.FC = () => {
                   </div>
 
                   {volo.note && (
-                    <div className="text-xs bg-rose-500/10 border border-rose-500/30 text-rose-700 dark:text-rose-300 p-2.5 rounded-xl flex items-center space-x-1.5 font-medium">
+                    <div className="text-xs bg-[var(--accent-torii)]/10 border border-[var(--accent-torii)]/30 text-[var(--accent-torii)] p-2.5 rounded-xl flex items-center space-x-1.5 font-medium">
                       <AlertCircle className="w-3.5 h-3.5 shrink-0" />
                       <span>{volo.note}</span>
                     </div>

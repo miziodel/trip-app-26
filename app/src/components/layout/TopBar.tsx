@@ -47,8 +47,8 @@ export const TopBar: React.FC = () => {
         </div>
         <div className="h-6 w-px bg-[var(--border-subtle)]" />
         <div className="flex flex-col">
-          <span className="text-amber-600 dark:text-amber-400 font-bold text-[10px] uppercase tracking-wider">JP/KR (UTC+9)</span>
-          <span className="text-amber-700 dark:text-amber-300 font-extrabold text-sm">{times.asia || '--:--'}</span>
+          <span className="text-[var(--accent-bamboo)] font-bold text-[10px] uppercase tracking-wider">JP/KR (UTC+9)</span>
+          <span className="text-[var(--accent-bamboo)] font-extrabold text-sm">{times.asia || '--:--'}</span>
         </div>
       </div>
 
@@ -58,7 +58,7 @@ export const TopBar: React.FC = () => {
         <button
           type="button"
           onClick={() => openCheckInModal()}
-          className="min-w-[44px] min-h-[44px] p-2.5 rounded-xl bg-[var(--bg-card)] border border-[var(--border-subtle)] text-emerald-600 dark:text-emerald-400 hover:border-emerald-500 transition-all active:scale-95 flex items-center justify-center cursor-pointer shadow-xs"
+          className="min-w-[44px] min-h-[44px] p-2.5 rounded-xl bg-[var(--bg-card)] border border-[var(--border-subtle)] text-[var(--accent-bamboo)] hover:border-[var(--accent-bamboo)] transition-all active:scale-95 flex items-center justify-center cursor-pointer shadow-xs"
           title="📍 Registra Check-in"
         >
           <MapPin className="w-4 h-4 stroke-[2.5]" />
@@ -91,7 +91,7 @@ export const TopBar: React.FC = () => {
           className="min-w-[44px] min-h-[44px] p-2.5 rounded-xl bg-[var(--bg-card)] border border-[var(--border-subtle)] text-[var(--text-primary)] hover:border-[var(--accent-gold)] transition-all active:scale-95 flex items-center justify-center cursor-pointer shadow-xs"
           title={theme === 'night' ? 'Attiva Modalità Giorno' : 'Attiva Modalità Notte'}
         >
-          {theme === 'night' ? <Sun className="w-4 h-4 text-[var(--accent-gold)]" /> : <Moon className="w-4 h-4 text-sky-400" />}
+          {theme === 'night' ? <Sun className="w-4 h-4 text-[var(--accent-gold)]" /> : <Moon className="w-4 h-4 text-[var(--accent-torii)]" />}
         </button>
       </div>
     </header>

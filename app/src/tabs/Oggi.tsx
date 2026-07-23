@@ -34,7 +34,7 @@ const TYPE_DOT_COLORS: Record<string, string> = {
   attivita: 'bg-emerald-500',
   pasto: 'bg-amber-500',
   alloggio: 'bg-purple-500',
-  festival: 'bg-rose-500',
+  festival: 'bg-[var(--accent-torii)]',
   compito: 'bg-yellow-500',
   info: 'bg-slate-500',
 };

@@ -23,19 +23,19 @@ export const EmergenzeTab: React.FC = () => {
   return (
     <div className="space-y-6 pb-24 px-4 pt-3 max-w-md mx-auto">
       {/* Assicurazione Card */}
-      <div className="bg-rose-500/10 border border-rose-500/50 rounded-2xl p-5 space-y-4 shadow-xl">
+      <div className="bg-[var(--accent-torii)]/10 border border-[var(--accent-torii)]/30 rounded-2xl p-5 space-y-4 shadow-xl">
         <div className="flex items-center space-x-2">
-          <ShieldCheck className="w-6 h-6 text-rose-500 dark:text-rose-400" />
+          <ShieldCheck className="w-6 h-6 text-[var(--accent-torii)]" />
           <div>
-            <h2 className="text-base font-bold text-rose-700 dark:text-rose-200">{assicurazione.compagnia}</h2>
-            <p className="text-xs text-rose-600 dark:text-rose-300/80 font-medium">Polizza Sanitaria & Assistenza H24</p>
+            <h2 className="text-base font-bold text-[var(--accent-torii)]">{assicurazione.compagnia}</h2>
+            <p className="text-xs text-[var(--text-secondary)] font-medium">Polizza Sanitaria & Assistenza H24</p>
           </div>
         </div>
 
-        <div className="bg-[var(--bg-primary)] border border-rose-500/30 rounded-xl p-3 space-y-2">
+        <div className="bg-[var(--bg-primary)] border border-[var(--border-subtle)] rounded-xl p-3 space-y-2">
           <div className="flex items-center justify-between text-xs">
             <span className="text-[var(--text-secondary)]">Numero Polizza:</span>
-            <CopyableText text={assicurazione.polizza} className="font-mono font-bold text-rose-600 dark:text-rose-300 bg-rose-500/20 px-2 py-0.5 rounded" />
+            <CopyableText text={assicurazione.polizza} className="font-mono font-bold text-[var(--accent-torii)] bg-[var(--accent-torii)]/20 px-2 py-0.5 rounded" />
           </div>
 
           <div className="flex items-center justify-between text-xs pt-1 border-t border-[var(--border-subtle)]">
@@ -47,7 +47,7 @@ export const EmergenzeTab: React.FC = () => {
         <div className="grid grid-cols-2 gap-2">
           <a
             href={`tel:${assicurazione.telefono_h24.replace(/\s+/g, '')}`}
-            className="bg-rose-600 hover:bg-rose-500 text-white font-bold py-3 px-3 rounded-xl text-xs shadow-lg transition-all active:scale-95 flex items-center justify-center space-x-1.5"
+            className="bg-[var(--accent-torii)] hover:opacity-90 text-white font-bold py-3 px-3 rounded-xl text-xs shadow-lg transition-all active:scale-95 flex items-center justify-center space-x-1.5"
           >
             <PhoneCall className="w-4 h-4 shrink-0" />
             <span className="truncate">Chiama H24</span>
@@ -57,7 +57,7 @@ export const EmergenzeTab: React.FC = () => {
             href={assicurazione.sito_web || 'https://www.columbus.it'}
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-[var(--bg-card)] hover:opacity-90 text-rose-600 dark:text-rose-300 border border-rose-500/40 font-bold py-3 px-3 rounded-xl text-xs shadow-lg transition-all active:scale-95 flex items-center justify-center space-x-1.5"
+            className="bg-[var(--bg-card)] hover:opacity-90 text-[var(--accent-torii)] border border-[var(--accent-torii)]/40 font-bold py-3 px-3 rounded-xl text-xs shadow-lg transition-all active:scale-95 flex items-center justify-center space-x-1.5"
           >
             <ExternalLink className="w-4 h-4 shrink-0" />
             <span className="truncate">Sito Web Polizza</span>
@@ -81,7 +81,7 @@ export const EmergenzeTab: React.FC = () => {
 
           <div className="bg-[var(--bg-primary)] p-2.5 rounded-xl border border-[var(--border-subtle)]">
             <div className="text-[var(--text-secondary)]">Ambulanza:</div>
-            <a href={`tel:${corea.ambulanza}`} className="font-mono font-bold text-base text-rose-600 dark:text-rose-400">
+            <a href={`tel:${corea.ambulanza}`} className="font-mono font-bold text-base text-[var(--accent-torii)]">
               {corea.ambulanza}
             </a>
           </div>
@@ -106,7 +106,7 @@ export const EmergenzeTab: React.FC = () => {
 
       {/* Japan Emergency Numbers */}
       <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-2xl p-4 space-y-3 shadow-md">
-        <h3 className="text-sm font-bold text-rose-600 dark:text-rose-400 flex items-center space-x-2">
+        <h3 className="text-sm font-bold text-[var(--accent-torii)] flex items-center space-x-2">
           <span>🇯🇵 Numeri di Emergenza Giappone</span>
         </h3>
 
@@ -120,7 +120,7 @@ export const EmergenzeTab: React.FC = () => {
 
           <div className="bg-[var(--bg-primary)] p-2.5 rounded-xl border border-[var(--border-subtle)]">
             <div className="text-[var(--text-secondary)]">Ambulanza:</div>
-            <a href={`tel:${giappone.ambulanza}`} className="font-mono font-bold text-base text-rose-600 dark:text-rose-400">
+            <a href={`tel:${giappone.ambulanza}`} className="font-mono font-bold text-base text-[var(--accent-torii)]">
               {giappone.ambulanza}
             </a>
           </div>
@@ -178,14 +178,14 @@ export const EmergenzeTab: React.FC = () => {
           <button
             type="button"
             onClick={() => setShowConfirmReset(true)}
-            className="w-full bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/30 font-semibold py-3 px-4 rounded-2xl text-xs transition-all active:scale-95 flex items-center justify-center gap-2"
+            className="w-full bg-[var(--accent-torii)]/10 hover:bg-[var(--accent-torii)]/20 text-[var(--accent-torii)] border border-[var(--accent-torii)]/30 font-semibold py-3 px-4 rounded-2xl text-xs transition-all active:scale-95 flex items-center justify-center gap-2"
           >
             <Trash2 className="w-4 h-4" />
             <span>🗑️ Reimposta App (Cancella IndexedDB)</span>
           </button>
         ) : (
-          <div className="bg-rose-500/10 border border-rose-500/40 p-4 rounded-2xl space-y-3 animate-in fade-in">
-            <div className="flex items-center gap-2 text-rose-600 dark:text-rose-300 text-xs font-bold">
+          <div className="bg-[var(--accent-torii)]/10 border border-[var(--accent-torii)]/40 p-4 rounded-2xl space-y-3 animate-in fade-in">
+            <div className="flex items-center gap-2 text-[var(--accent-torii)] text-xs font-bold">
               <AlertTriangle className="w-4 h-4" />
               <span>Sei sicuro di voler resettare tutti i dati?</span>
             </div>
@@ -196,7 +196,7 @@ export const EmergenzeTab: React.FC = () => {
               <button
                 type="button"
                 onClick={handleResetApp}
-                className="py-2.5 bg-rose-600 hover:bg-rose-500 text-white font-bold rounded-xl text-xs shadow"
+                className="py-2.5 bg-[var(--accent-torii)] hover:opacity-90 text-white font-bold rounded-xl text-xs shadow"
               >
                 Sì, Elimina Tutto
               </button>
