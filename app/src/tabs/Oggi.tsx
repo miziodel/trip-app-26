@@ -169,7 +169,7 @@ export const OggiTab: React.FC = () => {
           {currentDayData.titolo}
         </h1>
         <p className="text-xs text-[var(--text-secondary)] font-noto tracking-wide">
-          {currentDayData.fase} • Tappa a {currentDayData.citta}
+          {currentDayData.fase}
         </p>
       </div>
 

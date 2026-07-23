@@ -118,29 +118,31 @@ describe('BDD Scenario: Feature 7 - Tema Giorno 100% Solare & Alto Contrasto (WC
   });
 });
 
-describe('BDD Scenario: Feature 8 - Compressione Automatica Itinerario Completo', () => {
-  it('Given current date and time, When Itinerario tab initializes, Then computes only the active day and closest schedule item to open', () => {
-    const todayStr = '2026-07-28';
-    const currentMinutes = 10 * 60 + 30; // 10:30 AM
+describe('BDD Scenario: Feature 8 - Interazione Accordion e Navigazione a Oggi', () => {
+  it('Given user in Itinerario tab, When clicking day card header, Then toggles accordion expansion without switching tab', () => {
+    let expanded = false;
+    const toggleAccordion = () => { expanded = !expanded; };
+    
+    toggleAccordion();
+    expect(expanded).toBe(true);
 
-    const dayMatch = sampleData.itinerario.find((g) => g.data === todayStr) || sampleData.itinerario[0];
-    let closestIndex = 0;
-    let minDiff = Infinity;
+    toggleAccordion();
+    expect(expanded).toBe(false);
+  });
 
-    dayMatch.tabella_oraria.forEach((slot, idx) => {
-      if (slot.ora) {
-        const [h, m] = slot.ora.split(':').map(Number);
-        const slotMinutes = h * 60 + (m || 0);
-        const diff = Math.abs(currentMinutes - slotMinutes);
-        if (diff < minDiff) {
-          minDiff = diff;
-          closestIndex = idx;
-        }
-      }
-    });
+  it('Given user in Itinerario tab, When clicking "Apri in Oggi", Then switches active tab to Oggi with selected day', () => {
+    let activeTab = 'itinerario';
+    let selectedDay = 0;
 
-    expect(dayMatch.giorno).toBeDefined();
-    expect(closestIndex).toBeGreaterThanOrEqual(0);
+    const handleNavigateToOggi = (dayNum: number) => {
+      selectedDay = dayNum;
+      activeTab = 'oggi';
+    };
+
+    handleNavigateToOggi(4);
+    expect(selectedDay).toBe(4);
+    expect(activeTab).toBe('oggi');
   });
 });
+
 

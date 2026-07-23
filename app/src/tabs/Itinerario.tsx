@@ -223,9 +223,9 @@ export const ItinerarioTab: React.FC = () => {
               key={giorno.giorno}
               className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-2xl overflow-hidden shadow-md transition-all"
             >
-              {/* Accordion Header Bar - Clicking navigates to Oggi tab */}
+              {/* Accordion Header Bar - Clicking toggles accordion expansion in Itinerario tab */}
               <div
-                onClick={() => handleNavigateToOggi(giorno.giorno)}
+                onClick={(e) => toggleAccordion(giorno.giorno, e)}
                 className="w-full p-4 flex items-center justify-between text-left hover:bg-[var(--border-subtle)] transition-colors cursor-pointer"
               >
                 <div className="space-y-0.5 flex-1 min-w-0 pr-2">
@@ -240,10 +240,17 @@ export const ItinerarioTab: React.FC = () => {
                   <h3 className="text-base font-bold text-[var(--text-primary)] leading-snug break-words">
                     {giorno.titolo}
                   </h3>
-                  <span className="text-[11px] text-amber-600 dark:text-amber-300/80 font-medium flex items-center gap-1 pt-0.5">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleNavigateToOggi(giorno.giorno);
+                    }}
+                    className="inline-flex items-center gap-1 text-[11px] text-amber-600 dark:text-amber-300 font-bold hover:underline pt-0.5"
+                  >
                     <Calendar className="w-3 h-3 text-amber-500 dark:text-amber-400" />
                     <span>Apri in Oggi ➔</span>
-                  </span>
+                  </button>
                 </div>
 
                 <div className="flex items-center gap-2 flex-shrink-0">

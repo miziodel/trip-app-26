@@ -157,11 +157,11 @@ Feature: Compressione Automatica dell'Itinerario Completo
   Voglio vedere aperto di default soltanto il giorno e l'orario del momento attuale
   Per non essere sopraffatto da decine di schede aperte contemporaneamente
 
-  Scenario: Apertura di default del solo giorno e item orario corrente
-    Given l'utente apre il Tab ITINERARIO
-    When l'app rileva la data corrente del viaggio ed il timestamp attuale
-    Then viene aperta di default la sola fisarmonica del giorno corrente
-    And all'interno di quel giorno viene aperta la sola ScheduleCard dell'orario più vicino all'ora attuale
-    And tutti gli altri giorni e schede orarie rimangono compressi di default
+  Scenario: Interazione con l'accordion del giorno e navigazione condizionale
+    Given l'utente si trova nel Tab ITINERARIO
+    When tocca qualsiasi punto dell'intestazione della card del giorno
+    Then l'accordion del giorno si espande o si comprime rimanendo all'interno della vista ITINERARIO
+    When l'utente tocca specificamente il pulsante CTA "Apri in Oggi ➔"
+    Then l'applicazione naviga al Tab OGGI mostrando i dettagli del giorno selezionato
 ```
 
