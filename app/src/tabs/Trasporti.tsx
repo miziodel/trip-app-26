@@ -109,7 +109,7 @@ export const TrasportiTab: React.FC = () => {
       {/* Voli Section */}
       {(activeFilter === 'Tutti' || activeFilter === 'Voli') && (
         <div className="space-y-3">
-          <h2 className="text-sm uppercase tracking-wider font-bold text-sky-500 dark:text-sky-400 flex items-center space-x-2">
+          <h2 className="text-sm uppercase tracking-wider font-bold text-[var(--accent-torii)] flex items-center space-x-2">
             <Plane className="w-4 h-4" />
             <span>Voli ({filteredVoli.length})</span>
           </h2>
@@ -127,7 +127,7 @@ export const TrasportiTab: React.FC = () => {
                 >
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-mono font-bold text-[var(--accent-torii)]">{volo.id} • {volo.data}</span>
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 border border-emerald-500/30">
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-600 text-white border border-emerald-700">
                       {volo.stato}
                     </span>
                   </div>
@@ -198,7 +198,7 @@ export const TrasportiTab: React.FC = () => {
                     {'pnr' in item && item.pnr && (
                       <div className="flex items-center space-x-1 font-mono">
                         <span className="text-[var(--text-secondary)]">PNR:</span>
-                        <CopyableText text={item.pnr} className="font-bold text-sky-600 dark:text-sky-300 bg-sky-500/20 px-2 py-0.5 rounded border border-sky-500/30" />
+                        <CopyableText text={item.pnr} className="font-bold text-[var(--accent-torii)] bg-[var(--accent-torii)]/10 px-2 py-0.5 rounded border border-[var(--accent-torii)]/30" />
                       </div>
                     )}
                   </div>
@@ -323,7 +323,7 @@ export const TrasportiTab: React.FC = () => {
               >
                 <div className="flex items-center justify-between">
                   <span className="text-xs font-mono font-bold text-purple-500 dark:text-purple-400">{h.id} • {h.citta}</span>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 border border-emerald-500/30">
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-600 text-white border border-emerald-700">
                     {h.stato_pagamento}
                   </span>
                 </div>
