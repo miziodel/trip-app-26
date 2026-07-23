@@ -204,5 +204,46 @@ describe('BDD Scenario: Feature 9 - Copia Diario in Formato Testo (Markdown Expo
   });
 });
 
+describe('BDD Scenario: Feature 11 - Sincronizzazione Offline-First GiPSigo', () => {
+  it('Given un CheckIn locale, When viene convertito in DTO GiPSigo, Then source_key == id e i campi sono mappati correttamente', async () => {
+    const { toGiPSigoPayload } = await import('../../src/services/gipsigoService');
 
+    const mockCheckIn = {
+      id: 'ci-test-123',
+      giorno: 5,
+      timestamp: 1770100000000,
+      luogo_nome: 'N Seoul Tower',
+      commento: 'Vista panoramica incredibile',
+      rating: 5,
+      coords: { lat: 37.5512, lng: 126.9882 },
+      photoIds: [],
+      syncedToGiPSigo: false,
+    };
 
+    const payload = toGiPSigoPayload(mockCheckIn as any);
+
+    expect(payload.source_key).toBe('ci-test-123');
+    expect(payload.latitude).toBeCloseTo(37.5512);
+    expect(payload.longitude).toBeCloseTo(126.9882);
+    expect(payload.rating).toBe(5);
+    expect(payload.location_name).toBe('N Seoul Tower');
+    expect(payload.comment).toBe('Vista panoramica incredibile');
+    expect(typeof payload.date).toBe('string');
+    expect(payload.date).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+  });
+
+  it('Given GiPSigo non configurato (enabled: false), When syncPendingCheckIns viene chiamato, Then restituisce synced:0 senza fetch', async () => {
+    const { syncPendingCheckIns } = await import('../../src/services/gipsigoService');
+
+    const disabledConfig = {
+      enabled: false,
+      apiKey: '',
+      tripToken: '',
+      endpointUrl: '',
+    };
+
+    const result = await syncPendingCheckIns(disabledConfig as any);
+    expect(result.synced).toBe(0);
+    expect(result.errors).toContain('GiPSigo non configurato');
+  });
+});

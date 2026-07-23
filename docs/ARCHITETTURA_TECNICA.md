@@ -4,7 +4,7 @@
 
 - **Core**: React 19 + TypeScript 6.0
 - **Build Tool**: Vite 8.1
-- **Styling**: TailwindCSS v4 con accenti tematici (`slate-950`, `amber-400`, `sky-400`, `rose-400`, `purple-400`)
+- **Styling**: TailwindCSS v4 — **Palette Opzione B (Indaco & Bamboo Zen)**: token CSS personalizzati (`--accent-torii: Indaco`, `--accent-bamboo: Verde Bamboo`, `--accent-gold: Zafferano`). Zero-rosso-allarme.
 - **Icons**: Lucide React
 - **PWA Engine**: `vite-plugin-pwa` 1.3 (Workbox Service Worker Generator)
 - **Storage Layer**: `idb` 8.0 (IndexedDB Promise-based wrapper)
@@ -52,14 +52,21 @@
 ```
 
 ### 2.2 Schema IndexedDB (`viaggio-db-v2`)
-Database: `viaggio-db-v2` (Versione 1)
+Database: `viaggio-db-v2` (Versione attuale con migration automatica)
 - Store **`config`**:
   - Key `'data'`: Oggetto `ViaggioData` completo.
   - Key `'todos'`: Record `{ [giornoId: number]: boolean[] }` per lo stato delle spunte.
   - Key `'custom_todos'`: Record `{ [giornoId: number]: string[] }` per i promemoria aggiunti.
   - Key `'custom_rates'`: Oggetto `{ JPY_EUR: number, KRW_EUR: number }`.
-- Store **`logs`**:
+  - Key `'gipsigo_config'`: Oggetto `GiPSigoConfig` con credenziali, endpoint e stato sync.
+- Store **`logs`** (deprecato, in favore di `journals`):
   - Key `'logs'`: Record `{ [itemKey: string]: { reaction?: string, note?: string, updatedAt: number } }`.
+- Store **`journals`**:
+  - Key per `giornoId`: `DailyJournal` con rating, highlight, notes.
+- Store **`checkins`**:
+  - Oggetti `CheckIn` con ID univoco, timestamp, coordinate GPS, rating, commento, photoIds e flag `syncedToGiPSigo: boolean`.
+- Store **`checkin_photos`**:
+  - Oggetti `CheckInPhoto` con immagine compressa JPEG client-side (max 1200px, ~100KB).
 
 ### 2.3 Service Worker & Caching Strategy
 - Generato da `vite-plugin-pwa` in modalità `generateSW`.
@@ -74,27 +81,39 @@ Database: `viaggio-db-v2` (Versione 1)
 src/
 ├── App.tsx                     # Container principale SPA
 ├── main.tsx                    # Entry point React
-├── index.css                   # Tailwind Base & CSS Custom
+├── index.css                   # Tailwind Base & CSS Custom (token Opzione B)
 ├── types/
-│   └── viaggio.ts              # Tipizzazione TypeScript completa del schema dati
+│   └── viaggio.ts              # Tipizzazione TypeScript completa (incl. CheckIn, GiPSigoConfig)
 ├── store/
 │   ├── db.ts                   # Layer di accesso asincrono IndexedDB via `idb`
 │   └── store.ts                # Zustand store globale
+├── services/
+│   └── gipsigoService.ts       # Sync offline-first batch verso GiPSigo (POST JSON, BATCH_SIZE=500)
+├── utils/
+│   ├── dateUtils.ts            # Formatters date
+│   ├── exportUtils.ts          # generateFullJournalMarkdown, exportCheckInsGeoJSON/KML, exportFullBackupJSON
+│   ├── linkUtils.ts            # Deep-link mappe mobile
+│   └── transitUtils.ts         # isTransitActiveNow, getTransitProgressPercent
 ├── components/
 │   ├── layout/
-│   │   ├── TopBar.tsx          # Dual Timezone clock, wifi indicator, convertitore button
-│   │   └── BottomNav.tsx       # Bottom bar a 5 schede (min target 52px)
+│   │   ├── TopBar.tsx          # Dual Timezone clock, pulsante Check-in, valuta, todo
+│   │   └── BottomNav.tsx       # Bottom bar a 5 schede (min target 52px, senza dot indicator)
 │   ├── ui/
-│   │   ├── ScheduleCard.tsx    # Card oraria espandibile con Mappa/Search/Tabelog/Ticket
+│   │   ├── ScheduleCard.tsx    # Card oraria espandibile con Mappa/Search/Tabelog/Check-in
 │   │   ├── TaxiCard.tsx        # Overlay fullscreen Kanji/Hangul ad alto contrasto
 │   │   ├── CurrencyModal.tsx   # Modal convertitore EUR ↔ JPY/KRW editabile
 │   │   ├── CopyableText.tsx    # Wrapper per copia negli appunti 1-tap
-│   │   └── Toast.tsx           # Floating toast notification
+│   │   ├── Toast.tsx           # Floating toast notification
+│   │   ├── CheckInCard.tsx     # Card singolo check-in con foto, rating, mappa e cancellazione
+│   │   ├── CheckInTimeline.tsx # Timeline cronologica globale di tutti i check-in
+│   │   ├── CheckInModal.tsx    # Modal per nuovo/modifica check-in con GPS e foto
+│   │   ├── HeroProgressCard.tsx# Card progress per transiti attivi in tempo reale
+│   │   └── NightlyJournalCard.tsx # Diario di bordo serale con stelle e highlight
 │   └── welcome/
 │       └── WelcomeScreen.tsx   # Schermata di caricamento JSON al primo avvio
 └── tabs/
     ├── Oggi.tsx                # Tab 1: Dashboard dinamica giorno corrente
-    ├── Itinerario.tsx          # Tab 2: Overview città, diario express & export
+    ├── Itinerario.tsx          # Tab 2: Overview città, diario express, check-in, export & GiPSigo sync
     ├── Trasporti.tsx           # Tab 3: Voli, treni/bus, alloggi & biglietti musei
     ├── Guida.tsx               # Tab 4: Frasario (30 espressioni) & protocolli
     └── Emergenze.tsx           # Tab 5: Assicurazione, emergenze & reset DB
@@ -110,4 +129,17 @@ src/
 5. **Living Documentation Workflow**: Mantenimento attivo e aggiornato della Single Source of Truth in `docs/` (`maintain_living_documentation`).
 6. **Cleanup-Session Workflow**: Procedura di fine sessione in 3 fasi (Roadmap & Walkthrough Sync → Knowledge Check `/knowledge-check` → Git & Data Hygiene).
 
+---
+
+## 5. Integrazione GiPSigo (Feature 11 — Sincronizzazione Opzionale)
+
+L'integrazione GiPSigo è un layer di sincronizzazione **best-effort** e **non-bloccante** che NON viola il principio Zero-Cloud:
+
+- I check-in sono **sempre scritti prima** in IndexedDB locale (`checkins` store).
+- Il flag `syncedToGiPSigo: boolean` traccia cosa è già stato inviato.
+- Il servizio `gipsigoService.ts` esegue POST JSON batch (max 500 item) all'endpoint `external_checkin.php` con headers `X-Api-Key` e `X-Trip-Token`.
+- **Auto-sync**: listener `window.addEventListener('online', ...)` attivato in `Itinerario.tsx` e disponibile come helper `initGiPSigoAutoSync()` per `App.tsx`.
+- **Manual sync**: pulsante "🔗 Sync GiPSigo" visibile nella sezione Export solo se `gipsigoConfig.enabled === true`.
+- **Deduplicazione lato server**: ogni payload include `source_key = checkin.id` per prevenire duplicati.
+- Le credenziali (`apiKey`, `tripToken`, `endpointUrl`) sono salvate in IndexedDB e **mai** in file sorgente o environment variables pubbliche.
 ```

@@ -1,6 +1,15 @@
-# Roadmap Funzionale & Backlog (v5.0 Completed)
+# Roadmap Funzionale & Backlog (v6.0 Completed)
 
 Raccolta delle funzionalità implementate e future evoluzioni dell'applicazione PWA Trip App 2026.
+
+---
+
+## ✅ Funzionalità Completate (v6.0 - Luglio 2026)
+
+- [x] **Palette Opzione B (Indaco & Bamboo Zen)**: Eliminazione del rosso-allarme. Orari in Verde Bamboo, badge fase in Indaco Giapponese, valuta in Zafferano. Token CSS `[data-theme="day"]` / `[data-theme="night"]` in `index.css`. Zero modifiche strutturali ai componenti.
+- [x] **BottomNav Clean (No Dot Indicator)**: Rimosso il puntino attivo sotto l'icona di navigazione — la pillola di sfondo indaco è sufficiente indicatore visivo.
+- [x] **Contrasto Card Voli Day Mode (WCAG AA)**: Badge `Confermato` e bordi card voli sostituiti con token Indaco ad alto contrasto su sfondo bianco (`bg-[var(--accent-torii)] text-white`).
+- [x] **Sincronizzazione Offline-First GiPSigo (Feature 11)**: Servizio `gipsigoService.ts` con batch POST JSON (max 500 item), auto-sync su evento `online`, pulsante sync manuale nella sezione Export (visibile solo se `gipsigoConfig.enabled === true`), deduplicazione via `source_key`, flag `syncedToGiPSigo` in IndexedDB.
 
 ---
 

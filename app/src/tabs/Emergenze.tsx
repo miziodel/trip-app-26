@@ -1,14 +1,27 @@
 import React, { useState } from 'react';
-import { PhoneCall, ShieldCheck, Globe, ExternalLink, Trash2, AlertTriangle } from 'lucide-react';
+import { PhoneCall, ShieldCheck, Globe, ExternalLink, Trash2, AlertTriangle, Link2, CheckCircle2, Loader2 } from 'lucide-react';
 import { useViaggioStore } from '../store/store';
 import { CopyableText } from '../components/ui/CopyableText';
+import { syncPendingCheckIns } from '../services/gipsigoService';
 
 export const EmergenzeTab: React.FC = () => {
   const data = useViaggioStore((state) => state.data);
   const clearDatabase = useViaggioStore((state) => state.clearDatabase);
   const showToast = useViaggioStore((state) => state.showToast);
+  const gipsigoConfig = useViaggioStore((state) => state.gipsigoConfig);
+  const updateGiPSigoConfig = useViaggioStore((state) => state.updateGiPSigoConfig);
+  const markCheckInsSyncedGiPSigo = useViaggioStore((state) => state.markCheckInsSyncedGiPSigo);
+  const checkIns = useViaggioStore((state) => state.checkIns);
 
   const [showConfirmReset, setShowConfirmReset] = useState<boolean>(false);
+
+  // GiPSigo form state
+  const [gipsigoApiKey, setGipsigoApiKey] = useState(gipsigoConfig?.apiKey ?? '');
+  const [gipsigoTripToken, setGipsigoTripToken] = useState(gipsigoConfig?.tripToken ?? '');
+  const [gipsigoEndpoint, setGipsigoEndpoint] = useState(
+    gipsigoConfig?.endpointUrl ?? 'https://mio-gipsigo.it/api/external_checkin.php'
+  );
+  const [isSyncing, setIsSyncing] = useState(false);
 
   if (!data) return null;
 
@@ -170,6 +183,128 @@ export const EmergenzeTab: React.FC = () => {
           <span>Apri Google Drive Voucher</span>
           <ExternalLink className="w-3.5 h-3.5" />
         </a>
+      </div>
+
+      {/* GiPSigo Sync Section */}
+      <div className="bg-sky-500/5 border border-sky-500/20 rounded-2xl p-4 space-y-4 shadow-md">
+        <h3 className="text-sm font-bold text-sky-600 dark:text-sky-400 flex items-center space-x-2">
+          <Link2 className="w-4 h-4" />
+          <span>🔗 Sync GiPSigo</span>
+        </h3>
+
+        {gipsigoConfig?.enabled && (
+          <div className="flex items-center gap-2 text-xs text-emerald-600 dark:text-emerald-400 font-medium bg-emerald-500/10 px-3 py-2 rounded-xl border border-emerald-500/20">
+            <CheckCircle2 className="w-4 h-4 shrink-0" />
+            <span>
+              Integrazione attiva · ultima sync:{' '}
+              {gipsigoConfig.lastSyncAt
+                ? new Date(gipsigoConfig.lastSyncAt).toLocaleString('it-IT')
+                : 'mai'}
+            </span>
+          </div>
+        )}
+
+        <div className="space-y-2">
+          <label className="text-xs text-[var(--text-secondary)] font-medium block">Endpoint GiPSigo</label>
+          <input
+            id="gipsigo-endpoint"
+            type="url"
+            value={gipsigoEndpoint}
+            onChange={(e) => setGipsigoEndpoint(e.target.value)}
+            placeholder="https://mio-gipsigo.it/api/external_checkin.php"
+            className="w-full bg-[var(--bg-primary)] border border-[var(--border-subtle)] rounded-xl px-3 py-2.5 text-xs font-mono text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-sky-500/50"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <label className="text-xs text-[var(--text-secondary)] font-medium block">API Key</label>
+          <input
+            id="gipsigo-apikey"
+            type="text"
+            value={gipsigoApiKey}
+            onChange={(e) => setGipsigoApiKey(e.target.value)}
+            placeholder="gips_live_abc123..."
+            className="w-full bg-[var(--bg-primary)] border border-[var(--border-subtle)] rounded-xl px-3 py-2.5 text-xs font-mono text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-sky-500/50"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <label className="text-xs text-[var(--text-secondary)] font-medium block">Trip Token</label>
+          <input
+            id="gipsigo-triptoken"
+            type="text"
+            value={gipsigoTripToken}
+            onChange={(e) => setGipsigoTripToken(e.target.value)}
+            placeholder="trip_kr_jp_2026..."
+            className="w-full bg-[var(--bg-primary)] border border-[var(--border-subtle)] rounded-xl px-3 py-2.5 text-xs font-mono text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-sky-500/50"
+          />
+        </div>
+
+        <div className="grid grid-cols-2 gap-2 pt-1">
+          <button
+            id="gipsigo-save-btn"
+            type="button"
+            onClick={async () => {
+              if (!gipsigoApiKey.trim() || !gipsigoTripToken.trim() || !gipsigoEndpoint.trim()) {
+                showToast('Compila tutti i campi GiPSigo prima di salvare.');
+                return;
+              }
+              await updateGiPSigoConfig({
+                enabled: true,
+                apiKey: gipsigoApiKey.trim(),
+                tripToken: gipsigoTripToken.trim(),
+                endpointUrl: gipsigoEndpoint.trim(),
+              });
+              showToast('✅ Credenziali GiPSigo salvate!');
+            }}
+            className="py-2.5 bg-sky-600 hover:bg-sky-500 text-white font-bold rounded-xl text-xs shadow transition-all active:scale-95"
+          >
+            Salva Credenziali
+          </button>
+
+          <button
+            id="gipsigo-sync-btn"
+            type="button"
+            disabled={isSyncing || !gipsigoConfig?.enabled}
+            onClick={async () => {
+              if (!gipsigoConfig) return;
+              const pending = Object.values(checkIns).filter((c) => !c.syncedToGiPSigo);
+              if (pending.length === 0) {
+                showToast('Nessun check-in in coda — tutto sincronizzato! ✅');
+                return;
+              }
+              setIsSyncing(true);
+              try {
+                const result = await syncPendingCheckIns(gipsigoConfig);
+                if (result.synced > 0) {
+                  await markCheckInsSyncedGiPSigo(pending.map((c) => c.id).slice(0, result.synced));
+                  showToast(`✅ Sincronizzati ${result.synced} check-in su GiPSigo!`);
+                } else {
+                  showToast(`⚠️ Nessun check-in sincronizzato. ${result.errors[0] ?? ''}`);
+                }
+              } catch (e) {
+                showToast('❌ Errore durante la sincronizzazione.');
+              } finally {
+                setIsSyncing(false);
+              }
+            }}
+            className="py-2.5 bg-[var(--bg-card)] hover:opacity-90 text-sky-600 dark:text-sky-300 border border-sky-500/30 font-semibold rounded-xl text-xs shadow transition-all active:scale-95 flex items-center justify-center gap-1.5 disabled:opacity-40 disabled:cursor-not-allowed"
+          >
+            {isSyncing ? (
+              <><Loader2 className="w-3.5 h-3.5 animate-spin" /> Sync.....</>
+            ) : (
+              <>Sync Ora{Object.values(checkIns).filter((c) => !c.syncedToGiPSigo).length > 0 && (
+                <span className="bg-sky-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                  {Object.values(checkIns).filter((c) => !c.syncedToGiPSigo).length}
+                </span>
+              )}</>
+            )}
+          </button>
+        </div>
+
+        <p className="text-xs text-[var(--text-secondary)] leading-relaxed">
+          I check-in sono <strong>sempre salvati localmente</strong> sul dispositivo. La sync verso GiPSigo è opzionale e avviene automaticamente quando la connessione internet è disponibile.
+        </p>
       </div>
 
       {/* Reset Database Button */}

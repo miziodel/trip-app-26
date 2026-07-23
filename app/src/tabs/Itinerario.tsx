@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useViaggioStore } from '../store/store';
 import { ScheduleCard } from '../components/ui/ScheduleCard';
 import { CopyableText } from '../components/ui/CopyableText';
@@ -29,7 +29,10 @@ import {
   Square,
   Calendar,
   MapPin,
+  Link2,
+  Loader2,
 } from 'lucide-react';
+import { syncPendingCheckIns } from '../services/gipsigoService';
 
 const TYPE_DOT_COLORS: Record<string, string> = {
   trasporto: 'bg-sky-500',
@@ -58,6 +61,25 @@ export const ItinerarioTab: React.FC = () => {
   const checkIns = useViaggioStore((state) => state.checkIns);
   const openCheckInModal = useViaggioStore((state) => state.openCheckInModal);
   const deleteCheckIn = useViaggioStore((state) => state.deleteCheckIn);
+  const gipsigoConfig = useViaggioStore((state) => state.gipsigoConfig);
+  const markCheckInsSyncedGiPSigo = useViaggioStore((state) => state.markCheckInsSyncedGiPSigo);
+  const [isSyncingGipsigo, setIsSyncingGipsigo] = useState(false);
+
+  // Auto-sync al ripristino della connessione internet (Offline-First)
+  useEffect(() => {
+    const handleOnline = async () => {
+      if (!gipsigoConfig?.enabled) return;
+      const pending = Object.values(checkIns).filter((c) => !c.syncedToGiPSigo);
+      if (pending.length === 0) return;
+      const result = await syncPendingCheckIns(gipsigoConfig).catch(() => ({ synced: 0, errors: [] }));
+      if (result.synced > 0) {
+        await markCheckInsSyncedGiPSigo(pending.map((c) => c.id).slice(0, result.synced));
+        showToast(`🔗 ${result.synced} check-in sincronizzati su GiPSigo!`);
+      }
+    };
+    window.addEventListener('online', handleOnline);
+    return () => window.removeEventListener('online', handleOnline);
+  }, [gipsigoConfig, checkIns, markCheckInsSyncedGiPSigo, showToast]);
 
   // Dynamic initial state calculation based on current date and time
   const getInitialExpandedState = () => {
@@ -627,6 +649,56 @@ export const ItinerarioTab: React.FC = () => {
             <MapPin className="w-4 h-4 stroke-[2.5]" />
             <span>📍 Esporta KML</span>
           </button>
+
+          {/* GiPSigo Sync Button — visibile solo se configurato */}
+          {gipsigoConfig?.enabled && (() => {
+            const pendingCount = Object.values(checkIns).filter((c) => !c.syncedToGiPSigo).length;
+            return (
+              <button
+                id="itinerario-gipsigo-sync-btn"
+                type="button"
+                disabled={isSyncingGipsigo}
+                onClick={async () => {
+                  if (!gipsigoConfig) return;
+                  const pending = Object.values(checkIns).filter((c) => !c.syncedToGiPSigo);
+                  if (pending.length === 0) {
+                    showToast('Nessun check-in in coda — tutto sincronizzato! ✅');
+                    return;
+                  }
+                  setIsSyncingGipsigo(true);
+                  try {
+                    const result = await syncPendingCheckIns(gipsigoConfig);
+                    if (result.synced > 0) {
+                      await markCheckInsSyncedGiPSigo(pending.map((c) => c.id).slice(0, result.synced));
+                      showToast(`✅ Sincronizzati ${result.synced} check-in su GiPSigo!`);
+                    } else {
+                      showToast(`⚠️ ${result.errors[0] ?? 'Nessun check-in sincronizzato'}`);
+                    }
+                  } catch (_) {
+                    showToast('❌ Errore durante la sync GiPSigo.');
+                  } finally {
+                    setIsSyncingGipsigo(false);
+                  }
+                }}
+                className="col-span-1 sm:col-span-2 py-2.5 px-3 bg-[var(--bg-primary)] hover:opacity-90 text-sky-600 dark:text-sky-300 border border-sky-500/30 font-bold rounded-xl flex items-center justify-center gap-2 text-xs shadow transition-all active:scale-95 min-h-[44px] disabled:opacity-40 disabled:cursor-not-allowed"
+                title="Sincronizza i check-in non ancora inviati a GiPSigo"
+              >
+                {isSyncingGipsigo ? (
+                  <><Loader2 className="w-4 h-4 animate-spin" /> Sincronizzazione...</>
+                ) : (
+                  <>
+                    <Link2 className="w-4 h-4 stroke-[2.5]" />
+                    <span>🔗 Sync GiPSigo</span>
+                    {pendingCount > 0 && (
+                      <span className="bg-sky-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full">
+                        {pendingCount}
+                      </span>
+                    )}
+                  </>
+                )}
+              </button>
+            );
+          })()}
         </div>
       </div>
     </div>
