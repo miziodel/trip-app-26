@@ -43,10 +43,48 @@ export const ItinerarioTab: React.FC = () => {
   const removeCustomTodo = useViaggioStore((state) => state.removeCustomTodo);
   const showToast = useViaggioStore((state) => state.showToast);
 
+  // Dynamic initial state calculation based on current date and time
+  const getInitialExpandedState = () => {
+    if (!data || !data.itinerario) return { expandedDays: { 0: true }, openScheduleCards: {} };
+    
+    const todayStr = new Date().toISOString().split('T')[0];
+    const currentHour = new Date().getHours();
+    const currentMinute = new Date().getMinutes();
+    const currentTimeInMinutes = currentHour * 60 + currentMinute;
+
+    const todayMatch = data.itinerario.find((g) => g.data === todayStr);
+    const activeDayNum = todayMatch ? todayMatch.giorno : 0;
+    
+    const initialDays: Record<number, boolean> = { [activeDayNum]: true };
+    const initialCards: Record<string, boolean> = {};
+
+    if (todayMatch && todayMatch.tabella_oraria.length > 0) {
+      let activeCardIndex = 0;
+      let minDiff = Infinity;
+
+      todayMatch.tabella_oraria.forEach((item, idx) => {
+        if (item.ora) {
+          const [h, m] = item.ora.split(':').map(Number);
+          const itemMinutes = h * 60 + (m || 0);
+          const diff = Math.abs(currentTimeInMinutes - itemMinutes);
+          if (diff < minDiff) {
+            minDiff = diff;
+            activeCardIndex = idx;
+          }
+        }
+      });
+
+      initialCards[`${activeDayNum}-${activeCardIndex}`] = true;
+    }
+
+    return { expandedDays: initialDays, openScheduleCards: initialCards };
+  };
+
+  const [initialState] = useState(getInitialExpandedState);
   const [selectedCityFilter, setSelectedCityFilter] = useState<string>('Tutti');
-  const [expandedDays, setExpandedDays] = useState<Record<number, boolean>>({ 0: true, 1: true });
+  const [expandedDays, setExpandedDays] = useState<Record<number, boolean>>(initialState.expandedDays);
   const [customTodoInputs, setCustomTodoInputs] = useState<Record<number, string>>({});
-  const [openScheduleCards, setOpenScheduleCards] = useState<Record<string, boolean>>({});
+  const [openScheduleCards, setOpenScheduleCards] = useState<Record<string, boolean>>(initialState.openScheduleCards);
 
   const toggleScheduleCard = (giornoNum: number, sIdx: number) => {
     const cardKey = `${giornoNum}-${sIdx}`;
@@ -119,13 +157,13 @@ export const ItinerarioTab: React.FC = () => {
   return (
     <div className="pb-24 pt-4 px-4 max-w-md mx-auto space-y-4 animate-in fade-in duration-300">
       {/* Header & Export Button */}
-      <div className="flex items-center justify-between bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-md">
+      <div className="flex items-center justify-between bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-2xl p-4 shadow-md">
         <div>
-          <h2 className="text-lg font-black text-white flex items-center gap-2">
-            <Map className="w-5 h-5 text-amber-400" />
+          <h2 className="text-lg font-black text-[var(--text-primary)] flex items-center gap-2">
+            <Map className="w-5 h-5 text-amber-500 dark:text-amber-400" />
             <span>Itinerario Completo</span>
           </h2>
-          <p className="text-xs text-slate-400">28 Luglio - 20 Agosto 2026</p>
+          <p className="text-xs text-[var(--text-secondary)]">28 Luglio - 20 Agosto 2026</p>
         </div>
 
         <button
@@ -148,7 +186,7 @@ export const ItinerarioTab: React.FC = () => {
             className={`py-1.5 px-3.5 rounded-full text-xs font-bold whitespace-nowrap transition-all border ${
               selectedCityFilter === city
                 ? 'bg-amber-400 text-slate-950 border-amber-400 shadow'
-                : 'bg-slate-900 text-slate-400 border-slate-800 hover:text-white'
+                : 'bg-[var(--bg-card)] text-[var(--text-secondary)] border-[var(--border-subtle)] hover:text-[var(--text-primary)]'
             }`}
           >
             {city}
@@ -183,27 +221,27 @@ export const ItinerarioTab: React.FC = () => {
           return (
             <div
               key={giorno.giorno}
-              className="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-md transition-all"
+              className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-2xl overflow-hidden shadow-md transition-all"
             >
               {/* Accordion Header Bar - Clicking navigates to Oggi tab */}
               <div
                 onClick={() => handleNavigateToOggi(giorno.giorno)}
-                className="w-full p-4 flex items-center justify-between text-left hover:bg-slate-850 transition-colors cursor-pointer"
+                className="w-full p-4 flex items-center justify-between text-left hover:bg-[var(--border-subtle)] transition-colors cursor-pointer"
               >
                 <div className="space-y-0.5 flex-1 min-w-0 pr-2">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-xs font-bold text-amber-400 uppercase tracking-wide">
+                    <span className="text-xs font-bold text-amber-600 dark:text-amber-400 uppercase tracking-wide">
                       {giorno.fase}
                     </span>
-                    <span className="text-xs text-slate-500">•</span>
-                    <span className="text-xs font-semibold text-slate-400">Giorno {giorno.giorno}</span>
-                    <span className="text-xs text-slate-500">({formatDate(giorno.data)})</span>
+                    <span className="text-xs text-[var(--text-muted)]">•</span>
+                    <span className="text-xs font-semibold text-[var(--text-secondary)]">Giorno {giorno.giorno}</span>
+                    <span className="text-xs text-[var(--text-muted)]">({formatDate(giorno.data)})</span>
                   </div>
-                  <h3 className="text-base font-bold text-white leading-snug break-words">
+                  <h3 className="text-base font-bold text-[var(--text-primary)] leading-snug break-words">
                     {giorno.titolo}
                   </h3>
-                  <span className="text-[11px] text-amber-300/80 font-medium flex items-center gap-1 pt-0.5">
-                    <Calendar className="w-3 h-3 text-amber-400" />
+                  <span className="text-[11px] text-amber-600 dark:text-amber-300/80 font-medium flex items-center gap-1 pt-0.5">
+                    <Calendar className="w-3 h-3 text-amber-500 dark:text-amber-400" />
                     <span>Apri in Oggi ➔</span>
                   </span>
                 </div>
@@ -212,7 +250,7 @@ export const ItinerarioTab: React.FC = () => {
                   <button
                     type="button"
                     onClick={(e) => toggleAccordion(giorno.giorno, e)}
-                    className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors"
+                    className="p-1.5 text-[var(--text-secondary)] hover:text-[var(--text-primary)] rounded-lg hover:bg-[var(--border-subtle)] transition-colors"
                     title={isExpanded ? 'Riduci' : 'Espandi'}
                   >
                     {isExpanded ? (
@@ -226,44 +264,44 @@ export const ItinerarioTab: React.FC = () => {
 
               {/* Accordion Expanded Content */}
               {isExpanded && (
-                <div className="p-4 border-t border-slate-800/80 bg-slate-950/40 space-y-4 animate-in fade-in duration-200">
+                <div className="p-4 border-t border-[var(--border-subtle)] bg-[var(--bg-primary)] space-y-4 animate-in fade-in duration-200">
                   {/* Integrated Day Flights */}
                   {dayFlights.length > 0 && (
                     <div className="space-y-2">
                       {dayFlights.map((flight) => (
                         <div
                           key={flight.id}
-                          className="bg-blue-950/30 border border-blue-800/50 rounded-xl p-3 space-y-2 text-xs"
+                          className="bg-sky-500/10 border border-sky-500/30 rounded-xl p-3 space-y-2 text-xs"
                         >
                           <div className="flex items-center justify-between">
-                            <span className="font-bold text-blue-300 flex items-center gap-1.5">
-                              <Plane className="w-4 h-4 text-blue-400" />
+                            <span className="font-bold text-sky-600 dark:text-sky-300 flex items-center gap-1.5">
+                              <Plane className="w-4 h-4 text-sky-500 dark:text-sky-400" />
                               <span>
                                 {flight.compagnia} {flight.numero_volo} ({flight.citta_partenza} → {flight.citta_arrivo})
                                 {flight.data === '2026-07-27' && (
-                                  <span className="ml-1 px-1.5 py-0.5 bg-amber-500/20 text-amber-300 text-[10px] rounded font-mono">
+                                  <span className="ml-1 px-1.5 py-0.5 bg-amber-500/20 text-amber-700 dark:text-amber-300 text-[10px] rounded font-mono">
                                     Volo Ieri
                                   </span>
                                 )}
                               </span>
                             </span>
-                            <span className="px-2 py-0.5 bg-blue-500/20 text-blue-300 rounded font-semibold text-[10px] border border-blue-500/30">
+                            <span className="px-2 py-0.5 bg-sky-500/20 text-sky-700 dark:text-sky-300 rounded font-semibold text-[10px] border border-sky-500/30">
                               {flight.stato}
                             </span>
                           </div>
 
-                          <div className="flex items-center justify-between text-slate-300">
-                            <span>🕒 Orario: <strong className="text-white">{flight.ora_partenza} → {flight.ora_arrivo}</strong></span>
+                          <div className="flex items-center justify-between text-[var(--text-secondary)]">
+                            <span>🕒 Orario: <strong className="text-[var(--text-primary)]">{flight.ora_partenza} → {flight.ora_arrivo}</strong></span>
                             <span>⏳ Durata: {flight.durata}</span>
                           </div>
 
-                          <div className="flex items-center justify-between pt-1 border-t border-blue-900/40">
-                            <CopyableText text={flight.pnr} toastMessage="PNR copiato! 🎟️" className="text-blue-300 font-mono">
+                          <div className="flex items-center justify-between pt-1 border-t border-sky-500/20">
+                            <CopyableText text={flight.pnr} toastMessage="PNR copiato! 🎟️" className="text-sky-600 dark:text-sky-300 font-mono">
                               🎟️ PNR: <strong className="underline">{flight.pnr}</strong>
                             </CopyableText>
 
                             {flight.note && (
-                              <span className="text-[11px] text-amber-300 italic">{flight.note}</span>
+                              <span className="text-[11px] text-amber-600 dark:text-amber-300 italic">{flight.note}</span>
                             )}
                           </div>
                         </div>
@@ -273,22 +311,22 @@ export const ItinerarioTab: React.FC = () => {
 
                   {/* Focus Culinario & Tabelog Finder */}
                   {giorno.focus_culinario && (
-                    <div className="bg-slate-900 p-3 rounded-xl border border-slate-800 space-y-2">
+                    <div className="bg-[var(--bg-card)] p-3 rounded-xl border border-[var(--border-subtle)] space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-orange-400">🍜 Focus Culinario:</span>
+                        <span className="text-xs font-bold text-orange-500 dark:text-orange-400">🍜 Focus Culinario:</span>
                         {isJapan && (
                           <a
                             href={`https://tabelog.com/rstLst/?vs=1&sa=${encodeURIComponent(giorno.citta)}&sk=${encodeURIComponent(giorno.focus_culinario.split('(')[0])}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-400 hover:underline bg-amber-400/10 px-2 py-1 rounded-md border border-amber-400/20"
+                            className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-600 dark:text-amber-400 hover:underline bg-amber-500/10 px-2 py-1 rounded-md border border-amber-500/20"
                           >
                             <span>🍜 Cerca su Tabelog</span>
                             <ExternalLink className="w-3 h-3" />
                           </a>
                         )}
                       </div>
-                      <p className="text-xs text-slate-200 font-medium leading-relaxed">
+                      <p className="text-xs text-[var(--text-primary)] font-medium leading-relaxed">
                         {giorno.focus_culinario}
                       </p>
                     </div>
@@ -296,13 +334,13 @@ export const ItinerarioTab: React.FC = () => {
 
                   {/* Hourly Schedule Table using ScheduleCard */}
                   <div className="space-y-3">
-                    <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                    <h4 className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider">
                       Tabella Oraria
                     </h4>
                     <div className="space-y-4 relative before:absolute before:inset-0 before:left-3.5 before:w-0.5 before:bg-[var(--border-strong)]">
                       {giorno.tabella_oraria.map((slot, sIdx) => {
                         const cardKey = `${giorno.giorno}-${sIdx}`;
-                        const isCardOpen = openScheduleCards[cardKey] ?? true;
+                        const isCardOpen = !!openScheduleCards[cardKey];
                         return (
                           <div key={sIdx} className="timeline-item relative pl-9">
                             <div
@@ -338,10 +376,10 @@ export const ItinerarioTab: React.FC = () => {
 
                   {/* Integrated Overnight Accommodation */}
                   {dayAccommodation && (
-                    <div className="bg-slate-900 border border-slate-800 rounded-xl p-3 space-y-2">
-                      <div className="flex items-center justify-between text-xs text-slate-400 border-b border-slate-800 pb-1.5">
-                        <span className="flex items-center gap-1.5 font-bold text-slate-200">
-                          <Hotel className="w-4 h-4 text-amber-400" />
+                    <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl p-3 space-y-2">
+                      <div className="flex items-center justify-between text-xs text-[var(--text-secondary)] border-b border-[var(--border-subtle)] pb-1.5">
+                        <span className="flex items-center gap-1.5 font-bold text-[var(--text-primary)]">
+                          <Hotel className="w-4 h-4 text-amber-500 dark:text-amber-400" />
                           <span>Alloggio Notturno ({dayAccommodation.citta})</span>
                         </span>
                         <button
@@ -354,24 +392,24 @@ export const ItinerarioTab: React.FC = () => {
                               addressEn: dayAccommodation.indirizzo_en,
                             })
                           }
-                          className="py-1 px-2.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 font-bold rounded-lg border border-amber-500/30 flex items-center gap-1 text-[11px] transition-all"
+                          className="py-1 px-2.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 dark:text-amber-300 font-bold rounded-lg border border-amber-500/30 flex items-center gap-1 text-[11px] transition-all"
                         >
                           <Car className="w-3 h-3" />
                           <span>🚗 Taxi Card</span>
                         </button>
                       </div>
 
-                      <h4 className="text-sm font-bold text-white">{dayAccommodation.nome}</h4>
-                      <CopyableText text={dayAccommodation.indirizzo_locale} className="text-xs text-amber-300 font-mono block">
+                      <h4 className="text-sm font-bold text-[var(--text-primary)]">{dayAccommodation.nome}</h4>
+                      <CopyableText text={dayAccommodation.indirizzo_locale} className="text-xs text-amber-600 dark:text-amber-300 font-mono block">
                         📍 {dayAccommodation.indirizzo_locale}
                       </CopyableText>
                     </div>
                   )}
 
                   {/* Todo & Custom Todo Section */}
-                  <div className="bg-slate-900 p-3 rounded-xl border border-slate-800 space-y-3">
-                    <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
-                      <CheckSquare className="w-3.5 h-3.5 text-amber-400" />
+                  <div className="bg-[var(--bg-card)] p-3 rounded-xl border border-[var(--border-subtle)] space-y-3">
+                    <h4 className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider flex items-center gap-1.5">
+                      <CheckSquare className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
                       <span>Checklist & Promemoria (Giorno {giorno.giorno})</span>
                     </h4>
 
@@ -386,14 +424,14 @@ export const ItinerarioTab: React.FC = () => {
                               onClick={() => updateTodo(giorno.giorno, idx, !isChecked)}
                               className={`w-full text-left p-2.5 rounded-lg border flex items-start gap-2.5 transition-all text-xs ${
                                 isChecked
-                                  ? 'bg-emerald-950/20 border-emerald-800/40 text-slate-400 line-through'
-                                  : 'bg-slate-950/70 border-slate-800 text-slate-200 hover:border-slate-700'
+                                  ? 'bg-emerald-500/10 border-emerald-500/30 text-[var(--text-muted)] line-through'
+                                  : 'bg-[var(--bg-primary)] border-[var(--border-subtle)] text-[var(--text-primary)] hover:border-[var(--border-strong)]'
                               }`}
                             >
                               {isChecked ? (
-                                <CheckSquare className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
+                                <CheckSquare className="w-4 h-4 text-emerald-500 flex-shrink-0 mt-0.5" />
                               ) : (
-                                <Square className="w-4 h-4 text-slate-500 flex-shrink-0 mt-0.5" />
+                                <Square className="w-4 h-4 text-[var(--text-muted)] flex-shrink-0 mt-0.5" />
                               )}
                               <span className="leading-relaxed">{todo.testo}</span>
                             </button>
@@ -404,20 +442,20 @@ export const ItinerarioTab: React.FC = () => {
 
                     {/* Custom Todos List */}
                     {dayCustomTodos.length > 0 && (
-                      <div className="space-y-1.5 pt-1 border-t border-slate-800/80">
-                        <span className="text-[10px] font-bold text-amber-400/80 uppercase tracking-wider block">
+                      <div className="space-y-1.5 pt-1 border-t border-[var(--border-subtle)]">
+                        <span className="text-[10px] font-bold text-amber-600 dark:text-amber-400/80 uppercase tracking-wider block">
                           Personalizzati:
                         </span>
                         {dayCustomTodos.map((todoText, cIdx) => (
                           <div
                             key={cIdx}
-                            className="w-full p-2.5 rounded-lg border bg-slate-950/70 border-slate-800 text-slate-200 flex items-center justify-between gap-2 text-xs"
+                            className="w-full p-2.5 rounded-lg border bg-[var(--bg-primary)] border-[var(--border-subtle)] text-[var(--text-primary)] flex items-center justify-between gap-2 text-xs"
                           >
                             <span className="leading-relaxed flex-1 break-words">{todoText}</span>
                             <button
                               type="button"
                               onClick={() => removeCustomTodo(giorno.giorno, cIdx)}
-                              className="p-1 rounded hover:bg-rose-500/20 text-slate-400 hover:text-rose-400 transition-colors flex-shrink-0"
+                              className="p-1 rounded hover:bg-rose-500/20 text-[var(--text-secondary)] hover:text-rose-500 transition-colors flex-shrink-0"
                               title="Rimuovi"
                             >
                               <X className="w-3.5 h-3.5" />
@@ -442,7 +480,7 @@ export const ItinerarioTab: React.FC = () => {
                           }))
                         }
                         placeholder="Aggiungi promemoria..."
-                        className="flex-1 bg-slate-950 border border-slate-800 text-xs text-white p-2 rounded-lg focus:outline-none focus:border-amber-400"
+                        className="flex-1 bg-[var(--bg-primary)] border border-[var(--border-subtle)] text-xs text-[var(--text-primary)] p-2 rounded-lg focus:outline-none focus:border-amber-400"
                       />
                       <button
                         type="submit"

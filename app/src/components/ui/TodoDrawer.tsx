@@ -46,15 +46,15 @@ export const TodoDrawer: React.FC = () => {
 
   return (
     <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex flex-col justify-end animate-in fade-in duration-200">
-      <div className="bg-slate-900 border-t border-slate-800 rounded-t-3xl max-h-[85vh] flex flex-col w-full max-w-md mx-auto shadow-2xl overflow-hidden">
+      <div className="bg-[var(--bg-card)] border-t border-slate-800 rounded-t-3xl max-h-[85vh] flex flex-col w-full max-w-md mx-auto shadow-2xl overflow-hidden">
         {/* Header */}
-        <div className="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-900 sticky top-0 z-10">
+        <div className="p-4 border-b border-slate-800 flex items-center justify-between bg-[var(--bg-card)] sticky top-0 z-10">
           <div>
-            <h2 className="text-base font-bold text-white flex items-center gap-2">
+            <h2 className="text-base text-[var(--text-primary)] font-extrabold flex items-center gap-2">
               <CheckSquare className="w-5 h-5 text-amber-400" />
               <span>Checklist & Promemoria</span>
             </h2>
-            <p className="text-xs text-slate-400">
+            <p className="text-xs text-[var(--text-secondary)] font-semibold">
               Completati {completedTodosCount} di {totalTodosCount} todo
             </p>
           </div>
@@ -62,14 +62,14 @@ export const TodoDrawer: React.FC = () => {
           <button
             type="button"
             onClick={toggleTodoDrawer}
-            className="p-2 rounded-full bg-slate-800 text-slate-400 hover:text-white"
+            className="p-2 rounded-full bg-[var(--bg-primary)] text-[var(--text-primary)] border border-[var(--border-subtle)]"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Filter Toggle */}
-        <div className="px-4 py-2.5 bg-slate-950/60 border-b border-slate-800/60 flex items-center justify-between text-xs">
+        <div className="px-4 py-2.5 bg-[var(--bg-primary)]/60 border-b border-slate-800/60 flex items-center justify-between text-xs">
           <span className="text-slate-400 font-medium flex items-center gap-1.5">
             <Filter className="w-3.5 h-3.5 text-amber-400" />
             <span>Filtra giorni passati:</span>
@@ -80,7 +80,7 @@ export const TodoDrawer: React.FC = () => {
             className={`px-3 py-1 rounded-full font-bold transition-all border ${
               hidePastDays
                 ? 'bg-amber-400 text-slate-950 border-amber-400'
-                : 'bg-slate-800 text-slate-400 border-slate-700'
+                : 'bg-[var(--bg-primary)] text-[var(--text-primary)] border border-[var(--border-subtle)]'
             }`}
           >
             {hidePastDays ? 'Nascondi Passati' : 'Mostra Tutti'}
@@ -100,18 +100,18 @@ export const TodoDrawer: React.FC = () => {
                 className={`rounded-2xl p-4 space-y-3 border transition-all ${
                   isToday
                     ? 'bg-amber-950/20 border-amber-500/40'
-                    : 'bg-slate-950/60 border-slate-800/80'
+                    : 'bg-[var(--bg-primary)]/60 border-[var(--border-subtle)]'
                 }`}
               >
                 {/* Day Header */}
-                <div className="flex items-center justify-between border-b border-slate-800/80 pb-2">
+                <div className="flex items-center justify-between border-b border-[var(--border-subtle)] pb-2">
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-bold text-amber-400 uppercase tracking-wider">
                       {g.fase}
                     </span>
                     <span className="text-xs text-slate-500">•</span>
-                    <span className="text-xs font-bold text-white">Giorno {g.giorno}</span>
-                    <span className="text-xs text-slate-400">({formatDate(g.data)})</span>
+                    <span className="text-xs font-bold text-[var(--text-primary)]">Giorno {g.giorno}</span>
+                    <span className="text-xs text-[var(--text-secondary)] font-semibold">({formatDate(g.data)})</span>
                   </div>
                   {isToday && (
                     <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500 text-slate-950">
@@ -131,8 +131,8 @@ export const TodoDrawer: React.FC = () => {
                         onClick={() => updateTodo(g.giorno, idx, !isChecked)}
                         className={`w-full text-left p-2.5 rounded-xl border flex items-start gap-2.5 transition-all text-xs ${
                           isChecked
-                            ? 'bg-emerald-950/20 border-emerald-800/40 text-slate-400 line-through'
-                            : 'bg-slate-900 border-slate-800 text-slate-200 hover:border-slate-700'
+                            ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-800 dark:text-emerald-300 font-bold line-through'
+                            : 'bg-[var(--bg-card)] border-[var(--border-strong)] text-[var(--text-primary)] font-semibold hover:border-torii/40 shadow-sm'
                         }`}
                       >
                         {isChecked ? (
@@ -149,7 +149,7 @@ export const TodoDrawer: React.FC = () => {
                   {custom.map((cText, cIdx) => (
                     <div
                       key={cIdx}
-                      className="p-2.5 rounded-xl bg-slate-900 border border-amber-500/30 text-amber-200 flex items-center justify-between text-xs font-medium"
+                      className="p-2.5 rounded-xl bg-[var(--bg-card)] border border-amber-500/30 text-amber-200 flex items-center justify-between text-xs font-medium"
                     >
                       <span className="flex items-center gap-1.5 flex-1 pr-2 break-words">
                         <span className="text-amber-400 font-bold">★</span>
@@ -178,7 +178,7 @@ export const TodoDrawer: React.FC = () => {
                     onChange={(e) =>
                       setNewTodoInput((prev) => ({ ...prev, [g.giorno]: e.target.value }))
                     }
-                    className="flex-1 bg-slate-900 border border-slate-800 text-slate-100 text-xs rounded-xl px-3 py-2 focus:outline-none focus:border-amber-400"
+                    className="flex-1 bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--border-strong)] font-bold text-xs rounded-xl px-3 py-2 focus:outline-none focus:border-amber-400"
                   />
                   <button
                     type="submit"

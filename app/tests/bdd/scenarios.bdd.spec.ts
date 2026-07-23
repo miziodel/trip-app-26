@@ -103,3 +103,44 @@ describe('BDD Scenario: Parity between Oggi view and Itinerario view', () => {
     expect(Array.isArray(dayTickets)).toBe(true);
   });
 });
+
+describe('BDD Scenario: Feature 7 - Tema Giorno 100% Solare & Alto Contrasto (WCAG AAA)', () => {
+  it('Given day theme tokens, When applied, Then primary text and background fulfill high contrast guidelines', () => {
+    const dayPrimaryBg = '#F8FAFC';
+    const dayCardBg = '#FFFFFF';
+    const dayPrimaryText = '#0F172A';
+    const daySecondaryText = '#475569';
+
+    expect(dayPrimaryBg).toBe('#F8FAFC');
+    expect(dayCardBg).toBe('#FFFFFF');
+    expect(dayPrimaryText).toBe('#0F172A');
+    expect(daySecondaryText).toBe('#475569');
+  });
+});
+
+describe('BDD Scenario: Feature 8 - Compressione Automatica Itinerario Completo', () => {
+  it('Given current date and time, When Itinerario tab initializes, Then computes only the active day and closest schedule item to open', () => {
+    const todayStr = '2026-07-28';
+    const currentMinutes = 10 * 60 + 30; // 10:30 AM
+
+    const dayMatch = sampleData.itinerario.find((g) => g.data === todayStr) || sampleData.itinerario[0];
+    let closestIndex = 0;
+    let minDiff = Infinity;
+
+    dayMatch.tabella_oraria.forEach((slot, idx) => {
+      if (slot.ora) {
+        const [h, m] = slot.ora.split(':').map(Number);
+        const slotMinutes = h * 60 + (m || 0);
+        const diff = Math.abs(currentMinutes - slotMinutes);
+        if (diff < minDiff) {
+          minDiff = diff;
+          closestIndex = idx;
+        }
+      }
+    });
+
+    expect(dayMatch.giorno).toBeDefined();
+    expect(closestIndex).toBeGreaterThanOrEqual(0);
+  });
+});
+

@@ -163,9 +163,9 @@ export const ScheduleCard: React.FC<ScheduleCardProps> = ({
               href={googleMapUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-sky-950/80 text-sky-300 hover:bg-sky-900 border border-sky-500/30 transition shadow-sm"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-sky-500/10 text-sky-700 dark:text-sky-300 hover:bg-sky-500/20 border border-sky-500/30 transition shadow-sm"
             >
-              <MapPin className="w-3.5 h-3.5 text-sky-400" />
+              <MapPin className="w-3.5 h-3.5 text-sky-500 dark:text-sky-400" />
               <span>Google Maps</span>
               <ExternalLink className="w-3 h-3 opacity-60" />
             </a>
@@ -175,9 +175,9 @@ export const ScheduleCard: React.FC<ScheduleCardProps> = ({
                 href={naverMapUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-950/80 text-emerald-300 hover:bg-emerald-900 border border-emerald-500/30 transition shadow-sm"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-500/20 border border-emerald-500/30 transition shadow-sm"
               >
-                <MapPin className="w-3.5 h-3.5 text-emerald-400" />
+                <MapPin className="w-3.5 h-3.5 text-emerald-500 dark:text-emerald-400" />
                 <span>Naver Maps</span>
                 <ExternalLink className="w-3 h-3 opacity-60" />
               </a>
@@ -188,7 +188,7 @@ export const ScheduleCard: React.FC<ScheduleCardProps> = ({
                 href={item.tabelog_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-orange-950/60 text-orange-300 hover:bg-orange-900/80 border border-orange-500/30 transition"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-orange-500/10 text-orange-700 dark:text-orange-300 hover:bg-orange-500/20 border border-orange-500/30 transition"
               >
                 <span>🍊 Tabelog</span>
                 <ExternalLink className="w-3 h-3 opacity-60" />
@@ -214,7 +214,7 @@ export const ScheduleCard: React.FC<ScheduleCardProps> = ({
                   key={emoji}
                   type="button"
                   onClick={() => onSaveReaction(userReaction === emoji ? '' : emoji)}
-                  className={`text-sm p-1.5 rounded-lg hover:bg-slate-800 transition ${
+                  className={`text-sm p-1.5 rounded-lg hover:bg-[var(--border-subtle)] transition ${
                     userReaction === emoji ? 'bg-amber-400/20 scale-110 border border-amber-400/40' : 'border border-transparent'
                   }`}
                 >
@@ -240,15 +240,15 @@ export const ScheduleCard: React.FC<ScheduleCardProps> = ({
                 value={noteText}
                 onChange={(e) => setNoteText(e.target.value)}
                 placeholder="Aggiungi una nota offline..."
-                className="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-[var(--text-primary)] focus:outline-none focus:border-amber-400"
+                className="flex-1 bg-[var(--bg-primary)] border border-[var(--border-subtle)] rounded-lg px-3 py-1.5 text-xs text-[var(--text-primary)] focus:outline-none focus:border-amber-400 font-sans"
               />
-              <button type="submit" className="px-3 py-1.5 bg-amber-400 text-slate-950 text-xs font-bold rounded-lg">
+              <button type="submit" className="px-3 py-1.5 bg-amber-400 text-slate-950 text-xs font-bold rounded-lg hover:bg-amber-300 transition">
                 Salva
               </button>
             </form>
           ) : (
             userNote && (
-              <p className="text-xs italic text-amber-300 bg-amber-400/10 p-2 rounded-lg border border-amber-400/20">
+              <p className="text-xs italic text-amber-700 dark:text-amber-300 bg-amber-400/10 p-2 rounded-lg border border-amber-400/20">
                 📝 "{userNote}"
               </p>
             )

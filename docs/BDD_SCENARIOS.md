@@ -125,19 +125,43 @@ Feature: Log di Viaggio Express & Export JSON
 
 ---
 
-## Feature 6: Reset Database
+## Feature 7: Tema Giorno 100% Solare & Alto Contrasto (WCAG AAA)
 
 ```gherkin
-Feature: Ripristino dello Stato Iniziale
-  Come utente
-  Voglio poter cancellare tutti i dati locali per ricaricare un nuovo database
-  Per ripartire da zero in sicurezza
+Feature: Palette Colori Giorno e Notte Dinamica
+  Come utente sotto il sole estivo in Asia
+  Voglio un'interfaccia 100% chiara, solare e priva di aloni scuri hardcoded
+  Per consultare la mia guida senza riflessi e alla massima leggibilità
 
-  Scenario: Conferma di reset nell'area Emergenze
-    Given l'utente si trova nel Tab EMERGENZE
-    When tocca il pulsante "🗑️ Reimposta App (Cancella IndexedDB)"
-    Then appare un box di conferma con avviso rosso
-    When tocca "Sì, Elimina Tutto"
-    Then IndexedDB viene completamente svuotato
-    And l'app ritorna alla WelcomeScreen iniziale
+  Scenario: Attivazione Modalità Giorno 100% Chiara
+    Given l'utente seleziona il tema "day" (Giorno)
+    When l'attributo data-theme="day" viene applicato all'HTML
+    Then lo sfondo primario passa a #F8FAFC e le card a #FFFFFF puro
+    And tutti i container, modali (TodoDrawer, CurrencyModal) e bottoni non utilizzano sfondi grigio scuro slate
+    And i testi primari (#0F172A) e secondari (#475569) rispettano lo standard WCAG AAA per la massima leggibilità
+
+  Scenario: Mantenimento Modalità Notte OLED
+    Given l'utente seleziona il tema "night" (Notte)
+    When l'attributo data-theme="night" viene applicato all'HTML
+    Then lo sfondo passa a #090D16 con superfici #131C2E
+    And la struttura ed il template HTML dell'app rimangono 100% identici alla versione Giorno
 ```
+
+---
+
+## Feature 8: Apertura Intelligente dell'Itinerario
+
+```gherkin
+Feature: Compressione Automatica dell'Itinerario Completo
+  Come utente che naviga l'Itinerario Completo
+  Voglio vedere aperto di default soltanto il giorno e l'orario del momento attuale
+  Per non essere sopraffatto da decine di schede aperte contemporaneamente
+
+  Scenario: Apertura di default del solo giorno e item orario corrente
+    Given l'utente apre il Tab ITINERARIO
+    When l'app rileva la data corrente del viaggio ed il timestamp attuale
+    Then viene aperta di default la sola fisarmonica del giorno corrente
+    And all'interno di quel giorno viene aperta la sola ScheduleCard dell'orario più vicino all'ora attuale
+    And tutti gli altri giorni e schede orarie rimangono compressi di default
+```
+

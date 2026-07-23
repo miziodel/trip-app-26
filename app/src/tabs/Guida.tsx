@@ -89,12 +89,12 @@ export const GuidaTab: React.FC = () => {
   return (
     <div className="pb-24 pt-4 px-4 max-w-md mx-auto space-y-6 animate-in fade-in duration-300">
       {/* Header */}
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-md">
-        <h2 className="text-lg font-black text-white flex items-center gap-2">
-          <BookOpen className="w-5 h-5 text-amber-400" />
+      <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-2xl p-4 shadow-md">
+        <h2 className="text-lg font-black text-[var(--text-primary)] flex items-center gap-2">
+          <BookOpen className="w-5 h-5 text-amber-500 dark:text-amber-400" />
           <span>Guida & Frasario</span>
         </h2>
-        <p className="text-xs text-slate-400">Frasario essenziale Giapponese/Coreano e protocolli culturali</p>
+        <p className="text-xs text-[var(--text-secondary)]">Frasario essenziale Giapponese/Coreano e protocolli culturali</p>
       </div>
 
       {/* Anchor Navigation Buttons */}
@@ -120,34 +120,34 @@ export const GuidaTab: React.FC = () => {
 
       {/* Cultural Protocols Section */}
       <div id="protocolli" className="space-y-4 pt-2">
-        <h3 className="text-sm font-bold text-white flex items-center gap-2 uppercase tracking-wider">
-          <Sparkles className="w-4 h-4 text-amber-400" />
+        <h3 className="text-sm font-bold text-[var(--text-primary)] flex items-center gap-2 uppercase tracking-wider">
+          <Sparkles className="w-4 h-4 text-amber-500 dark:text-amber-400" />
           <span>Protocolli Culturali & Guide ⛩️</span>
         </h3>
 
         {/* Onsen Protocol */}
         {protocolli.onsen && (
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl shadow-md overflow-hidden">
+          <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-2xl shadow-md overflow-hidden">
             <button
               type="button"
               onClick={() => toggleProtocol('onsen')}
-              className="w-full p-4 flex items-center justify-between text-left hover:bg-slate-800/50 transition-colors"
+              className="w-full p-4 flex items-center justify-between text-left hover:bg-[var(--border-subtle)] transition-colors"
             >
-              <h4 className="text-base font-bold text-amber-400 flex items-center gap-2">
-                <Flame className="w-5 h-5 text-amber-400" />
+              <h4 className="text-base font-bold text-amber-600 dark:text-amber-400 flex items-center gap-2">
+                <Flame className="w-5 h-5 text-amber-500 dark:text-amber-400" />
                 <span>{protocolli.onsen.titolo}</span>
               </h4>
-              <span className="text-slate-400 font-bold text-sm">
+              <span className="text-[var(--text-secondary)] font-bold text-sm">
                 {expandedProtocols.onsen ? '▲' : '▼'}
               </span>
             </button>
             {expandedProtocols.onsen && (
-              <div className="px-4 pb-4 space-y-3 pt-1 border-t border-slate-800/80">
-                <ul className="space-y-2 text-xs text-slate-300">
+              <div className="px-4 pb-4 space-y-3 pt-1 border-t border-[var(--border-subtle)]">
+                <ul className="space-y-2 text-xs text-[var(--text-secondary)]">
                   {protocolli.onsen.regole?.map((r, idx) => (
-                    <li key={idx} className="flex items-start gap-2 bg-slate-950/60 p-2.5 rounded-xl border border-slate-800">
-                      <span className="text-amber-400 font-bold">{idx + 1}.</span>
-                      <span className="leading-relaxed">{r}</span>
+                    <li key={idx} className="flex items-start gap-2 bg-[var(--bg-primary)] p-2.5 rounded-xl border border-[var(--border-subtle)]">
+                      <span className="text-amber-600 dark:text-amber-400 font-bold">{idx + 1}.</span>
+                      <span className="leading-relaxed text-[var(--text-primary)]">{r}</span>
                     </li>
                   ))}
                 </ul>
@@ -158,27 +158,27 @@ export const GuidaTab: React.FC = () => {
 
         {/* Monjayaki Protocol */}
         {protocolli.monjayaki && (
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl shadow-md overflow-hidden">
+          <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-2xl shadow-md overflow-hidden">
             <button
               type="button"
               onClick={() => toggleProtocol('monjayaki')}
-              className="w-full p-4 flex items-center justify-between text-left hover:bg-slate-800/50 transition-colors"
+              className="w-full p-4 flex items-center justify-between text-left hover:bg-[var(--border-subtle)] transition-colors"
             >
-              <h4 className="text-base font-bold text-orange-400 flex items-center gap-2">
-                <Utensils className="w-5 h-5 text-orange-400" />
+              <h4 className="text-base font-bold text-orange-600 dark:text-orange-400 flex items-center gap-2">
+                <Utensils className="w-5 h-5 text-orange-500 dark:text-orange-400" />
                 <span>{protocolli.monjayaki.titolo}</span>
               </h4>
-              <span className="text-slate-400 font-bold text-sm">
+              <span className="text-[var(--text-secondary)] font-bold text-sm">
                 {expandedProtocols.monjayaki ? '▲' : '▼'}
               </span>
             </button>
             {expandedProtocols.monjayaki && (
-              <div className="px-4 pb-4 space-y-3 pt-1 border-t border-slate-800/80">
-                <ol className="space-y-2 text-xs text-slate-300">
+              <div className="px-4 pb-4 space-y-3 pt-1 border-t border-[var(--border-subtle)]">
+                <ol className="space-y-2 text-xs text-[var(--text-secondary)]">
                   {protocolli.monjayaki.passaggi?.map((p, idx) => (
-                    <li key={idx} className="flex items-start gap-2 bg-slate-950/60 p-2.5 rounded-xl border border-slate-800">
-                      <span className="text-orange-400 font-bold">{idx + 1}.</span>
-                      <span className="leading-relaxed">{p}</span>
+                    <li key={idx} className="flex items-start gap-2 bg-[var(--bg-primary)] p-2.5 rounded-xl border border-[var(--border-subtle)]">
+                      <span className="text-orange-600 dark:text-orange-400 font-bold">{idx + 1}.</span>
+                      <span className="leading-relaxed text-[var(--text-primary)]">{p}</span>
                     </li>
                   ))}
                 </ol>
@@ -189,27 +189,27 @@ export const GuidaTab: React.FC = () => {
 
         {/* Beijing Layover Protocol */}
         {protocolli.pechino_transito && (
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl shadow-md overflow-hidden">
+          <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-2xl shadow-md overflow-hidden">
             <button
               type="button"
               onClick={() => toggleProtocol('pechino')}
-              className="w-full p-4 flex items-center justify-between text-left hover:bg-slate-800/50 transition-colors"
+              className="w-full p-4 flex items-center justify-between text-left hover:bg-[var(--border-subtle)] transition-colors"
             >
-              <h4 className="text-base font-bold text-blue-400 flex items-center gap-2">
-                <Plane className="w-5 h-5 text-blue-400" />
+              <h4 className="text-base font-bold text-sky-600 dark:text-sky-400 flex items-center gap-2">
+                <Plane className="w-5 h-5 text-sky-500 dark:text-sky-400" />
                 <span>{protocolli.pechino_transito.titolo}</span>
               </h4>
-              <span className="text-slate-400 font-bold text-sm">
+              <span className="text-[var(--text-secondary)] font-bold text-sm">
                 {expandedProtocols.pechino ? '▲' : '▼'}
               </span>
             </button>
             {expandedProtocols.pechino && (
-              <div className="px-4 pb-4 space-y-3 pt-1 border-t border-slate-800/80">
-                <ul className="space-y-2 text-xs text-slate-300">
+              <div className="px-4 pb-4 space-y-3 pt-1 border-t border-[var(--border-subtle)]">
+                <ul className="space-y-2 text-xs text-[var(--text-secondary)]">
                   {protocolli.pechino_transito.istruzioni?.map((istr, idx) => (
-                    <li key={idx} className="flex items-start gap-2 bg-slate-950/60 p-2.5 rounded-xl border border-slate-800">
-                      <span className="text-blue-400 font-bold">•</span>
-                      <span className="leading-relaxed">{istr}</span>
+                    <li key={idx} className="flex items-start gap-2 bg-[var(--bg-primary)] p-2.5 rounded-xl border border-[var(--border-subtle)]">
+                      <span className="text-sky-600 dark:text-sky-400 font-bold">•</span>
+                      <span className="leading-relaxed text-[var(--text-primary)]">{istr}</span>
                     </li>
                   ))}
                 </ul>
@@ -220,27 +220,27 @@ export const GuidaTab: React.FC = () => {
 
         {/* Geta Gujo Protocol */}
         {protocolli.geta_gujo && (
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl shadow-md overflow-hidden">
+          <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-2xl shadow-md overflow-hidden">
             <button
               type="button"
               onClick={() => toggleProtocol('geta')}
-              className="w-full p-4 flex items-center justify-between text-left hover:bg-slate-800/50 transition-colors"
+              className="w-full p-4 flex items-center justify-between text-left hover:bg-[var(--border-subtle)] transition-colors"
             >
-              <h4 className="text-base font-bold text-emerald-400 flex items-center gap-2">
-                <Footprints className="w-5 h-5 text-emerald-400" />
+              <h4 className="text-base font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-2">
+                <Footprints className="w-5 h-5 text-emerald-500 dark:text-emerald-400" />
                 <span>{protocolli.geta_gujo.titolo}</span>
               </h4>
-              <span className="text-slate-400 font-bold text-sm">
+              <span className="text-[var(--text-secondary)] font-bold text-sm">
                 {expandedProtocols.geta ? '▲' : '▼'}
               </span>
             </button>
             {expandedProtocols.geta && (
-              <div className="px-4 pb-4 space-y-3 pt-1 border-t border-slate-800/80">
-                <ul className="space-y-2 text-xs text-slate-300">
+              <div className="px-4 pb-4 space-y-3 pt-1 border-t border-[var(--border-subtle)]">
+                <ul className="space-y-2 text-xs text-[var(--text-secondary)]">
                   {protocolli.geta_gujo.consigli?.map((c, idx) => (
-                    <li key={idx} className="flex items-start gap-2 bg-slate-950/60 p-2.5 rounded-xl border border-slate-800">
-                      <span className="text-emerald-400 font-bold">•</span>
-                      <span className="leading-relaxed">{c}</span>
+                    <li key={idx} className="flex items-start gap-2 bg-[var(--bg-primary)] p-2.5 rounded-xl border border-[var(--border-subtle)]">
+                      <span className="text-emerald-600 dark:text-emerald-400 font-bold">•</span>
+                      <span className="leading-relaxed text-[var(--text-primary)]">{c}</span>
                     </li>
                   ))}
                 </ul>
@@ -251,24 +251,24 @@ export const GuidaTab: React.FC = () => {
       </div>
 
       {/* Phrasebook Section */}
-      <div id="frasario" className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-4 shadow-md pt-4">
+      <div id="frasario" className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-2xl p-4 space-y-4 shadow-md pt-4">
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold text-white flex items-center gap-2">
-              <Volume2 className="w-4 h-4 text-amber-400" />
+            <h3 className="text-sm font-bold text-[var(--text-primary)] flex items-center gap-2">
+              <Volume2 className="w-4 h-4 text-amber-500 dark:text-amber-400" />
               <span>Frasario Tascabile 🗣️ ({filteredFrasario.length} frasi)</span>
             </h3>
           </div>
 
           {/* Language Selector */}
-          <div className="grid grid-cols-3 gap-1.5 p-1 bg-slate-950 rounded-xl border border-slate-800 text-xs font-semibold">
+          <div className="grid grid-cols-3 gap-1.5 p-1 bg-[var(--bg-primary)] rounded-xl border border-[var(--border-subtle)] text-xs font-semibold">
             <button
               type="button"
               onClick={() => setSelectedLanguage('jp')}
               className={`py-1.5 px-2 rounded-lg text-center transition-all ${
                 selectedLanguage === 'jp'
                   ? 'bg-amber-400 text-slate-950 font-bold shadow'
-                  : 'text-slate-400 hover:text-white'
+                  : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
               }`}
             >
               🇯🇵 Giapponese
@@ -279,7 +279,7 @@ export const GuidaTab: React.FC = () => {
               className={`py-1.5 px-2 rounded-lg text-center transition-all ${
                 selectedLanguage === 'kr'
                   ? 'bg-sky-400 text-slate-950 font-bold shadow'
-                  : 'text-slate-400 hover:text-white'
+                  : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
               }`}
             >
               🇰🇷 Coreano
@@ -290,7 +290,7 @@ export const GuidaTab: React.FC = () => {
               className={`py-1.5 px-2 rounded-lg text-center transition-all ${
                 selectedLanguage === 'both'
                   ? 'bg-purple-500 text-white font-bold shadow'
-                  : 'text-slate-400 hover:text-white'
+                  : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
               }`}
             >
               📖 Entrambe
@@ -308,7 +308,7 @@ export const GuidaTab: React.FC = () => {
               className={`py-1 px-3 rounded-full text-xs font-bold whitespace-nowrap transition-all border ${
                 selectedCategory === cat
                   ? 'bg-amber-400 text-slate-950 border-amber-400'
-                  : 'bg-slate-950 text-slate-400 border-slate-800 hover:text-white'
+                  : 'bg-[var(--bg-primary)] text-[var(--text-secondary)] border-[var(--border-subtle)] hover:text-[var(--text-primary)]'
               }`}
             >
               {cat}
@@ -321,40 +321,40 @@ export const GuidaTab: React.FC = () => {
           {filteredFrasario.map((f, idx) => (
             <div
               key={idx}
-              className="bg-slate-950/70 p-3.5 rounded-xl border border-slate-800 space-y-2 hover:border-slate-700 transition-colors"
+              className="bg-[var(--bg-primary)] p-3.5 rounded-xl border border-[var(--border-subtle)] space-y-2 hover:border-[var(--border-strong)] transition-colors"
             >
               <div className="flex items-center justify-between">
-                <span className="text-sm font-bold text-white">{f.it}</span>
-                <span className="text-[10px] px-2 py-0.5 rounded font-bold bg-slate-900 text-slate-400 border border-slate-800 uppercase">
+                <span className="text-sm font-bold text-[var(--text-primary)]">{f.it}</span>
+                <span className="text-[10px] px-2 py-0.5 rounded font-bold bg-[var(--bg-card)] text-[var(--text-secondary)] border border-[var(--border-subtle)] uppercase">
                   {f.categoria}
                 </span>
               </div>
 
               {/* Japanese */}
               {(selectedLanguage === 'both' || selectedLanguage === 'jp') && (
-                <div className="bg-slate-900 p-2.5 rounded-lg border border-slate-800 space-y-1">
+                <div className="bg-[var(--bg-card)] p-2.5 rounded-lg border border-[var(--border-subtle)] space-y-1">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold text-slate-400">🇯🇵 Giapponese:</span>
-                    <CopyableText text={f.jp} toastMessage="Frase Giapponese copiata!" className="text-amber-400 text-xs font-bold">
+                    <span className="text-[10px] font-bold text-[var(--text-secondary)]">🇯🇵 Giapponese:</span>
+                    <CopyableText text={f.jp} toastMessage="Frase Giapponese copiata!" className="text-amber-600 dark:text-amber-400 text-xs font-bold">
                       Copia 📋
                     </CopyableText>
                   </div>
-                  <p className="text-base font-bold text-amber-300 font-mono">{f.jp}</p>
-                  <p className="text-xs text-slate-300 italic">Pronuncia: {f.pronuncia}</p>
+                  <p className="text-base font-bold text-amber-600 dark:text-amber-300 font-mono">{f.jp}</p>
+                  <p className="text-xs text-[var(--text-secondary)] italic">Pronuncia: {f.pronuncia}</p>
                 </div>
               )}
 
               {/* Korean */}
               {(selectedLanguage === 'both' || selectedLanguage === 'kr') && f.kr && (
-                <div className="bg-slate-900 p-2.5 rounded-lg border border-slate-800 space-y-1">
+                <div className="bg-[var(--bg-card)] p-2.5 rounded-lg border border-[var(--border-subtle)] space-y-1">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold text-slate-400">🇰🇷 Coreano:</span>
-                    <CopyableText text={f.kr} toastMessage="Frase Coreana copiata!" className="text-blue-400 text-xs font-bold">
+                    <span className="text-[10px] font-bold text-[var(--text-secondary)]">🇰🇷 Coreano:</span>
+                    <CopyableText text={f.kr} toastMessage="Frase Coreana copiata!" className="text-sky-600 dark:text-sky-400 text-xs font-bold">
                       Copia 📋
                     </CopyableText>
                   </div>
-                  <p className="text-base font-bold text-blue-300 font-mono">{f.kr}</p>
-                  {f.kr_pronuncia && <p className="text-xs text-slate-300 italic">Pronuncia: {f.kr_pronuncia}</p>}
+                  <p className="text-base font-bold text-sky-600 dark:text-sky-300 font-mono">{f.kr}</p>
+                  {f.kr_pronuncia && <p className="text-xs text-[var(--text-secondary)] italic">Pronuncia: {f.kr_pronuncia}</p>}
                 </div>
               )}
             </div>

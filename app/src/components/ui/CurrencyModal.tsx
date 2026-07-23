@@ -87,12 +87,12 @@ export const CurrencyModal: React.FC = () => {
   const krwPerEur = (1 / krwRate).toFixed(0);
 
   return (
-    <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 p-4 flex items-center justify-center animate-in fade-in duration-200">
-      <div className="bg-slate-900 text-[var(--text-primary)] border border-slate-800 rounded-3xl p-6 max-w-md w-full shadow-2xl relative max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 bg-[var(--bg-primary)]/80 backdrop-blur-sm z-50 p-4 flex items-center justify-center animate-in fade-in duration-200">
+      <div className="bg-[var(--bg-card)] text-[var(--text-primary)] border border-[var(--border-subtle)] rounded-3xl p-6 max-w-md w-full shadow-2xl relative max-h-[90vh] overflow-y-auto">
         <button
           type="button"
           onClick={toggleCurrencyModal}
-          className="absolute top-5 right-5 p-2 text-slate-400 hover:text-white bg-slate-800 rounded-full transition-colors"
+          className="absolute top-5 right-5 p-2 bg-[var(--bg-primary)] text-[var(--text-primary)] border border-[var(--border-subtle)] hover:opacity-80 rounded-full transition-colors"
         >
           <X className="w-5 h-5" />
         </button>
@@ -100,7 +100,7 @@ export const CurrencyModal: React.FC = () => {
         <div className="flex items-center justify-between mb-6 pr-8">
           <div className="flex items-center gap-2 text-[var(--accent-gold)]">
             <ArrowRightLeft className="w-5 h-5" />
-            <h2 className="text-xl font-bold text-white">Convertitore Valuta 💱</h2>
+            <h2 className="text-xl font-extrabold text-[var(--text-primary)]">Convertitore Valuta 💱</h2>
           </div>
           {isCustom && (
             <span className="bg-[var(--accent-gold)]/20 text-[var(--accent-gold)] border border-[var(--accent-gold)]/40 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
@@ -110,7 +110,7 @@ export const CurrencyModal: React.FC = () => {
         </div>
 
         {/* Currency selection tabs */}
-        <div className="flex rounded-xl bg-slate-950 p-1 mb-6 border border-slate-800">
+        <div className="flex rounded-xl bg-[var(--bg-primary)] p-1 mb-6 border border-[var(--border-subtle)]">
           {(['EUR', 'JPY', 'KRW'] as const).map((m) => (
             <button
               key={m}
@@ -120,7 +120,7 @@ export const CurrencyModal: React.FC = () => {
                 setInputValue(m === 'EUR' ? '10' : m === 'JPY' ? '1000' : '10000');
               }}
               className={`flex-1 py-2 rounded-lg text-xs font-bold transition-all ${
-                mode === m ? 'bg-[var(--accent-gold)] text-slate-950 shadow' : 'text-slate-400 hover:text-white'
+                mode === m ? 'bg-[var(--accent-gold)] text-slate-950 shadow' : 'text-[var(--text-secondary)] font-bold hover:text-[var(--text-primary)]'
               }`}
             >
               {m === 'EUR' ? '🇪🇺 EUR (€)' : m === 'JPY' ? '🇯🇵 JPY (¥)' : '🇰🇷 KRW (₩)'}
@@ -130,21 +130,21 @@ export const CurrencyModal: React.FC = () => {
 
         {/* Input box */}
         <div className="mb-6">
-          <label className="block text-xs text-slate-400 mb-1 font-medium">
+          <label className="block text-xs text-[var(--text-secondary)] font-bold mb-1">
             Importo da convertire in {mode}:
           </label>
           <input
             type="number"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
-            className="w-full bg-slate-950 border border-slate-700 text-white text-2xl font-bold p-3 rounded-xl focus:outline-none focus:border-[var(--accent-gold)]"
+            className="w-full bg-[var(--bg-primary)] border border-[var(--border-subtle)] text-[var(--text-primary)] text-2xl font-bold p-3 rounded-xl focus:outline-none focus:border-[var(--accent-gold)]"
             placeholder="0"
           />
         </div>
 
         {/* Presets */}
         <div className="mb-6">
-          <span className="text-xs text-slate-400 block mb-2 font-medium">Scorciatoie veloci:</span>
+          <span className="text-xs text-[var(--text-secondary)] font-bold block mb-2">Scorciatoie veloci:</span>
           <div className="flex flex-wrap gap-1.5">
             {presets.map((p) => (
               <button
@@ -154,7 +154,7 @@ export const CurrencyModal: React.FC = () => {
                   setMode(p.mode as 'EUR' | 'JPY' | 'KRW');
                   setInputValue(p.val);
                 }}
-                className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg border border-slate-700 transition-colors"
+                className="px-3 py-1.5 bg-[var(--bg-primary)] hover:bg-[var(--border-subtle)] text-[var(--text-primary)] border border-[var(--border-subtle)] text-xs font-semibold rounded-lg transition-colors"
               >
                 {p.label}
               </button>
@@ -163,52 +163,52 @@ export const CurrencyModal: React.FC = () => {
         </div>
 
         {/* Conversion Display Cards */}
-        <div className="space-y-3 bg-slate-950/60 p-4 rounded-2xl border border-slate-800">
-          <div className="flex justify-between items-center py-1 border-b border-slate-800/80">
-            <span className="text-slate-400 text-sm font-medium">🇪🇺 Euro (EUR)</span>
-            <span className="text-xl font-bold text-white">€ {eurAmount.toLocaleString('it-IT', { minimumFractionDigits: 2 })}</span>
+        <div className="space-y-3 bg-[var(--bg-primary)]/60 p-4 rounded-2xl border border-[var(--border-subtle)]">
+          <div className="flex justify-between items-center py-1 border-b border-[var(--border-subtle)]">
+            <span className="text-[var(--text-secondary)] text-sm font-bold">🇪🇺 Euro (EUR)</span>
+            <span className="text-base font-extrabold text-[var(--text-primary)]">€ {eurAmount.toLocaleString('it-IT', { minimumFractionDigits: 2 })}</span>
           </div>
 
-          <div className="flex justify-between items-center py-1 border-b border-slate-800/80">
-            <span className="text-slate-400 text-sm font-medium">🇯🇵 Yen (JPY)</span>
-            <span className="text-xl font-bold text-[var(--accent-gold)]">¥ {jpyAmount.toLocaleString('it-IT')}</span>
+          <div className="flex justify-between items-center py-1 border-b border-[var(--border-subtle)]">
+            <span className="text-[var(--text-secondary)] text-sm font-bold">🇯🇵 Yen (JPY)</span>
+            <span className="text-lg font-black text-amber-600 dark:text-amber-400">¥ {jpyAmount.toLocaleString('it-IT')}</span>
           </div>
 
           <div className="flex justify-between items-center py-1">
-            <span className="text-slate-400 text-sm font-medium">🇰🇷 Won (KRW)</span>
-            <span className="text-xl font-bold text-blue-400">₩ {krwAmount.toLocaleString('it-IT')}</span>
+            <span className="text-[var(--text-secondary)] text-sm font-bold">🇰🇷 Won (KRW)</span>
+            <span className="text-lg font-black text-sky-600 dark:text-sky-400">₩ {krwAmount.toLocaleString('it-IT')}</span>
           </div>
         </div>
 
         {/* Pivoted Rate Info */}
-        <div className="mt-4 text-center space-y-1 bg-slate-950/40 p-2.5 rounded-xl border border-slate-800/60">
-          <p className="text-xs font-bold text-[var(--accent-gold)]">
+        <div className="mt-4 text-center space-y-1 bg-[var(--bg-primary)] p-2.5 rounded-xl border border-[var(--border-subtle)]">
+          <p className="text-xs font-extrabold text-[var(--text-primary)]">
             1 EUR = {jpyPerEur} JPY / {krwPerEur} KRW
           </p>
-          <p className="text-[10px] text-slate-500">
+          <p className="text-[10px] text-[var(--text-secondary)] font-semibold">
             (Tassi base: 1 JPY = {jpyRate} EUR | 1 KRW = {krwRate} EUR)
           </p>
         </div>
 
         {/* Collapsible Edit Rates Section */}
-        <div className="mt-4 pt-4 border-t border-slate-800">
+        <div className="mt-4 pt-4 border-t border-[var(--border-subtle)]">
           <button
             type="button"
             onClick={() => setShowEditRates(!showEditRates)}
-            className="w-full flex items-center justify-between text-xs text-slate-400 hover:text-white py-1 transition-colors"
+            className="w-full flex items-center justify-between text-xs text-[var(--text-secondary)] hover:text-[var(--text-primary)] py-1 transition-colors"
           >
             <span className="flex items-center gap-1.5 font-bold">
               <Settings className="w-3.5 h-3.5 text-[var(--accent-gold)]" />
               ⚙️ Aggiorna Tassi di Cambio
             </span>
-            <span className="text-[10px] font-mono text-slate-500">{showEditRates ? '▲ Chiudi' : '▼ Apri'}</span>
+            <span className="text-[10px] font-mono text-[var(--text-secondary)]">{showEditRates ? '▲ Chiudi' : '▼ Apri'}</span>
           </button>
 
           {showEditRates && (
-            <form onSubmit={handleSaveRates} className="mt-3 bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-3 animate-in fade-in duration-150">
+            <form onSubmit={handleSaveRates} className="mt-3 bg-[var(--bg-primary)] p-3 rounded-xl border border-[var(--border-subtle)] space-y-3 animate-in fade-in duration-150">
               <div className="grid grid-cols-2 gap-2 text-xs">
                 <div>
-                  <label className="block text-[11px] text-slate-400 mb-1">
+                  <label className="block text-[11px] text-[var(--text-secondary)] font-bold mb-1">
                     JPY/EUR (1 ¥ in €):
                   </label>
                   <input
@@ -216,14 +216,14 @@ export const CurrencyModal: React.FC = () => {
                     step="0.00001"
                     value={editJpyRate}
                     onChange={(e) => setEditJpyRate(e.target.value)}
-                    className="w-full bg-slate-900 border border-slate-700 text-white font-mono text-xs p-2 rounded-lg focus:outline-none focus:border-[var(--accent-gold)]"
+                    className="w-full bg-[var(--bg-card)] border border-[var(--border-subtle)] text-[var(--text-primary)] font-mono text-xs p-2 rounded-lg focus:outline-none focus:border-[var(--accent-gold)]"
                   />
-                  <span className="text-[10px] text-slate-500 block mt-0.5">
+                  <span className="text-[10px] text-[var(--text-secondary)] block mt-0.5">
                     1 € ≈ {parseFloat(editJpyRate) > 0 ? (1 / parseFloat(editJpyRate)).toFixed(1) : 0} ¥
                   </span>
                 </div>
                 <div>
-                  <label className="block text-[11px] text-slate-400 mb-1">
+                  <label className="block text-[11px] text-[var(--text-secondary)] font-bold mb-1">
                     KRW/EUR (1 ₩ in €):
                   </label>
                   <input
@@ -231,9 +231,9 @@ export const CurrencyModal: React.FC = () => {
                     step="0.000001"
                     value={editKrwRate}
                     onChange={(e) => setEditKrwRate(e.target.value)}
-                    className="w-full bg-slate-900 border border-slate-700 text-white font-mono text-xs p-2 rounded-lg focus:outline-none focus:border-[var(--accent-gold)]"
+                    className="w-full bg-[var(--bg-card)] border border-[var(--border-subtle)] text-[var(--text-primary)] font-mono text-xs p-2 rounded-lg focus:outline-none focus:border-[var(--accent-gold)]"
                   />
-                  <span className="text-[10px] text-slate-500 block mt-0.5">
+                  <span className="text-[10px] text-[var(--text-secondary)] block mt-0.5">
                     1 € ≈ {parseFloat(editKrwRate) > 0 ? (1 / parseFloat(editKrwRate)).toFixed(0) : 0} ₩
                   </span>
                 </div>
@@ -251,7 +251,7 @@ export const CurrencyModal: React.FC = () => {
                   <button
                     type="button"
                     onClick={handleResetRates}
-                    className="bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold py-1.5 px-3 rounded-lg text-xs flex items-center justify-center gap-1 border border-slate-700 transition-colors"
+                    className="bg-[var(--bg-card)] hover:opacity-80 text-[var(--text-primary)] font-semibold py-1.5 px-3 rounded-lg text-xs flex items-center justify-center gap-1 border border-[var(--border-subtle)] transition-colors"
                     title="Ripristina tassi originali"
                   >
                     <RotateCcw className="w-3.5 h-3.5" />

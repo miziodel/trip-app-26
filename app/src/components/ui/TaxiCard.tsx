@@ -55,7 +55,7 @@ export const TaxiCard: React.FC<TaxiCardProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md animate-fadeIn">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn">
       <div className="w-full max-w-md bg-white text-slate-950 rounded-3xl p-6 shadow-2xl border-4 border-amber-400 relative space-y-5">
         
         {/* Header */}

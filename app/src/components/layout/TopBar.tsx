@@ -46,8 +46,8 @@ export const TopBar: React.FC = () => {
         </div>
         <div className="h-6 w-px bg-[var(--border-subtle)]" />
         <div className="flex flex-col">
-          <span className="text-amber-400 text-[10px] uppercase tracking-wider">JP/KR (UTC+9)</span>
-          <span className="text-amber-300 font-semibold text-sm">{times.asia || '--:--'}</span>
+          <span className="text-amber-600 dark:text-amber-400 font-bold text-[10px] uppercase tracking-wider">JP/KR (UTC+9)</span>
+          <span className="text-amber-700 dark:text-amber-300 font-extrabold text-sm">{times.asia || '--:--'}</span>
         </div>
       </div>
 
@@ -57,20 +57,20 @@ export const TopBar: React.FC = () => {
         <button
           type="button"
           onClick={() => setTheme(theme === 'night' ? 'day' : 'night')}
-          className="p-1.5 rounded-full bg-slate-800/80 border border-slate-700 hover:border-amber-400 text-amber-400 transition"
+          className="p-1.5 rounded-full bg-[var(--bg-card)] border border-[var(--border-subtle)] text-[var(--text-primary)] hover:border-[var(--accent-gold)] transition cursor-pointer"
           title={theme === 'night' ? 'Attiva Modalità Giorno' : 'Attiva Modalità Notte'}
         >
-          {theme === 'night' ? <Sun className="w-4 h-4 text-amber-400" /> : <Moon className="w-4 h-4 text-sky-400" />}
+          {theme === 'night' ? <Sun className="w-4 h-4 text-[var(--accent-gold)]" /> : <Moon className="w-4 h-4 text-sky-400" />}
         </button>
 
         {/* Todo Drawer Trigger */}
         <button
           type="button"
           onClick={toggleTodoDrawer}
-          className="flex items-center space-x-1 bg-slate-800 border border-slate-700 text-slate-200 hover:bg-slate-700 px-2.5 py-1.5 rounded-xl transition-all active:scale-95 text-xs font-semibold"
+          className="flex items-center space-x-1 bg-[var(--bg-card)] border border-[var(--border-subtle)] text-[var(--text-primary)] hover:opacity-90 px-2.5 py-1.5 rounded-xl transition-all active:scale-95 text-xs font-semibold shadow-xs cursor-pointer"
           title="Tutti i Todo & Promemoria"
         >
-          <CheckSquare className="w-3.5 h-3.5 text-amber-400" />
+          <CheckSquare className="w-3.5 h-3.5 text-[var(--accent-gold)]" />
           <span>Todo</span>
         </button>
 
@@ -78,9 +78,9 @@ export const TopBar: React.FC = () => {
         <button
           type="button"
           onClick={toggleCurrencyModal}
-          className="flex items-center space-x-1 bg-amber-500/20 border border-amber-500/40 text-amber-300 hover:bg-amber-500/30 px-2.5 py-1.5 rounded-xl transition-all active:scale-95 text-xs font-semibold"
+          className="flex items-center space-x-1 bg-[var(--bg-card)] border border-[var(--border-subtle)] text-[var(--text-primary)] hover:opacity-90 px-2.5 py-1.5 rounded-xl transition-all active:scale-95 text-xs font-semibold shadow-xs cursor-pointer"
         >
-          <Coins className="w-3.5 h-3.5 text-amber-400" />
+          <Coins className="w-3.5 h-3.5 text-[var(--accent-gold)]" />
           <span>Cambio</span>
         </button>
       </div>
