@@ -18,8 +18,8 @@ interface GiPSigoCheckInPayload {
   source_key: string;
   timestamp: number;
   date: string;       // "YYYY-MM-DD"
-  latitude?: number;
-  longitude?: number;
+  lat?: number;
+  lng?: number;
   location_name?: string;
   comment?: string;
   rating?: number;
@@ -31,6 +31,7 @@ interface GiPSigoApiResponse {
   inserted: number;
   skipped: number;
   inserted_keys?: string[];
+  errors?: string[];  // errori per-item dal server
 }
 
 /** Converte un CheckIn locale nel DTO per l'endpoint GiPSigo */
@@ -52,8 +53,8 @@ export function toGiPSigoPayload(c: CheckIn): GiPSigoCheckInPayload {
     source_key: c.id,
     timestamp: c.timestamp,
     date: dateStr,
-    ...(lat !== undefined && { latitude: lat }),
-    ...(lng !== undefined && { longitude: lng }),
+    ...(lat !== undefined && { lat }),
+    ...(lng !== undefined && { lng }),
     ...(parts.length > 0 && { location_name: parts[0], comment: parts.slice(1).join(' — ') }),
     ...(c.rating !== undefined && { rating: c.rating }),
   };
@@ -89,10 +90,12 @@ export async function syncPendingCheckIns(
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Api-Key': config.apiKey,
-          'X-Trip-Token': config.tripToken,
         },
-        body: JSON.stringify({ checkins: payloads }),
+        body: JSON.stringify({
+          api_key: config.apiKey,
+          trip_token: config.tripToken,
+          checkins: payloads,
+        }),
       });
 
       if (!resp.ok) {
@@ -104,14 +107,28 @@ export async function syncPendingCheckIns(
       const json: GiPSigoApiResponse = await resp.json();
 
       if (json.ok) {
-        // Se il server risponde con gli inserted_keys, usa quelli per la marcatura precisa.
-        // Altrimenti marca come sincronizzati tutti gli elementi del batch.
-        const syncedIds = json.inserted_keys?.length
-          ? json.inserted_keys
-          : batch.map((c) => c.id);
+        // Propaga eventuali errori per-item dal server
+        if (json.errors?.length) {
+          for (const e of json.errors) errors.push(e);
+        }
 
-        await markCheckInsSynced(syncedIds);
-        totalSynced += syncedIds.length;
+        // Se il server restituisce inserted_keys, usa quelli come IDs certi.
+        // Altrimenti: inserted+skipped = "accettati" dal server (deduplicati o nuovi).
+        // Non marcare se ci sono errori e inserted = 0 (significa che tutto è stato rifiutato).
+        const serverAccepted = json.inserted + json.skipped;
+        if (json.inserted_keys?.length) {
+          // Precisione massima: marca solo gli ID esplicitamente confermati
+          await markCheckInsSynced(json.inserted_keys);
+          totalSynced += json.inserted_keys.length;
+        } else if (serverAccepted > 0 && (!json.errors?.length || json.inserted > 0)) {
+          // Marca come sincronizzati tutti gli elementi del batch
+          // (il server li ha processati tutti, anche i duplicati via source_key)
+          await markCheckInsSynced(batch.map((c) => c.id));
+          totalSynced += batch.length;
+        } else if (json.errors?.length && json.inserted === 0) {
+          // Tutto rifiutato con errori — NON marcare come sincronizzati, lascia in coda
+          // (verranno ritentati alla prossima sync)
+        }
         onProgress?.(totalSynced, pending.length);
       } else {
         errors.push('Il server ha risposto con ok: false');

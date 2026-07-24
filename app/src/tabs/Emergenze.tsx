@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PhoneCall, ShieldCheck, Globe, ExternalLink, Trash2, AlertTriangle, Link2, CheckCircle2, Loader2 } from 'lucide-react';
 import { useViaggioStore } from '../store/store';
 import { CopyableText } from '../components/ui/CopyableText';
@@ -19,9 +19,18 @@ export const EmergenzeTab: React.FC = () => {
   const [gipsigoApiKey, setGipsigoApiKey] = useState(gipsigoConfig?.apiKey ?? '');
   const [gipsigoTripToken, setGipsigoTripToken] = useState(gipsigoConfig?.tripToken ?? '');
   const [gipsigoEndpoint, setGipsigoEndpoint] = useState(
-    gipsigoConfig?.endpointUrl ?? 'https://mio-gipsigo.it/api/external_checkin.php'
+    gipsigoConfig?.endpointUrl ?? 'https://giemme76.com/gipsigo/api/external_checkin.php'
   );
   const [isSyncing, setIsSyncing] = useState(false);
+
+  // Sync form fields quando gipsigoConfig viene caricato da IndexedDB (caricamento asincrono)
+  useEffect(() => {
+    if (gipsigoConfig) {
+      setGipsigoApiKey(gipsigoConfig.apiKey);
+      setGipsigoTripToken(gipsigoConfig.tripToken);
+      setGipsigoEndpoint(gipsigoConfig.endpointUrl);
+    }
+  }, [gipsigoConfig?.apiKey, gipsigoConfig?.tripToken, gipsigoConfig?.endpointUrl]);
 
   if (!data) return null;
 
@@ -283,7 +292,9 @@ export const EmergenzeTab: React.FC = () => {
                   showToast(`⚠️ Nessun check-in sincronizzato. ${result.errors[0] ?? ''}`);
                 }
               } catch (e) {
-                showToast('❌ Errore durante la sincronizzazione.');
+                const msg = e instanceof Error ? e.message : String(e);
+                console.error('[GiPSigo sync error]', e);
+                showToast(`❌ ${msg}`);
               } finally {
                 setIsSyncing(false);
               }

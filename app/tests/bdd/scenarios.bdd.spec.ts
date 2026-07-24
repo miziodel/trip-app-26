@@ -223,8 +223,8 @@ describe('BDD Scenario: Feature 11 - Sincronizzazione Offline-First GiPSigo', ()
     const payload = toGiPSigoPayload(mockCheckIn as any);
 
     expect(payload.source_key).toBe('ci-test-123');
-    expect(payload.latitude).toBeCloseTo(37.5512);
-    expect(payload.longitude).toBeCloseTo(126.9882);
+    expect(payload.lat).toBeCloseTo(37.5512);
+    expect(payload.lng).toBeCloseTo(126.9882);
     expect(payload.rating).toBe(5);
     expect(payload.location_name).toBe('N Seoul Tower');
     expect(payload.comment).toBe('Vista panoramica incredibile');

@@ -79,13 +79,13 @@ function makeConfig(overrides: Partial<GiPSigoConfig> = {}): GiPSigoConfig {
 // Feature 11 — Scenario 1: DTO Mapper
 // ──────────────────────────────────────────────
 describe('BDD Feature 11 — Scenario 1: DTO Mapper da CheckIn a GiPSigo', () => {
-  it('Given un CheckIn con coordinate e commento, When convertito in payload, Then i campi source_key, latitude, longitude e date sono corretti', () => {
+  it('Given un CheckIn con coordinate e commento, When convertito in payload, Then i campi source_key, lat, lng e date sono corretti', () => {
     const ci = makeCheckIn();
     const payload = toGiPSigoPayload(ci);
 
     expect(payload.source_key).toBe('ci-test-001');
-    expect(payload.latitude).toBeCloseTo(37.5665);
-    expect(payload.longitude).toBeCloseTo(126.978);
+    expect(payload.lat).toBeCloseTo(37.5665);
+    expect(payload.lng).toBeCloseTo(126.978);
     expect(payload.date).toBe('2026-08-01');
     expect(payload.location_name).toBe('N Seoul Tower');
     expect(payload.rating).toBe(5);
@@ -95,16 +95,16 @@ describe('BDD Feature 11 — Scenario 1: DTO Mapper da CheckIn a GiPSigo', () =>
     const ci = makeCheckIn({ lat: undefined, lng: undefined, coords: { lat: 35.6762, lng: 139.6503 } });
     const payload = toGiPSigoPayload(ci);
 
-    expect(payload.latitude).toBeCloseTo(35.6762);
-    expect(payload.longitude).toBeCloseTo(139.6503);
+    expect(payload.lat).toBeCloseTo(35.6762);
+    expect(payload.lng).toBeCloseTo(139.6503);
   });
 
-  it('Given un CheckIn senza coordinate, When convertito, Then latitude e longitude sono undefined nel payload', () => {
+  it('Given un CheckIn senza coordinate, When convertito, Then lat e lng sono undefined nel payload', () => {
     const ci = makeCheckIn({ lat: undefined, lng: undefined, coords: undefined });
     const payload = toGiPSigoPayload(ci);
 
-    expect(payload.latitude).toBeUndefined();
-    expect(payload.longitude).toBeUndefined();
+    expect(payload.lat).toBeUndefined();
+    expect(payload.lng).toBeUndefined();
     // source_key e timestamp devono essere presenti
     expect(payload.source_key).toBeDefined();
     expect(payload.timestamp).toBeDefined();
