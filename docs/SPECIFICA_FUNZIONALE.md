@@ -17,9 +17,11 @@ L'applicazione permette ai viaggiatori (Maurizio & Paola) di consultare e gestir
   1. `📂 Carica Database Viaggio (.json)` — Caricamento manuale di un file JSON locale fornito dall'utente.
   2. `Carica Database Integrato` — Caricamento rapido del file `viaggio-2026.json` fornito col bundle.
 - **Persistenza**: All'importazione dei dati viene eseguita la chiamata `navigator.storage.persist()` per richiedere al sistema operativo di non cancellare la memoria dell'app.
-- **Store IndexedDB (`viaggio-db-v2`)**:
-  - `config`: memorizza i dati generali del viaggio, i to-do di base, i to-do custom e i tassi di cambio personalizzati.
-  - `logs`: memorizza le reazioni (❤️👍😐👎) e le note inserite dall'utente per ogni punto d'interesse.
+- **Store IndexedDB (`viaggio-db-v4`)**:
+  - `config`: memorizza i dati generali del viaggio, i to-do di base, i to-do custom, i tassi di cambio personalizzati e le credenziali `gipsigo_config`.
+  - `journals`: memorizza il diario di bordo serale (`DailyJournal`) con stelle, highlight e riflessioni.
+  - `checkins`: memorizza i check-in geolocalizzati (`CheckIn`) con coordinate, timestamp, rating, commento, photoIds e flag `syncedToGiPSigo`.
+  - `checkin_photos`: memorizza le foto compresse client-side in formato Blob JPEG (`CheckInPhoto`).
 
 ---
 
@@ -42,29 +44,24 @@ L'interfaccia mobile-first presenta una **Bottom Navigation Bar fissa** a 5 sche
     - Riga 1: Pallino colorato per `tipo` (es. `bg-sky-500` trasporto, `bg-amber-500` pasto, `bg-emerald-500` visita) + Orario + Badge tipo.
     - Riga 2: Titolo attivita + Nome locale in caratteri giapponesi/coreani.
     - Riga 3: Descrizione dell'item (`dettagli`) visibile subito.
-  - **Sezione Espansa al Click**: Attiva le CTA per Google Maps, Naver Maps, Tabelog, Taxi Card, Feedback Reazioni (`❤️`, `👍`, `😐`, `👎`) e Note offline.
+  - **Sezione Espansa al Click**: Attiva le CTA per Google Maps, Naver Maps, Tabelog, Taxi Card, Feedback Reazioni e Note offline.
   - Ogni slot orario mostra l'ora, la categoria badge (Cibo 🍜, Trasporto 🚌, Cultura ⛩️, Onsen ♨️, Evento ⭐), il titolo e i dettagli.
   - **Auto-espansione**: L'attività più vicina all'orario attuale del giorno si espande automaticamente all'avvio.
-  - **Pannello azioni al click**:
-    - `📍 Apri Mappa`: Deep link a Naver Map per Seoul/Corea (`map.naver.com`) o Google Maps per il Giappone (`google.com/maps`).
-    - `🔍 Cerca su Google`: Ricerca automatica della voce su Google.
-    - `🍜 Cerca su Tabelog`: Presente per le voci cibo in Giappone (filtro score >3.5).
-    - `🎟️ Codice Biglietto`: Se i dettagli contengono un codice/PNR/ticket, appare il tasto per la copia rapida negli appunti.
 - **Checklist & To-Do**:
   - Spunte interattive salvate in IndexedDB.
   - Form `+ Aggiungi nota o promemoria` per inserire voci custom per quel giorno (con tasto elimina `✕`).
+- **Diario di Bordo Serale (`NightlyJournalCard`)**: Box in fondo alla giornata per valutare l'esperienza (1-5 stelle), salvare il momento highlight e le note serali.
 - **Alloggio Notturno & Taxi Card**: Box in fondo alla pagina con nome dell'hotel, stazione di riferimento e pulsante `🚗 Mostra Taxi Card`.
 
-### 3.2 🗺️ Tab 2: "ITINERARIO" (Overview & Diario di Viaggio)
-- **Filtri Città**: Pills interattivi (`Tutti` | `Seoul` | `Tokyo` | `Alpi Giapponesi` | `Osaka`).
-- **Navigazione diretta**: Cliccando sul titolo di un giorno si viene reindirizzati direttamente alla vista **OGGI** di quel specifico giorno.
-- **Integrazione Trasporti & Alloggi nella Timeline**:
-  - I voli della giornata compaiono come voci speciali `Volo ✈️` con PNR copiabile.
-  - L'alloggio notturno del giorno compare come voce finale `Pernottamento 🏨` con tasto Taxi Card.
-- **Diario Express 1-Tap**:
-  - Ogni slot del programma dispone di 4 icone reazione: ❤️ (Super), 👍 (Bello), 😐 (Così così), 👎 (Da evitare).
-  - Campo di testo per annotare note libere (es. piatto migliore, costo, ricordo).
-- **Pulsante `📥 Esporta Diario`**: Genera e fa scaricare un file `.json` contenente tutte le recensioni e note salvate dall'utente.
+### 3.2 🗺️ Tab 2: "ITINERARIO" (Overview, Timeline & Exporter)
+- **Selettore Vista Doppia**:
+  - **🗺️ Itinerario Completo**: mostra la tabella oraria di tutte le giornate del viaggio filtrabili per città (Pills: `Tutti` | `Seoul` | `Tokyo` | `Alpi Giapponesi` | `Osaka`).
+  - **📍 Timeline Check-in**: mostra la vista cronologica pura dei check-in geolocalizzati (`CheckInTimeline`) con foto e momenti registrati.
+- **Strumenti di Esportazione & Backup (`#export-section`)**: Posizionata sempre in fondo a entrambe le viste per consentire:
+  - `📋 Copia Diario (Testo)`: Genera e copia negli appunti l'intero diario in formato Markdown.
+  - `📥 Esporta JSON`: Backup completo di dati, diari e check-in.
+  - `🗺️ Esporta GeoJSON` e `📍 Esporta KML`: File geografici pronti per l'importazione su Google My Maps/Earth.
+  - `🔗 Sync GiPSigo`: Pulsante di sincronizzazione opzionale (visibile se GiPSigo è configurato) con contatore pendenti.
 
 ### 3.3 🚄 Tab 3: "VIAGGI" (Voli, Treni, Alloggi & Biglietti)
 - **Filtri Categoria**: `Tutti` | `✈️ Voli` | `🚄 Treni & Bus` | `🏨 Alloggi` | `🎟️ Biglietti`.
