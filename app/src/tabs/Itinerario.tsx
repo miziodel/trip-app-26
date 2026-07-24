@@ -118,11 +118,14 @@ export const ItinerarioTab: React.FC = () => {
     return { expandedDays: initialDays, openScheduleCards: initialCards };
   };
 
+  const [activeSubView, setActiveSubView] = useState<'itinerario' | 'timeline'>('itinerario');
   const [initialState] = useState(getInitialExpandedState);
   const [selectedCityFilter, setSelectedCityFilter] = useState<string>('Tutti');
   const [expandedDays, setExpandedDays] = useState<Record<number, boolean>>(initialState.expandedDays);
   const [customTodoInputs, setCustomTodoInputs] = useState<Record<number, string>>({});
   const [openScheduleCards, setOpenScheduleCards] = useState<Record<string, boolean>>(initialState.openScheduleCards);
+
+  const checkInCount = Object.keys(checkIns || {}).length;
 
   const toggleScheduleCard = (giornoNum: number, sIdx: number) => {
     const cardKey = `${giornoNum}-${sIdx}`;
@@ -213,13 +216,42 @@ export const ItinerarioTab: React.FC = () => {
   return (
     <div className="pb-24 pt-4 px-4 max-w-md mx-auto space-y-4 animate-in fade-in duration-300">
       {/* Header */}
-      <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-2xl p-4 shadow-md">
-        <h2 className="text-lg font-black text-[var(--text-primary)] flex items-center gap-2">
-          <Map className="w-5 h-5 text-amber-500 dark:text-amber-400" />
-          <span>Itinerario Completo</span>
-        </h2>
-        <p className="text-xs text-[var(--text-secondary)]">28 Luglio - 20 Agosto 2026</p>
+      <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-2xl p-4 shadow-md space-y-3">
+        <div>
+          <h2 className="text-lg font-black text-[var(--text-primary)] flex items-center gap-2">
+            <Map className="w-5 h-5 text-amber-500 dark:text-amber-400" />
+            <span>Itinerario Completo</span>
+          </h2>
+          <p className="text-xs text-[var(--text-secondary)]">28 Luglio - 20 Agosto 2026</p>
+        </div>
+
+        {/* View Selector Tabs/Pills */}
+        <div className="flex bg-[var(--bg-primary)] p-1 rounded-xl border border-[var(--border-subtle)]">
+          <button
+            onClick={() => setActiveSubView('itinerario')}
+            className={`flex-1 py-2 px-3 rounded-lg text-sm font-bold transition-all cursor-pointer ${
+              activeSubView === 'itinerario'
+                ? 'bg-amber-400 text-slate-950 shadow-sm'
+                : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+            }`}
+          >
+            🗺️ Itinerario Completo
+          </button>
+          <button
+            onClick={() => setActiveSubView('timeline')}
+            className={`flex-1 py-2 px-3 rounded-lg text-sm font-bold transition-all cursor-pointer ${
+              activeSubView === 'timeline'
+                ? 'bg-amber-400 text-slate-950 shadow-sm'
+                : 'text-[var(--text-secondary)] hover:text-[var(--text-primary)]'
+            }`}
+          >
+            📍 Timeline Check-in ({checkInCount})
+          </button>
+        </div>
       </div>
+
+      {activeSubView === 'itinerario' && (
+        <>
 
       {/* City Filter Pills */}
       <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
@@ -580,9 +612,11 @@ export const ItinerarioTab: React.FC = () => {
           );
         })}
       </div>
+      </>
+      )}
 
       {/* Timeline Check-in Section */}
-      <CheckInTimeline />
+      {activeSubView === 'timeline' && <CheckInTimeline />}
 
       {/* Strumenti di Esportazione & Backup Card */}
       <div id="export-section" className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-2xl p-4 shadow-md space-y-3">

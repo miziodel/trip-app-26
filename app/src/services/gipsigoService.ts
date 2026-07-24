@@ -9,7 +9,17 @@
  */
 
 import type { CheckIn, GiPSigoConfig } from '../types/viaggio';
-import { getPendingCheckIns, markCheckInsSynced, saveGiPSigoConfig, getGiPSigoConfig } from '../store/db';
+import { getPendingCheckIns, markCheckInsSynced, saveGiPSigoConfig, getGiPSigoConfig, getCheckInPhotos } from '../store/db';
+
+/** Converte un Blob in Data URL (Base64) */
+export function blobToDataURL(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = () => reject(new Error('Errore nella lettura del Blob'));
+    reader.readAsDataURL(blob);
+  });
+}
 
 const BATCH_SIZE = 500;
 
@@ -23,6 +33,7 @@ interface GiPSigoCheckInPayload {
   location_name?: string;
   comment?: string;
   rating?: number;
+  image_base64?: string;
 }
 
 /** Risposta attesa dall'API GiPSigo */
@@ -80,22 +91,45 @@ export async function syncPendingCheckIns(
   const errors: string[] = [];
   let totalSynced = 0;
 
+  // Pre-carichiamo le foto (per trovare la prima foto dei check-in in coda)
+  const allPhotos = await getCheckInPhotos();
+
   // Invia in batch da max 500 elementi
   for (let i = 0; i < pending.length; i += BATCH_SIZE) {
     const batch = pending.slice(i, i + BATCH_SIZE);
-    const payloads = batch.map(toGiPSigoPayload);
+    
+    // Convertiamo i payload in modo asincrono (per leggere i Blob)
+    const payloads = await Promise.all(batch.map(async (c) => {
+      const payload = toGiPSigoPayload(c);
+      if (c.photoIds && c.photoIds.length > 0) {
+        const firstPhotoId = c.photoIds[0];
+        const photo = allPhotos.find(p => p.id === firstPhotoId);
+        if (photo && photo.blob) {
+          try {
+            payload.image_base64 = await blobToDataURL(photo.blob);
+          } catch (e) {
+            // Se fallisce il base64 ignora o logga
+          }
+        }
+      }
+      return payload;
+    }));
 
     try {
+      const bodyPayload = {
+        api_key: config.apiKey,
+        trip_token: config.tripToken,
+        checkins: payloads,
+      };
+
+      console.log('🚀 [GiPSigo Payload Inviato]', JSON.stringify(bodyPayload, null, 2));
+
       const resp = await fetch(config.endpointUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          api_key: config.apiKey,
-          trip_token: config.tripToken,
-          checkins: payloads,
-        }),
+        body: JSON.stringify(bodyPayload),
       });
 
       if (!resp.ok) {
@@ -112,22 +146,18 @@ export async function syncPendingCheckIns(
           for (const e of json.errors) errors.push(e);
         }
 
-        // Se il server restituisce inserted_keys, usa quelli come IDs certi.
-        // Altrimenti: inserted+skipped = "accettati" dal server (deduplicati o nuovi).
-        // Non marcare se ci sono errori e inserted = 0 (significa che tutto è stato rifiutato).
-        const serverAccepted = json.inserted + json.skipped;
-        if (json.inserted_keys?.length) {
-          // Precisione massima: marca solo gli ID esplicitamente confermati
-          await markCheckInsSynced(json.inserted_keys);
-          totalSynced += json.inserted_keys.length;
-        } else if (serverAccepted > 0 && (!json.errors?.length || json.inserted > 0)) {
-          // Marca come sincronizzati tutti gli elementi del batch
-          // (il server li ha processati tutti, anche i duplicati via source_key)
+        if (json.inserted_keys) {
+          // Precisione massima: marca solo gli ID esplicitamente confermati (gestione atomica)
+          if (json.inserted_keys.length > 0) {
+            await markCheckInsSynced(json.inserted_keys);
+            totalSynced += json.inserted_keys.length;
+          }
+        } else if (!json.errors?.length && json.inserted + json.skipped > 0) {
+          // Fallback se il server non torna inserted_keys, e non ci sono errori.
+          // In presenza di errori NON marchiamo tutto il batch, ma lasciamo che l'utente riprovi
+          // (per evitare di considerare sincronizzati record scartati in assenza di ID specifici).
           await markCheckInsSynced(batch.map((c) => c.id));
           totalSynced += batch.length;
-        } else if (json.errors?.length && json.inserted === 0) {
-          // Tutto rifiutato con errori — NON marcare come sincronizzati, lascia in coda
-          // (verranno ritentati alla prossima sync)
         }
         onProgress?.(totalSynced, pending.length);
       } else {

@@ -28,6 +28,16 @@ export const CITY_FALLBACKS: Record<string, [number, number]> = {
   hiroshima: [132.4553, 34.3963],
 };
 
+// Restituisce { lat, lng } sempre valide per un CheckIn (usando GPS o fallback di città/itinerario)
+export function resolveCheckInCoordinates(
+  c: { lat?: number; lng?: number; coords?: { lat: number; lng: number }; luogo_nome?: string; locationName?: string; giorno?: number },
+  itinerario?: Array<{ giorno: number; citta: string }>
+): { lat: number; lng: number } {
+  const result = getCheckInCoordinates(c as CheckIn, itinerario);
+  // getCheckInCoordinates restituisce [lng, lat]
+  return { lat: result.coords[1], lng: result.coords[0] };
+}
+
 export function getCheckInCoordinates(
   c: CheckIn,
   itinerario?: Array<{ giorno: number; citta: string }>

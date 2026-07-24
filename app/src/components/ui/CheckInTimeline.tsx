@@ -1,15 +1,21 @@
 import React, { useState, useMemo } from 'react';
 import { useViaggioStore } from '../../store/store';
 import { CheckInCard } from './CheckInCard';
-import { MapPin, ArrowUpDown, Plus, Sparkles } from 'lucide-react';
+import { MapPin, ArrowUpDown, Plus, Sparkles, Link as LinkIcon, RefreshCw } from 'lucide-react';
+import { syncPendingCheckIns } from '../../services/gipsigoService';
 
 export const CheckInTimeline: React.FC = () => {
   const checkIns = useViaggioStore((state) => state.checkIns);
   const deleteCheckIn = useViaggioStore((state) => state.deleteCheckIn);
   const openCheckInModal = useViaggioStore((state) => state.openCheckInModal);
+  const gipsigoConfig = useViaggioStore((state) => state.gipsigoConfig);
+  const setActiveTab = useViaggioStore((state) => state.setActiveTab);
+  const markCheckInsSyncedGiPSigo = useViaggioStore((state) => state.markCheckInsSyncedGiPSigo);
+  const showToast = useViaggioStore((state) => state.showToast);
 
   const [sortOrder, setSortOrder] = useState<'desc' | 'asc'>('desc');
   const [selectedDayFilter, setSelectedDayFilter] = useState<number | 'all'>('all');
+  const [isSyncing, setIsSyncing] = useState(false);
 
   const checkInList = useMemo(() => {
     return Object.values(checkIns || {});
@@ -38,6 +44,31 @@ export const CheckInTimeline: React.FC = () => {
       return a.timestamp - b.timestamp;
     });
   }, [checkInList, selectedDayFilter, sortOrder]);
+
+  const pendingCount = useMemo(() => {
+    return checkInList.filter((c) => !c.syncedToGiPSigo).length;
+  }, [checkInList]);
+
+  const handleSync = async () => {
+    if (!gipsigoConfig?.enabled) return;
+    setIsSyncing(true);
+    try {
+      const pending = checkInList.filter((c) => !c.syncedToGiPSigo);
+      const result = await syncPendingCheckIns(gipsigoConfig);
+      if (result.synced > 0) {
+        await markCheckInsSyncedGiPSigo(pending.map((c) => c.id).slice(0, result.synced));
+        showToast(`✅ Sincronizzati ${result.synced} check-in su GiPSigo!`);
+      } else if (result.errors.length > 0) {
+        showToast(`⚠️ Errore sync: ${result.errors[0]}`);
+      } else {
+        showToast(`✅ Nessun check-in da sincronizzare`);
+      }
+    } catch (e) {
+      showToast(`❌ Errore durante la sincronizzazione`);
+    } finally {
+      setIsSyncing(false);
+    }
+  };
 
   return (
     <div id="checkin-timeline-section" className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-2xl p-4 shadow-md space-y-4 font-sans">
@@ -71,6 +102,44 @@ export const CheckInTimeline: React.FC = () => {
           </button>
         </div>
       </div>
+
+      {/* Sync Widget / Banner */}
+      {!gipsigoConfig?.enabled ? (
+        <div className="flex items-center justify-between bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-700/50 rounded-xl p-3">
+          <div className="flex items-center gap-2 text-amber-800 dark:text-amber-200 text-sm">
+            <LinkIcon className="w-5 h-5 flex-shrink-0" />
+            <span>Integrazione GiPSigo non attiva. I tuoi check-in rimangono solo locali.</span>
+          </div>
+          <button
+            onClick={() => setActiveTab('emergenze')}
+            className="text-amber-700 dark:text-amber-300 font-bold text-xs underline whitespace-nowrap hover:text-amber-900 dark:hover:text-amber-100 cursor-pointer"
+          >
+            Configura
+          </button>
+        </div>
+      ) : (
+        <div className="flex items-center justify-between bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700/50 rounded-xl p-3">
+          <div className="flex items-center gap-2 text-blue-800 dark:text-blue-200 text-sm font-medium">
+            {pendingCount > 0 ? (
+              <>⚠️ {pendingCount} check-in pendenti su GiPSigo</>
+            ) : (
+              <>✅ Tutto sincronizzato</>
+            )}
+          </div>
+          <button
+            onClick={handleSync}
+            disabled={isSyncing || pendingCount === 0}
+            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              isSyncing || pendingCount === 0
+                ? 'bg-slate-200 text-slate-500 cursor-not-allowed dark:bg-slate-800 dark:text-slate-500'
+                : 'bg-blue-600 hover:bg-blue-700 text-white shadow-sm'
+            }`}
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? 'animate-spin' : ''}`} />
+            {isSyncing ? 'Sincronizzazione...' : 'Sync Ora'}
+          </button>
+        </div>
+      )}
 
       {/* Filter & Sort Toolbar */}
       {checkInList.length > 0 && (

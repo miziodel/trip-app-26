@@ -9,7 +9,8 @@ Raccolta delle funzionalità implementate e future evoluzioni dell'applicazione 
 - [x] **Palette Opzione B (Indaco & Bamboo Zen)**: Eliminazione del rosso-allarme. Orari in Verde Bamboo, badge fase in Indaco Giapponese, valuta in Zafferano. Token CSS `[data-theme="day"]` / `[data-theme="night"]` in `index.css`. Zero modifiche strutturali ai componenti.
 - [x] **BottomNav Clean (No Dot Indicator)**: Rimosso il puntino attivo sotto l'icona di navigazione — la pillola di sfondo indaco è sufficiente indicatore visivo.
 - [x] **Contrasto Card Voli Day Mode (WCAG AA)**: Badge `Confermato` e bordi card voli sostituiti con token Indaco ad alto contrasto su sfondo bianco (`bg-[var(--accent-torii)] text-white`).
-- [x] **Sincronizzazione Offline-First GiPSigo (Feature 11)**: Servizio `gipsigoService.ts` con batch POST JSON (max 500 item), auto-sync su evento `online`, pulsante sync manuale nella sezione Export (visibile solo se `gipsigoConfig.enabled === true`), deduplicazione via `source_key`, flag `syncedToGiPSigo` in IndexedDB.
+- [x] **Sincronizzazione Offline-First GiPSigo (Feature 11)**: Servizio `gipsigoService.ts` con batch POST JSON (max 500 item), auto-sync su evento `online`, upload della prima foto in Data URI Base64 (`image_base64`), sincronizzazione atomica per-item con tracciamento `inserted_keys` dal server, fallback automatico coordinate città in `store.ts`, pulsante sync e widget con contatore pendenti sia nella Timeline dei Check-in che nelle Impostazioni (Emergenze).
+- [x] **Selettore Vista Doppia (Itinerario vs Timeline)**: Selettore a due pill nel tab `Itinerario.tsx` per passare dalla vista "🗺️ Itinerario Completo" (tappe e orari) alla vista "📍 Timeline Check-in" (cronologia foto e momenti) mantenendo sempre la sezione Export in coda.
 
 ---
 

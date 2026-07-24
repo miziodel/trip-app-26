@@ -136,10 +136,13 @@ src/
 L'integrazione GiPSigo è un layer di sincronizzazione **best-effort** e **non-bloccante** che NON viola il principio Zero-Cloud:
 
 - I check-in sono **sempre scritti prima** in IndexedDB locale (`checkins` store).
+- Se un check-in non possiede coordinate GPS trasmesse dal dispositivo, l'app assegna in automatico alla creazione/modifica le coordinate stimata della città dal giorno dell'itinerario via `resolveCheckInCoordinates()`.
 - Il flag `syncedToGiPSigo: boolean` traccia cosa è già stato inviato.
-- Il servizio `gipsigoService.ts` esegue POST JSON batch (max 500 item) all'endpoint `external_checkin.php` con headers `X-Api-Key` e `X-Trip-Token`.
-- **Auto-sync**: listener `window.addEventListener('online', ...)` attivato in `Itinerario.tsx` e disponibile come helper `initGiPSigoAutoSync()` per `App.tsx`.
-- **Manual sync**: pulsante "🔗 Sync GiPSigo" visibile nella sezione Export solo se `gipsigoConfig.enabled === true`.
+- Il servizio `gipsigoService.ts` esegue POST JSON batch (max 500 item) all'endpoint `external_checkin.php` inviando `api_key`, `trip_token` e `checkins` direttamente nel body JSON.
+- **Prima Foto allegata**: se il check-in possiede foto in IndexedDB, la prima foto viene convertita in Data URI Base64 ed inviata nel campo `image_base64`.
+- **Sync Atomico per-item**: in caso di errori dal server su specifici item (es. immagine non valida), l'app segna come `syncedToGiPSigo: true` soltanto gli ID accettati/inseriti (`inserted_keys`), lasciando gli altri in coda per i successivi tentativi.
+- **Auto-sync**: listener `window.addEventListener('online', ...)` attivato in `Itinerario.tsx` ed `App.tsx`.
+- **Manual sync & Widget**: pulsante "🔗 Sync GiPSigo" e widget con contatore pendenti visibile sia nella Timeline dei check-in che nelle Impostazioni (Emergenze).
+- **Selettore Vista Doppia**: in `Itinerario.tsx` è presente un selettore prominente tra la vista "Itinerario Completo" (tappe e tabelle orarie) e "Timeline Check-in" (cronologia foto e momenti).
 - **Deduplicazione lato server**: ogni payload include `source_key = checkin.id` per prevenire duplicati.
 - Le credenziali (`apiKey`, `tripToken`, `endpointUrl`) sono salvate in IndexedDB e **mai** in file sorgente o environment variables pubbliche.
-```

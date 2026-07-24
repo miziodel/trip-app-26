@@ -248,14 +248,24 @@ Feature: Sincronizzazione Offline-First dei Check-in verso GiPSigo
     And alla conferma con esito positivo dal server
     Then ciascun record in IndexedDB viene aggiornato impostando syncedToGiPSigo: true ed il timestamp syncedAt corrente
 
-  Scenario: Sincronizzazione manuale dal pulsante Sync GiPSigo
-    Given l'utente visualizza il pulsante "Sync GiPSigo" recante l'indicatore dei check-in pendenti (es. "(3)")
-    When l'utente tocca il pulsante "Sync GiPSigo"
-    Then l'app avvia la trasmissione in batch (max 500) dei check-in non ancora sincronizzati (syncedToGiPSigo: false) a "external_checkin.php"
-    And mostra uno spinner di caricamento durante l'operazione
-    And aggiorna i record in IndexedDB impostando syncedToGiPSigo: true e syncedAt al termine con esito positivo
-    And azzera l'indicatore dei check-in pendenti sul pulsante
+  Scenario: Sincronizzazione atomica e gestione della prima immagine in Base64
+    Given uno o più check-in pendenti con foto associate in IndexedDB
+    When il servizio di sincronizzazione invia il batch a "external_checkin.php"
+    Then la prima foto di ciascun check-in viene convertita in Data URI Base64 ("image_base64")
+    And se il server risponde con errori su specifici item (es. lat/lng mancanti o immagine troppo grande)
+    Then l'app marca come sincronizzati (syncedToGiPSigo: true) SOLTANTO i check-in accettati o inseriti (inserted_keys)
+    And mantiene in coda (syncedToGiPSigo: false) i soli elementi in errore
+    And mostra un messaggio di feedback con il dettaglio degli errori per-item
+
+  Scenario: Selettore vista doppia Itinerario Completo vs Timeline Check-in
+    Given l'utente si trova nel Tab ITINERARIO
+    When tocca la pill "🗺️ Itinerario Completo"
+    Then viene mostrata la tabella delle giornate tappe e l'orario ed è nascosta la timeline dei check-in
+    When tocca la pill "📍 Timeline Check-in"
+    Then viene mostrata la vista cronologica pura dei check-in (CheckInTimeline) ed è nascosto l'itinerario
+    And la sezione "Strumenti di Esportazione & Backup" rimane sempre visibile in coda a entrambe le viste
 ```
+
 
 
 

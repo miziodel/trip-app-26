@@ -27,6 +27,7 @@ import {
   getGiPSigoConfig,
 } from './db';
 import type { CustomRates } from './db';
+import { resolveCheckInCoordinates } from '../utils/geoUtils';
 
 export type ActiveTab = 'oggi' | 'itinerario' | 'trasporti' | 'guida' | 'emergenze';
 
@@ -199,6 +200,18 @@ export const useViaggioStore = create<ViaggioState>((set, get) => ({
     }
 
     const name = checkinData.luogo_nome || checkinData.locationName || 'Check-in';
+    const { data } = get();
+    const resolvedCoords = resolveCheckInCoordinates(
+      {
+        lat: checkinData.lat ?? checkinData.coords?.lat,
+        lng: checkinData.lng ?? checkinData.coords?.lng,
+        coords: checkinData.coords,
+        luogo_nome: name,
+        giorno: checkinData.giorno,
+      },
+      data?.itinerario
+    );
+
     const checkIn: CheckIn = {
       ...checkinData,
       id,
@@ -207,9 +220,9 @@ export const useViaggioStore = create<ViaggioState>((set, get) => ({
       locationName: name,
       commento: checkinData.commento || checkinData.comment,
       comment: checkinData.commento || checkinData.comment,
-      coords: checkinData.coords || (checkinData.lat !== undefined && checkinData.lng !== undefined ? { lat: checkinData.lat, lng: checkinData.lng } : undefined),
-      lat: checkinData.lat ?? checkinData.coords?.lat,
-      lng: checkinData.lng ?? checkinData.coords?.lng,
+      coords: resolvedCoords,
+      lat: resolvedCoords.lat,
+      lng: resolvedCoords.lng,
       photoIds: photoIds.length > 0 ? photoIds : (checkinData.photoIds || checkinData.photos || []),
       photos: photoIds.length > 0 ? photoIds : (checkinData.photoIds || checkinData.photos || []),
       item_id: checkinData.item_id || checkinData.scheduleItemId,
