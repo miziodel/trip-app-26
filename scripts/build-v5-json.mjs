@@ -53,7 +53,7 @@ data.alloggi = data.alloggi.map(h => {
   return h;
 });
 
-// 3. Update Voli - Mappatura esatta e rigorosa V1-V5 da v9.md
+// 3. Update Voli - Mappatura esatta V1-V5 da v9.md + specifiche bagagli 2026
 data.trasporti.voli = [
   {
     id: "V1",
@@ -70,7 +70,7 @@ data.trasporti.voli = [
     numero_volo: "CA 940",
     pnr: "FJMTYD",
     stato: "Confermato",
-    note: "Boeing 777-300. Franchigia: Mano 1x 5kg, Stiva 2x 23kg a testa."
+    note: "Boeing 777-300. Franchigia: Mano 1x 5kg (55x40x20cm), Stiva 2x 23kg a testa (max 158cm)."
   },
   {
     id: "V2",
@@ -104,7 +104,7 @@ data.trasporti.voli = [
     numero_volo: "NH 864",
     pnr: "FJVGH3",
     stato: "Confermato",
-    note: "Boeing 767. Pasto caldo incluso a bordo. Franchigia: Mano 1x 10kg, Stiva 2x 23kg."
+    note: "Boeing 767. Pasto caldo incluso. ⚠️ REGOLE BAGAGLI ANA 2026: Peso totale cabina max 10kg. Borsa personale sotto il sedile MAX 40x30x20 cm."
   },
   {
     id: "V4",
@@ -142,7 +142,7 @@ data.trasporti.voli = [
   }
 ];
 
-// 4. Update Bus tratte durations and confirmations
+// 4. Update Bus tratte
 data.trasporti.bus = data.trasporti.bus.map(b => {
   if (b.id === 'B1') {
     return { ...b, durata: "2h 15m", codice_prenotazione: "07122010861" };
@@ -156,7 +156,84 @@ data.trasporti.bus = data.trasporti.bus.map(b => {
   return b;
 });
 
-// 5. Update Itinerario & Checklist To-Dos
+// 5. Update Protocolli (Inclusi tutti i precedenti + nuovi bagagli 2026)
+data.protocolli = {
+  onsen: {
+    titolo: "🛀 Onsen Etiquette & Policy Tatuaggi",
+    regole: [
+      "Spogliarsi totalmente nello spogliatoio (costume vietato). Portare solo il piccolo asciugamano tenugui.",
+      "Lavarsi e sciacquarsi accuratamente seduti sugli sgabelli di plastica prima di entrare in acqua.",
+      "Entrare lentamente in vasca senza mai immergere l'asciugamano nell'acqua termale.",
+      "Hotel Vista Kanazawa: DIVIETO ASSOLUTO TATUAGGI nella vasca comune. I cerotti coprenti (cover stickers) NON sono consentiti.",
+      "Takayama Ouan: 3 vasche private esterne (kashikiri) prenotabili gratis alla reception per chi ha tatuaggi (accesso garantito senza coperture)."
+    ]
+  },
+  pechino_transito: {
+    titolo: "✈️ Protocollo Definitivo Transito Pechino PEK (1h 55m)",
+    istruzioni: [
+      "Al check-in di Osaka KIX richiedere Thru-check dei bagagli fino a Roma FCO e adesivo Priority Connection.",
+      "All'atterraggio al Terminal 3-E seguire esclusivamente i cartelli blu International Transfer / 24-Hour Transit (國際轉機).",
+      "STRATEGIA ZERO-RISK POWER BANK: Non portare alcun Power Bank nei bagagli a mano o stivati per azzerare qualsiasi ritardo o ispezione ai controlli di sicurezza cinesi.",
+      "Presentare passaporto e seconda carta d'imbarco al varco transiti per il timbro rapido."
+    ]
+  },
+  nagaragawa_railway: {
+    titolo: "🚃 Regole Nagaragawa Railway & Spese a Gujo",
+    istruzioni: [
+      "La ferrovia locale Nagaragawa Railway NON accetta carte contactless Suica/Pasmo o carte di credito.",
+      "Il pagamento del biglietto o della corsa avviene esclusivamente in CONTANTI e MONETE.",
+      "Fotografare subito in stazione l'orario dei treni notturni straordinari per il rientro dal Gujo Odori.",
+      "Le bancarelle yatai del festival e i negozietti tradizionali di Gujo accettano solo contante."
+    ]
+  },
+  contanti_seoul: {
+    titolo: "💳 Contanti & Prelievi a Seoul",
+    istruzioni: [
+      "Scegli solo ATM Global o Foreign Card (presenti in aeroporto, stazioni e banche Shinhan, Hana, KB) per evitare che la carta venga rifiutata.",
+      "Tassa fissa locali ATM: quasi tutti gli ATM addebitano ~3.000–4.800 KRW (2–3,50 €). Evita tanti piccoli prelievi.",
+      "Scegli sempre l'addebito in KRW (no conversione dinamica) per evitare tassi svantaggiosi.",
+      "Converti gli Euro in Won in-app (es. Revolut) da lunedì a venerdì per evitare le maggiorazioni del weekend.",
+      "Limitare il contante al minimo: pagamenti digitali ovunque, contanti usati per ricaricare T-Money e nei mercati tradizionali."
+    ]
+  },
+  bus_6002_icn: {
+    titolo: "🚌 Airport Bus 6002 Incheon (ICN) -> Jongno 3-ga / Insadong",
+    istruzioni: [
+      "Tratta e durata: Da ICN Terminal 1 o 2 fino a Jongno 3-ga / Insadong (durata 80–90 minuti).",
+      "Prezzi: Adulti 17.000 KRW (~11,50 €), Bambini 6–12 anni 12.000 KRW (~8,00 €).",
+      "Pagamenti accettati: Carte di credito/debito internazionali (Revolut) ai desk o al lettore contactless sul bus; T-Money / WOWPASS al lettore; contanti alle biglietterie aeroporto.",
+      "Fermate in aeroporto: Terminal 1 Banchina 5B-4 (Piano 1F Arrivi); Terminal 2 Banchina 30 (Piano B1 Centro Trasporti)."
+    ]
+  },
+  t_money_rimborso: {
+    titolo: "💳 Gestione & Rimborso Saldo Residuo T-Money",
+    istruzioni: [
+      "Rimborso in contanti: Chiedi il rimborso nei convenience store (CU, GS25, 7-Eleven), stazioni metro o aeroporto. Restituzione in KRW contanti con commissione fissa di 500 KRW (per saldi fino a 20.000–30.000 KRW).",
+      "Azzera il saldo con acquisti: Usala come carta di debito nei convenience store, Olive Young o distributori automatici. Il resto mancante si può saldare in contanti o Revolut.",
+      "Nessuna scadenza: La tessera e il credito non scadono mai. Puoi regalarla o prestarla ad amici.",
+      "Nota: Il costo di acquisto della tessera di plastica (3.000–5.000 KRW) non è mai rimborsabile."
+    ]
+  },
+  bagagli_ana_2026: {
+    titolo: "🎒 Nuova Normativa Bagaglio a Mano ANA 2026 (Seoul ➔ Tokyo)",
+    istruzioni: [
+      "Attenzione al volo ANA NH 864 (01 Agosto): in vigore dal 1° Luglio 2026 nuove regole tassative per la cabina.",
+      "Oggetto personale sotto il sedile: dimensioni massime 40 cm x 30 cm x 20 cm.",
+      "Peso combinato cabina: Il peso totale di bagaglio a mano (55x40x25cm) + borsa personale non deve superare i 10 kg totali.",
+      "Controlli al gate: Le borse fuori misura verranno imbarcate in stiva a pagamento."
+    ]
+  },
+  bagagli_liquidi: {
+    titolo: "🧪 Regolamento Liquidi in Cabina (LAG)",
+    istruzioni: [
+      "Contenitori da max 100 ml (o 100 g) ciascuno.",
+      "Tutti i flaconi inseriti in un unico sacchetto di plastica trasparente richiudibile da max 1 Litro (20 cm x 20 cm).",
+      "Consentito un solo sacchetto a passeggero, da estrarre ai controlli di sicurezza."
+    ]
+  }
+};
+
+// 6. Update Itinerario & Checklist To-Dos
 data.itinerario = data.itinerario.map(g => {
   let dayTodos = [];
 
@@ -221,7 +298,7 @@ data.itinerario = data.itinerario.map(g => {
 
     dayTodos = [
       { testo: "Controllare la prenotazione del Leeum Museum (M1 ore 10:00)", fatto: false },
-      { testo: "Preparare gli zaini e lasciare l'alloggio pulito per il check-out di domani mattina", fatto: false }
+      { testo: "Preparare gli zaini e verificare che la borsa borsa personale per il volo ANA rispetti i 40x30x20 cm (max 10kg totali cabina)", fatto: false }
     ];
 
     return {
@@ -450,6 +527,9 @@ data.itinerario = data.itinerario.map(g => {
 
     return {
       ...g,
+      titolo: "Kanazawa Castle, Gyokusen-inmaru & Arte Contemporanea",
+      focus: "Kenroku-en, Gyokusen-inmaru, D.T. Suzuki Museum, 21st Century Museum",
+      vibe: "Natura imperiale, specchi d'acqua riflettenti e architettura zen d'avanguardia",
       tabella_oraria: newItems,
       todo_list: dayTodos
     };
@@ -683,4 +763,4 @@ data.itinerario = data.itinerario.map(g => {
 });
 
 fs.writeFileSync(targetPath, JSON.stringify(data, null, 2), 'utf8');
-console.log(`✅ File viaggio-2026-v5.json ricostruito correttamente e senza alcuna sovrapposizione!`);
+console.log(`✅ File viaggio-2026-v5.json rigenerato con TUTTI gli 8 protocolli ufficiali completi!`);
