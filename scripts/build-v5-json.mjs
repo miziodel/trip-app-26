@@ -24,8 +24,23 @@ data.meta.passeggeri = [
   }
 ];
 
-// 2. Update Alloggi - H3 Hotel Vista Kanazawa tattoo policy & H5 Gujo host/address details
+// 2. Update Alloggi - H1 Insadong, H2 Tokyo, H3 Kanazawa, H5 Gujo details
 data.alloggi = data.alloggi.map(h => {
+  if (h.id === 'H1') {
+    return {
+      ...h,
+      telefono_host: "+82 70 4154 4863"
+    };
+  }
+  if (h.id === 'H2') {
+    return {
+      ...h,
+      nome: "Maison Jeunesse Camera 101",
+      nome_locale: "メゾン・ジュネス 101室",
+      link_prenotazione: "https://www.airbnb.it/rooms/948873888166246209",
+      telefono_host: "+81 90 6420 1210"
+    };
+  }
   if (h.id === 'H3') {
     return {
       ...h,
@@ -41,6 +56,7 @@ data.alloggi = data.alloggi.map(h => {
       ...h,
       indirizzo_en: "382 Minamichō Mito, Gujo, Gifu 501-4105, Giappone",
       indirizzo_locale: "〒501-4105 岐阜県郡上市美波町水戸382",
+      telefono_host: "+81 90-1696-2083",
       note: "Jeenie (host) - +81 90-1696-2083. Lavatrice/Asciugatrice, Bagno condiviso, No colazione",
       features: [
         "Jeenie (host) - +81 90-1696-2083",

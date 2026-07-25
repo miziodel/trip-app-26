@@ -125,129 +125,42 @@ export const GuidaTab: React.FC = () => {
           <span>Protocolli Culturali & Guide ⛩️</span>
         </h3>
 
-        {/* Onsen Protocol */}
-        {protocolli.onsen && (
-          <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-2xl shadow-md overflow-hidden">
-            <button
-              type="button"
-              onClick={() => toggleProtocol('onsen')}
-              className="w-full p-4 flex items-center justify-between text-left hover:bg-[var(--border-subtle)] transition-colors"
-            >
-              <h4 className="text-base font-bold text-amber-600 dark:text-amber-400 flex items-center gap-2">
-                <Flame className="w-5 h-5 text-amber-500 dark:text-amber-400" />
-                <span>{protocolli.onsen.titolo}</span>
-              </h4>
-              <span className="text-[var(--text-secondary)] font-bold text-sm">
-                {expandedProtocols.onsen ? '▲' : '▼'}
-              </span>
-            </button>
-            {expandedProtocols.onsen && (
-              <div className="px-4 pb-4 space-y-3 pt-1 border-t border-[var(--border-subtle)]">
-                <ul className="space-y-2 text-xs text-[var(--text-secondary)]">
-                  {protocolli.onsen.regole?.map((r, idx) => (
-                    <li key={idx} className="flex items-start gap-2 bg-[var(--bg-primary)] p-2.5 rounded-xl border border-[var(--border-subtle)]">
-                      <span className="text-amber-600 dark:text-amber-400 font-bold">{idx + 1}.</span>
-                      <span className="leading-relaxed text-[var(--text-primary)]">{r}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
-        )}
+        {protocolli && Object.entries(protocolli).map(([key, p]) => {
+          if (!p || !p.titolo) return null;
+          const isExpanded = !!expandedProtocols[key];
+          const items = p.regole || p.passaggi || p.istruzioni || p.consigli || [];
 
-        {/* Monjayaki Protocol */}
-        {protocolli.monjayaki && (
-          <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-2xl shadow-md overflow-hidden">
-            <button
-              type="button"
-              onClick={() => toggleProtocol('monjayaki')}
-              className="w-full p-4 flex items-center justify-between text-left hover:bg-[var(--border-subtle)] transition-colors"
-            >
-              <h4 className="text-base font-bold text-orange-600 dark:text-orange-400 flex items-center gap-2">
-                <Utensils className="w-5 h-5 text-orange-500 dark:text-orange-400" />
-                <span>{protocolli.monjayaki.titolo}</span>
-              </h4>
-              <span className="text-[var(--text-secondary)] font-bold text-sm">
-                {expandedProtocols.monjayaki ? '▲' : '▼'}
-              </span>
-            </button>
-            {expandedProtocols.monjayaki && (
-              <div className="px-4 pb-4 space-y-3 pt-1 border-t border-[var(--border-subtle)]">
-                <ol className="space-y-2 text-xs text-[var(--text-secondary)]">
-                  {protocolli.monjayaki.passaggi?.map((p, idx) => (
-                    <li key={idx} className="flex items-start gap-2 bg-[var(--bg-primary)] p-2.5 rounded-xl border border-[var(--border-subtle)]">
-                      <span className="text-orange-600 dark:text-orange-400 font-bold">{idx + 1}.</span>
-                      <span className="leading-relaxed text-[var(--text-primary)]">{p}</span>
-                    </li>
-                  ))}
-                </ol>
-              </div>
-            )}
-          </div>
-        )}
+          return (
+            <div key={key} className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-2xl shadow-md overflow-hidden">
+              <button
+                type="button"
+                onClick={() => toggleProtocol(key)}
+                className="w-full p-4 flex items-center justify-between text-left hover:bg-[var(--border-subtle)] transition-colors"
+              >
+                <h4 className="text-sm font-bold text-amber-600 dark:text-amber-400 flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-amber-500 dark:text-amber-400 shrink-0" />
+                  <span>{p.titolo}</span>
+                </h4>
+                <span className="text-[var(--text-secondary)] font-bold text-sm">
+                  {isExpanded ? '▲' : '▼'}
+                </span>
+              </button>
 
-        {/* Beijing Layover Protocol */}
-        {protocolli.pechino_transito && (
-          <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-2xl shadow-md overflow-hidden">
-            <button
-              type="button"
-              onClick={() => toggleProtocol('pechino')}
-              className="w-full p-4 flex items-center justify-between text-left hover:bg-[var(--border-subtle)] transition-colors"
-            >
-              <h4 className="text-base font-bold text-sky-600 dark:text-sky-400 flex items-center gap-2">
-                <Plane className="w-5 h-5 text-sky-500 dark:text-sky-400" />
-                <span>{protocolli.pechino_transito.titolo}</span>
-              </h4>
-              <span className="text-[var(--text-secondary)] font-bold text-sm">
-                {expandedProtocols.pechino ? '▲' : '▼'}
-              </span>
-            </button>
-            {expandedProtocols.pechino && (
-              <div className="px-4 pb-4 space-y-3 pt-1 border-t border-[var(--border-subtle)]">
-                <ul className="space-y-2 text-xs text-[var(--text-secondary)]">
-                  {protocolli.pechino_transito.istruzioni?.map((istr, idx) => (
-                    <li key={idx} className="flex items-start gap-2 bg-[var(--bg-primary)] p-2.5 rounded-xl border border-[var(--border-subtle)]">
-                      <span className="text-sky-600 dark:text-sky-400 font-bold">•</span>
-                      <span className="leading-relaxed text-[var(--text-primary)]">{istr}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Geta Gujo Protocol */}
-        {protocolli.geta_gujo && (
-          <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-2xl shadow-md overflow-hidden">
-            <button
-              type="button"
-              onClick={() => toggleProtocol('geta')}
-              className="w-full p-4 flex items-center justify-between text-left hover:bg-[var(--border-subtle)] transition-colors"
-            >
-              <h4 className="text-base font-bold text-emerald-600 dark:text-emerald-400 flex items-center gap-2">
-                <Footprints className="w-5 h-5 text-emerald-500 dark:text-emerald-400" />
-                <span>{protocolli.geta_gujo.titolo}</span>
-              </h4>
-              <span className="text-[var(--text-secondary)] font-bold text-sm">
-                {expandedProtocols.geta ? '▲' : '▼'}
-              </span>
-            </button>
-            {expandedProtocols.geta && (
-              <div className="px-4 pb-4 space-y-3 pt-1 border-t border-[var(--border-subtle)]">
-                <ul className="space-y-2 text-xs text-[var(--text-secondary)]">
-                  {protocolli.geta_gujo.consigli?.map((c, idx) => (
-                    <li key={idx} className="flex items-start gap-2 bg-[var(--bg-primary)] p-2.5 rounded-xl border border-[var(--border-subtle)]">
-                      <span className="text-emerald-600 dark:text-emerald-400 font-bold">•</span>
-                      <span className="leading-relaxed text-[var(--text-primary)]">{c}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </div>
-        )}
+              {isExpanded && (
+                <div className="px-4 pb-4 space-y-3 pt-1 border-t border-[var(--border-subtle)]">
+                  <ul className="space-y-2 text-xs text-[var(--text-secondary)]">
+                    {items.map((itemStr, idx) => (
+                      <li key={idx} className="flex items-start gap-2 bg-[var(--bg-primary)] p-2.5 rounded-xl border border-[var(--border-subtle)]">
+                        <span className="text-amber-600 dark:text-amber-400 font-bold">{idx + 1}.</span>
+                        <span className="leading-relaxed text-[var(--text-primary)]">{itemStr}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
 
       {/* Phrasebook Section */}

@@ -57,6 +57,8 @@ export interface Alloggio {
   stato_pagamento: string;
   features?: string[];        // es. ["Lavatrice in camera", "Colazione inclusa"]
   note?: string;
+  telefono_host?: string;     // es. "+81 90-1696-2083" per case/Airbnb
+  link_prenotazione?: string; // es. URL Airbnb/Booking
 }
 
 // ─────────────────────────────────────────────
