@@ -74,6 +74,39 @@ export function getTransitEtaMinutes(
 }
 
 /**
+ * Helper to calculate time difference in format "Xh Ym" between HH:MM strings
+ */
+export function calculateDurationStr(depTime: string, arrTime: string): string {
+  if (!depTime || !arrTime || depTime === '--:--' || arrTime === '--:--') return '';
+
+  const cleanDep = depTime.replace(/\(\+\d+\)/, '').trim();
+  const cleanArr = arrTime.replace(/\(\+\d+\)/, '').trim();
+
+  const [depH, depM] = cleanDep.split(':').map(Number);
+  const [arrH, arrM] = cleanArr.split(':').map(Number);
+
+  if (isNaN(depH) || isNaN(depM) || isNaN(arrH) || isNaN(arrM)) return '';
+
+  let depMinutes = depH * 60 + depM;
+  let arrMinutes = arrH * 60 + arrM;
+
+  // Handle +1 day arrival or next-day midnight wrap
+  if (arrMinutes < depMinutes || arrTime.includes('+1')) {
+    arrMinutes += 24 * 60;
+  }
+
+  const diffMinutes = arrMinutes - depMinutes;
+  if (diffMinutes <= 0) return '';
+
+  const h = Math.floor(diffMinutes / 60);
+  const m = diffMinutes % 60;
+
+  if (h > 0 && m > 0) return `${h}h ${m < 10 ? '0' : ''}${m}m`;
+  if (h > 0) return `${h}h 00m`;
+  return `${m}m`;
+}
+
+/**
  * Parses route string, time range string, and duration into structured object for UI display
  */
 export function parseTransitRoute(
@@ -89,12 +122,14 @@ export function parseTransitRoute(
   const depTime = timeParts[0] || '--:--';
   const arrTime = timeParts[1] || '--:--';
 
+  const calculatedDuration = durata || calculateDurationStr(depTime, arrTime);
+
   return {
     origin,
     destination,
     depTime,
     arrTime,
-    duration: durata || '',
+    duration: calculatedDuration,
   };
 }
 

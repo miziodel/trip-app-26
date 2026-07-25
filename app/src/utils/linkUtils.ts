@@ -3,20 +3,20 @@ import type { ItemOrario, MapsProvider, Paese } from '../types/viaggio';
 /**
  * Normalizes query string for map searches
  */
-export function formatMapQuery(query?: string, city?: string): string {
+export function formatMapQuery(query?: string, city?: string, address?: string): string {
   const q = (query || '').replace(/\[.*?\]|\(.*?\)/g, '').trim();
+  const a = (address || '').trim();
   const c = (city || '').trim();
 
-  if (!q && !c) return '';
-  if (!q) return c;
-  if (!c) return q;
-
-  // Avoid duplicating city name if already present in query
-  if (q.toLowerCase().includes(c.toLowerCase())) {
-    return q;
+  let result = q;
+  if (a && !result.toLowerCase().includes(a.toLowerCase())) {
+    result = result ? `${result}, ${a}` : a;
+  }
+  if (c && !result.toLowerCase().includes(c.toLowerCase())) {
+    result = result ? `${result}, ${c}` : c;
   }
 
-  return `${q}, ${c}`;
+  return result;
 }
 
 /**
@@ -26,9 +26,10 @@ export function getMapDeepLink(
   query?: string,
   city?: string,
   explicitProvider?: MapsProvider,
-  paese?: Paese
+  paese?: Paese,
+  address?: string
 ): string {
-  const fullQuery = formatMapQuery(query, city);
+  const fullQuery = formatMapQuery(query, city, address);
 
   if (!fullQuery) {
     return 'https://www.google.com/maps';

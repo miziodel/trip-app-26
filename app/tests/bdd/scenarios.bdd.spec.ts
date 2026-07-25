@@ -247,3 +247,34 @@ describe('BDD Scenario: Feature 11 - Sincronizzazione Offline-First GiPSigo', ()
     expect(result.errors).toContain('GiPSigo non configurato');
   });
 });
+
+describe('BDD Scenario: Correct Overnight Accommodation Selection on City Change Days', () => {
+  it('Given a city change day (e.g. Day 4 - 2026-08-01 transfer from Seoul to Tokyo), When calculating sleep accommodation for the day, Then selects the destination accommodation (Tokyo H2) where check_in <= date < check_out', () => {
+    const dayData = sampleData.itinerario.find((g) => g.giorno === 4)!;
+    const dateStr = dayData.data; // "2026-08-01"
+
+    const sleepAccommodation =
+      sampleData.alloggi.find((h) => dateStr >= h.check_in && dateStr < h.check_out) ||
+      sampleData.alloggi[sampleData.alloggi.length - 1];
+
+    // Day 4 date is 2026-08-01. H1 (Seoul) check_out is 2026-08-01, H2 (Tokyo) check_in is 2026-08-01 and check_out is 2026-08-10.
+    // Therefore, the overnight sleep location for Day 4 MUST be H2 (Tokyo), NOT H1 (Seoul).
+    expect(sleepAccommodation.id).toBe('H2');
+    expect(sleepAccommodation.citta).toBe('Tokyo');
+  });
+});
+
+describe('BDD Scenario: Automatic Transit Duration Calculation', () => {
+  it('Given a transit route with missing duration parameter, When parseTransitRoute is called with departure and arrival times, Then automatically calculates and formats travel duration', async () => {
+    const { parseTransitRoute, calculateDurationStr } = await import('../../src/utils/transitUtils');
+
+    const parsed1 = parseTransitRoute('Omiya -> Kanazawa', '10:21 -> 12:30');
+    expect(parsed1.duration).toBe('2h 09m');
+
+    const parsed2 = parseTransitRoute('Seoul (GMP) -> Tokyo (HND)', '12:40 -> 14:55');
+    expect(parsed2.duration).toBe('2h 15m');
+
+    const durationOvernight = calculateDurationStr('20:30', '12:45 (+1)');
+    expect(durationOvernight).toBe('16h 15m');
+  });
+});

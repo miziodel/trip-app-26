@@ -436,7 +436,7 @@ export const OggiTab: React.FC = () => {
 
           <div className="grid grid-cols-2 gap-2 pt-1 font-sans">
             <a
-              href={getMapDeepLink(wakeupAccommodation.indirizzo_locale, wakeupAccommodation.citta)}
+              href={getMapDeepLink(wakeupAccommodation.nome, wakeupAccommodation.citta, undefined, wakeupAccommodation.paese, wakeupAccommodation.indirizzo_en || wakeupAccommodation.indirizzo_locale)}
               target="_blank"
               rel="noopener noreferrer"
               className="py-2 bg-[var(--bg-card)] hover:bg-[var(--border-subtle)] text-[var(--text-primary)] font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 border border-[var(--border-subtle)] shadow-sm transition-all active:scale-95"
@@ -649,7 +649,7 @@ export const OggiTab: React.FC = () => {
 
           <div className="grid grid-cols-2 gap-2 pt-1 font-sans">
             <a
-              href={getMapDeepLink(sleepAccommodation.indirizzo_locale, sleepAccommodation.citta)}
+              href={getMapDeepLink(sleepAccommodation.nome, sleepAccommodation.citta, undefined, sleepAccommodation.paese, sleepAccommodation.indirizzo_en || sleepAccommodation.indirizzo_locale)}
               target="_blank"
               rel="noopener noreferrer"
               className="py-2.5 bg-[var(--bg-card)] hover:bg-[var(--border-subtle)] text-[var(--text-primary)] font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 border border-[var(--border-subtle)] shadow-sm transition-all active:scale-95"

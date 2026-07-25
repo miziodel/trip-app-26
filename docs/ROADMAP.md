@@ -1,10 +1,17 @@
-# Roadmap Funzionale & Backlog (v6.0 Completed)
+# Roadmap Funzionale & Backlog (v7.0 Completed)
 
 Raccolta delle funzionalità implementate e future evoluzioni dell'applicazione PWA Trip App 2026.
 
 ---
 
-## ✅ Funzionalità Completate (v6.0 - Luglio 2026)
+## ✅ Funzionalità Completate (v7.0 - Luglio 2026)
+
+- [x] **Dataset Viaggio `viaggio-2026-v5.json`**: Compilazione e validazione dello schema 5.0 sincronizzato con le specifiche di `database-app-viaggio-2026-v9.md`, inclusi numeri di e-ticket passeggeri per Air China (CA) e All Nippon Airways (NH), franchigie bagaglio (Air China: 5kg/2x23kg, ANA: 10kg/2x23kg), durate precise e conferme per tratte bus (B1-B3) e Shinkansen (T1).
+- [x] **Card Diario di Bordo Serale Accordion Collapsible (`NightlyJournalCard.tsx`)**: Stato iniziale inteligente per la card del diario di bordo serale: **chiusa di default** se non contiene ricordi/stelle salvate con invito a compilare, **aperta di default** se già compilata. Interattività tap per espandere/comprimere l'accordion in qualsiasi momento.
+- [x] **Calcolo Automatico Durata Trasporti (`transitUtils.ts`)**: Funzione `calculateDurationStr(depTime, arrTime)` per calcolare e visualizzare automaticamente la durata di una tratta (es. `2h 09m`) quando il campo `durata` è omesso o non fornito.
+- [x] **Selezione Alloggio Notturno nei Giorni di Cambio Città (`Oggi.tsx` & `Itinerario.tsx`)**: Perfezionamento del calcolo del pernottamento serale con vincolo rigoroso $\text{check\_in} \le \text{data} < \text{check\_out}$, garantendo che nei giorni di trasferimento (es. Seoul ➔ Tokyo del 1° Agosto) la card di sveglia mostri la città di partenza e la card notturna mostri la città di arrivo.
+
+---
 
 - [x] **Palette Opzione B (Indaco & Bamboo Zen)**: Eliminazione del rosso-allarme. Orari in Verde Bamboo, badge fase in Indaco Giapponese, valuta in Zafferano. Token CSS `[data-theme="day"]` / `[data-theme="night"]` in `index.css`. Zero modifiche strutturali ai componenti.
 - [x] **BottomNav Clean (No Dot Indicator)**: Rimosso il puntino attivo sotto l'icona di navigazione — la pillola di sfondo indaco è sufficiente indicatore visivo.

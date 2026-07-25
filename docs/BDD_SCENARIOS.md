@@ -264,6 +264,35 @@ Feature: Sincronizzazione Offline-First dei Check-in verso GiPSigo
     When tocca la pill "📍 Timeline Check-in"
     Then viene mostrata la vista cronologica pura dei check-in (CheckInTimeline) ed è nascosto l'itinerario
     And la sezione "Strumenti di Esportazione & Backup" rimane sempre visibile in coda a entrambe le viste
+
+---
+
+## Feature 12: Diario Serale Collapsible & Calcolo Durata Trasporti
+
+```gherkin
+Feature: Diario Serale Collapsible & Calcolo Automatico Durate
+  Come utente in mobilità
+  Voglio che il diario serale sia compresso se vuoto e che le durate delle tratte vengano calcolate automaticamente
+  Per risparmiare spazio verticale sullo schermo e conoscere al volo le tempistiche di viaggio
+
+  Scenario: Card Diario di Bordo Serale chiusa di default se vuota
+    Given il diario di bordo serale di un giorno non contiene stelle, highlight o note salvate
+    When la pagina del giorno viene renderizzata
+    Then la card "🌙 Diario di Bordo Serale" si presenta compressa (chiusa)
+    And mostra l'indicazione "Tocca per compilare i ricordi del giorno"
+    When l'utente tocca la header bar della card
+    Then la card si espande mostrando i controlli per il rating e le textarea per le note
+
+  Scenario: Card Diario di Bordo Serale aperta di default se contenente dati
+    Given il diario di bordo serale contiene già un rating salvato (es. 5 stelle) o note
+    When la pagina del giorno viene renderizzata
+    Then la card si presenta già aperta per la visualizzazione immediata dei ricordi
+
+  Scenario: Calcolo automatico durata tratte trasporti
+    Given un oggetto di trasporto (volo, treno, bus) che contiene ora_partenza e ora_arrivo ma privo del campo durata
+    When viene invocata la funzione parseTransitRoute o calculateDurationStr
+    Then l'app calcola automaticamente la differenza temporale e restituisce la stringa formattata (es. "2h 09m" o "16h 15m")
+```
 ```
 
 

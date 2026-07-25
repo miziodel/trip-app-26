@@ -376,7 +376,7 @@ export const TrasportiTab: React.FC = () => {
                     <span>🚗 Taxi Card</span>
                   </button>
                   <a
-                    href={getMapDeepLink(h.nome, h.citta)}
+                    href={getMapDeepLink(h.nome, h.citta, undefined, h.paese, h.indirizzo_en || h.indirizzo_locale)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="py-2.5 bg-[var(--bg-primary)] hover:opacity-90 text-sky-600 dark:text-sky-300 font-bold rounded-xl text-xs border border-sky-500/30 shadow transition-all active:scale-95 flex items-center justify-center gap-1"

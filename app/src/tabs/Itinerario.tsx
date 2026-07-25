@@ -286,10 +286,10 @@ export const ItinerarioTab: React.FC = () => {
             dayFlights = [...prevDayFlights, ...dayFlights];
           }
 
-          // Find accommodation for this day
-          const dayAccommodation = data.alloggi.find((h) => {
-            return giorno.data >= h.check_in && giorno.data <= h.check_out;
-          });
+          // Find accommodation for this day (overnight sleep location)
+          const dayAccommodation =
+            data.alloggi.find((h) => giorno.data >= h.check_in && giorno.data < h.check_out) ||
+            data.alloggi.find((h) => giorno.data >= h.check_in && giorno.data <= h.check_out);
 
           // Todos for this day
           const dayTodos = userTodos[giorno.giorno] || giorno.todo_list.map((t) => t.fatto);
