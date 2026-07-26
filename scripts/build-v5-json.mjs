@@ -158,16 +158,34 @@ data.trasporti.voli = [
   }
 ];
 
-// 4. Update Bus tratte
+// 4. Update Bus tratte con dettagli vettore e limiti bagagli ufficiali
 data.trasporti.bus = data.trasporti.bus.map(b => {
   if (b.id === 'B1') {
-    return { ...b, durata: "2h 15m", codice_prenotazione: "07122010861" };
+    return {
+      ...b,
+      vettore: "Nohi Bus",
+      durata: "2h 15m",
+      codice_prenotazione: "07122010861",
+      note: "Partenza West Exit Bus Stop No. 4. Bagaglio a mano max 10kg (<0.027 m³, lungo <1m). Stiva inferiore: nessun limite rigido pezzi/misura (carico autonomo)."
+    };
   }
   if (b.id === 'B2') {
-    return { ...b, durata: "1h 21m", codice_prenotazione: "116572765" };
+    return {
+      ...b,
+      vettore: "Meitetsu Bus / Nohi Bus (Linea Nagoya)",
+      durata: "1h 21m",
+      codice_prenotazione: "116572765",
+      note: "Arrivo casello autostradale (Gujo IC). Pick-up privato Jeenie. Bagaglio in stiva: 1 solo bagaglio grande a persona (max 30 kg, somma 3 lati < 2m)."
+    };
   }
   if (b.id === 'B3') {
-    return { ...b, durata: "4h 31m", codice_prenotazione: "07162002992" };
+    return {
+      ...b,
+      vettore: "Kintetsu Bus",
+      durata: "4h 31m",
+      codice_prenotazione: "07162002992",
+      note: "Partenza casello Gujo IC ➔ Arrivo Osaka Namba OCAT. Bagaglio in stiva: 1 pezzo max 10 kg, somma 3 lati < 1m, capacità < 0.3 m³. Mano a bordo solo se non ingombrante."
+    };
   }
   return b;
 });
@@ -245,6 +263,14 @@ data.protocolli = {
       "Contenitori da max 100 ml (o 100 g) ciascuno.",
       "Tutti i flaconi inseriti in un unico sacchetto di plastica trasparente richiudibile da max 1 Litro (20 cm x 20 cm).",
       "Consentito un solo sacchetto a passeggero, da estrarre ai controlli di sicurezza."
+    ]
+  },
+  bagagli_bus_montagne: {
+    titolo: "🚌 Limiti Bagagli Bus Montagne (Kanazawa, Takayama, Gujo, Osaka)",
+    istruzioni: [
+      "Kanazawa ➔ Takayama (Nohi Bus - 12 Aug): Mano in cabina max 10 kg (<0.027 m³, lungo <1m). Stiva inferiore: nessun limite rigido su pezzi/misura (carico autonomo).",
+      "Takayama ➔ Gujo Hachiman IC (Meitetsu/Nohi Bus - 14 Aug): Stiva inferiore: consentito 1 solo bagaglio grande a persona (peso max 30 kg, somma 3 lati < 2m).",
+      "Gujo Hachiman IC ➔ Osaka Namba OCAT (Kintetsu Bus - 16 Aug): Stiva inferiore: 1 pezzo max 10 kg, somma 3 lati < 1m, capacità < 0.3 m³. Mano a bordo consentito solo per oggetti fragili/valore se non ingombrante."
     ]
   }
 };
