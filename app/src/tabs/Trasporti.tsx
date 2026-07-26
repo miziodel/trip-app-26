@@ -4,6 +4,7 @@ import { useViaggioStore } from '../store/store';
 import { CopyableText } from '../components/ui/CopyableText';
 import { TransitCard3Col } from '../components/ui/TransitCard3Col';
 import { FlightStatusDrawer } from '../components/ui/FlightStatusDrawer';
+import { getMapDeepLink } from '../utils/linkUtils';
 import { Radio } from 'lucide-react';
 import type { Volo } from '../types/viaggio';
 

@@ -7,7 +7,7 @@ import { NightlyJournalCard } from '../components/ui/NightlyJournalCard';
 import { CheckInCard } from '../components/ui/CheckInCard';
 import { FlightStatusDrawer } from '../components/ui/FlightStatusDrawer';
 import { formatDate } from '../utils/dateUtils';
-import { getMapDeepLink, getFlightTrackingUrls } from '../utils/linkUtils';
+import { getMapDeepLink } from '../utils/linkUtils';
 import { isTransitActiveNow, getTransitProgressPercent, getTransitEtaMinutes } from '../utils/transitUtils';
 import type { Volo, Treno, Bus } from '../types/viaggio';
 import {

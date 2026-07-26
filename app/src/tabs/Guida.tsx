@@ -4,10 +4,6 @@ import { CopyableText } from '../components/ui/CopyableText';
 import {
   BookOpen,
   Volume2,
-  Flame,
-  Utensils,
-  Plane,
-  Footprints,
   Sparkles,
 } from 'lucide-react';
 import type { Frase } from '../types/viaggio';
