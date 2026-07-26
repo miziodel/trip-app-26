@@ -65,11 +65,11 @@ L'interfaccia mobile-first presenta una **Bottom Navigation Bar fissa** a 5 sche
 
 ### 3.3 🚄 Tab 3: "VIAGGI" (Voli, Treni, Alloggi & Biglietti)
 - **Filtri Categoria**: `Tutti` | `✈️ Voli` | `🚄 Treni & Bus` | `🏨 Alloggi` | `🎟️ Biglietti`.
-- **Sezione Voli (V1 - V5)**: Tabella sintetizzata con PNR copiabili in 1-tap, terminal, orari, durata e note sui transiti (es. layover Pechino 1h 55m).
-- **Sezione Treni & Bus (T1, B1-B3)**: Shinkansen Kagayaki e Bus Nohi/Kintetsu con PNR, carrozze, posti e codici di ritiro.
+- **Sezione Voli (V1 - V5)**: Tabella sintetizzata con PNR copiabili in 1-tap, terminal, orari, durata, note sui transiti (es. layover Pechino 1h 55m) e pulsante CTA `📡 Stato Volo Live / Radar` per aprire il drawer modale `FlightStatusDrawer` (con link a FlightAware ICAO, Trip.com e Flightradar24).
+- **Sezione Treni & Bus (T1, B1-B3)**: Shinkansen Kagayaki e Bus Nohi/Meitetsu/Kintetsu con PNR, carrozze, posti, codici di ritiro e specifiche trasparenti sui limiti bagagli (stiva/mano).
 - **Card Spedizione Valigie Yamato (Takkyubin)**: Scheda dedicata per la spedizione Shinjuku ➔ Osaka con pulsante fullscreen dell'indirizzo dell'Hotel S-Presso West.
-- **Nuova Sezione Biglietti Musei & Eventi**: Estratta automaticamente dal programma (teamLab Borderless, Mori Art Museum, 21st Century Museum) con codici d'accesso copiabili.
-- **Registro Alloggi (H1 - H6)**: Indirizzi in inglese e lingua locale copiabili, note lavatrice, stazioni metro e pulsante `🚗 Taxi Card` per ciascun hotel.
+- **Sezione Biglietti Musei & Eventi**: Estratta automaticamente dal programma (teamLab Borderless, Mori Art Museum, 21st Century Museum) con codici d'accesso copiabili.
+- **Registro Alloggi (H1 - H6)**: Indirizzi in inglese e lingua locale copiabili, numeri di telefono degli host (quando non hotel, es. Jeenie Gujo, Insadong, Tokyo), link prenotazione Airbnb (Maison Jeunesse Camera 101), note e pulsante `🚗 Taxi Card` per ciascun hotel.
 
 ### 3.4 ⛩️ Tab 4: "GUIDA" (Frasario & Protocolli)
 - **Pulsanti Anchor Rapidi**: In cima al tab due bottoni d'azione `[ 📖 Vai al Frasario ]` e `[ 🎌 Vai ai Protocolli ]` per scrollare immediatamente alle sezioni.
@@ -77,11 +77,14 @@ L'interfaccia mobile-first presenta una **Bottom Navigation Bar fissa** a 5 sche
   - Suddiviso in 4 categorie (*Cortesia*, *Cibo*, *Trasporti*, *Emergenze*).
   - Testo in Giapponese 🇯🇵 (Kanji/Kana) e Coreano 🇰🇷 (Hangul), pronuncia fonetica e pulsante per la copia rapida negli appunti.
   - Campo di ricerca live per filtrare le frasi.
-- **Protocolli Culturali**:
+- **Protocolli Culturali & Operativi (Renderizzati Dinamicamente dal JSON)**:
   - *Etichetta Onsen & Tattoo Cover* (regole lavaggio, asciugamani, tattoo stickers).
   - *Tecnica della Diga (Dote) per Monjayaki* (passaggi di cottura al tavolo).
   - *Protocollo Transito Pechino PEK* (regole battery bank <100Wh, cartelli blu).
   - *Uso dei Geta al Gujo Odori* (calzata corta, prevenzione vesciche).
+  - *Nuova Normativa Bagaglio ANA 2026* (Seoul ➔ Tokyo: 40x30x20 cm sotto il sedile, max 10kg).
+  - *Regolamento Liquidi in Cabina (LAG)*.
+  - *Limiti Bagagli Bus Montagne* (Kanazawa, Takayama, Gujo, Osaka).
 
 ### 3.5 🆘 Tab 5: "EMERGENZE & UTILITIES"
 - **Polizza Assicurativa Columbus**: Numero polizza `000000000` e avvio chiamata rapida `tel:+390000000000` H24.

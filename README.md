@@ -9,11 +9,13 @@ Progressive Web App (PWA) responsive e 100% Offline-First con **Architettura di 
 - **Privacy Zero-Cloud**: Nessun database remoto obbligatorio o server cloud per i dati sensibili. Tutti i dati personali (PNR, indirizzi, polizze, diario e check-in) risiedono unicamente nella memoria locale protetta del dispositivo (**IndexedDB**).
 - **Offline Engine**: Service Worker PWA (`vite-plugin-pwa`) per garantire il funzionamento completo anche in assenza di rete internet o in modalità aereo.
 - **Sincronizzazione Opzionale GiPSigo (Feature 11)**: Integrazione offline-first per inviare i check-in e le foto (in Data URI Base64) a un'istanza esterna GiPSigo con sincronizzazione automatica su evento `online`, sync atomica per-item e fallback coordinate città.
+- **Diario Serale Collapsible & Calcolo Durate (`NightlyJournalCard.tsx` / `transitUtils.ts` - Feature 12)**: Diario serale chiuso di default se vuoto ed espandibile a tap; calcolo automatico delle durate di viaggio quando non fornite.
+- **Stato Volo Live & Radar Radar (`FlightStatusDrawer.tsx` - Feature 13)**: Pulsante per l'apertura del drawer modale per il tracciamento live del volo su **FlightAware** (codici ICAO es. `CCA940`, `ANA864`), **Trip.com** e **Flightradar24**, con avviso integrato per dati incompleti nel JSON.
 - **5 Schede Mobile-First**:
   1. **📅 OGGI**: Dashboard dinamica con auto-date picker per la tappa del giorno, dual timezone clock (CET / UTC+9), toggle piano pioggia/caldo, card orarie espandibili con mappe Naver/Google, taxi card e diario di bordo serale a 5 stelle.
   2. **🗺️ ITINERARIO**: Selettore vista doppia tra **Itinerario Completo** (tappe filtrabili per città) e **Timeline Check-in** (cronologia foto e momenti geolocalizzati), con strumenti di esportazione JSON, GeoJSON, KML e Markdown.
-  3. **<ctrl42> VIAGGI**: Voli con PNR copiabili, treni/bus, alloggi con Taxi Card fullscreen e sezione dedicata ai biglietti musei/eventi.
-  4. **⛩️ GUIDA**: Frasario tascabile a 30 espressioni JP/KR con fonetica, toggle lingua e pulsanti anchor rapidi, protocolli culturali (Onsen, Monjayaki, Transito Pechino, Geta).
+  3. **🚄 VIAGGI**: Voli con PNR e tracking radar live, treni/bus (con limiti bagagli Nohi/Meitetsu/Kintetsu), alloggi con contatto host e Taxi Card fullscreen e sezione dedicata ai biglietti musei/eventi.
+  4. **⛩️ GUIDA**: Frasario tascabile a 30 espressioni JP/KR con fonetica, toggle lingua e pulsanti anchor rapidi, protocolli culturali ed operativi renderizzati dinamicamente dal JSON (Onsen, Monjayaki, Transito Pechino, Geta, Bagagli ANA 2026, Liquidi, Bus Montagne).
   5. **🆘 EMERGENZE**: Assicurazione sanitaria con chiamata rapida H24, numeri d'emergenza nazionali, contatti ambasciate, integrazione credenziali GiPSigo e funzione di reset del database locale.
 
 ---
@@ -23,7 +25,7 @@ Progressive Web App (PWA) responsive e 100% Offline-First con **Architettura di 
 - **Frontend**: React 19 + TypeScript + Vite 8
 - **Styling**: TailwindCSS v4 (Palette Indaco & Bamboo Zen, Zero-rosso-allarme) + Lucide Icons
 - **Offline & Storage**: IndexedDB (libreria `idb`), Zustand, `vite-plugin-pwa` (Workbox)
-- **Testing**: Vitest (45 test unitari e BDD Given-When-Then)
+- **Testing**: Vitest (49 test unitari e BDD Given-When-Then)
 
 ---
 
