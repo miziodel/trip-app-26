@@ -278,3 +278,22 @@ describe('BDD Scenario: Automatic Transit Duration Calculation', () => {
     expect(durationOvernight).toBe('16h 15m');
   });
 });
+
+describe('BDD Scenario: Flight Tracking URLs Generation (FlightAware ICAO, Trip.com IATA, Flightradar24 IATA)', () => {
+  it('Given flight number and ICAO code, When getFlightTrackingUrls is called, Then generates exact live tracking URLs for FlightAware, Trip.com, and Flightradar24', async () => {
+    const { getFlightTrackingUrls } = await import('../../src/utils/linkUtils');
+
+    // Test Volo V1: Air China CA 940 -> ICAO: CCA940
+    const urlsV1 = getFlightTrackingUrls('CA 940', 'CCA940');
+    expect(urlsV1.flightAware).toBe('https://www.flightaware.com/live/flight/CCA940');
+    expect(urlsV1.tripCom).toBe('https://it.trip.com/flights/status-ca940');
+    expect(urlsV1.flightradar24).toBe('https://www.flightradar24.com/data/flights/ca940');
+
+    // Test Volo V3: All Nippon Airways NH 864 -> ICAO: ANA864
+    const urlsV3 = getFlightTrackingUrls('NH 864', 'ANA864');
+    expect(urlsV3.flightAware).toBe('https://www.flightaware.com/live/flight/ANA864');
+    expect(urlsV3.tripCom).toBe('https://it.trip.com/flights/status-nh864');
+    expect(urlsV3.flightradar24).toBe('https://www.flightradar24.com/data/flights/nh864');
+  });
+});
+

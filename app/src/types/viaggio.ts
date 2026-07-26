@@ -80,6 +80,7 @@ export interface Volo {
   numero_volo: string;            // "CA 940"
   pnr: string;
   stato: string;
+  codice_icao?: string;           // es. "CCA940" o "ANA864" per FlightAware
   layover?: string;               // "6h 05m a PEK"
   attenzione?: string;            // avviso critico, es. "Aeroporto Gimpo (GMP)!"
   note?: string;

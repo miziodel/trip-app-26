@@ -84,6 +84,7 @@ data.trasporti.voli = [
     durata: "10h 15m",
     compagnia: "Air China CA 940",
     numero_volo: "CA 940",
+    codice_icao: "CCA940",
     pnr: "FJMTYD",
     stato: "Confermato",
     note: "Boeing 777-300. Franchigia: Mano 1x 5kg (55x40x20cm), Stiva 2x 23kg a testa (max 158cm)."
@@ -101,6 +102,7 @@ data.trasporti.voli = [
     durata: "1h 55m",
     compagnia: "Air China CA 709",
     numero_volo: "CA 709",
+    codice_icao: "CCA709",
     pnr: "FJMTYD",
     stato: "Confermato",
     note: "Airbus A321. Transito PEK: 6h 05m."
@@ -118,6 +120,7 @@ data.trasporti.voli = [
     durata: "2h 15m",
     compagnia: "All Nippon Airways NH 864",
     numero_volo: "NH 864",
+    codice_icao: "ANA864",
     pnr: "FJVGH3",
     stato: "Confermato",
     note: "Boeing 767. Pasto caldo incluso. ⚠️ REGOLE BAGAGLI ANA 2026: Peso totale cabina max 10kg. Borsa personale sotto il sedile MAX 40x30x20 cm."
@@ -135,6 +138,7 @@ data.trasporti.voli = [
     durata: "3h 20m",
     compagnia: "Air China CA 162",
     numero_volo: "CA 162",
+    codice_icao: "CCA162",
     pnr: "FJMTYD",
     stato: "Confermato",
     note: "Airbus A321. Sveglia ore 04:30. Treno Airport Express alle 05:15."
@@ -152,6 +156,7 @@ data.trasporti.voli = [
     durata: "11h 10m",
     compagnia: "Air China CA 939",
     numero_volo: "CA 939",
+    codice_icao: "CCA939",
     pnr: "FJMTYD",
     stato: "Confermato",
     note: "Boeing 777-300. Transito PEK: 1h 55m (Connessione Stretta) - Zero Power Bank nei bagagli."

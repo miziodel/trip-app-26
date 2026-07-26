@@ -6,7 +6,7 @@ import { HeroProgressCard } from '../components/ui/HeroProgressCard';
 import { NightlyJournalCard } from '../components/ui/NightlyJournalCard';
 import { CheckInCard } from '../components/ui/CheckInCard';
 import { formatDate } from '../utils/dateUtils';
-import { getMapDeepLink } from '../utils/linkUtils';
+import { getMapDeepLink, getFlightTrackingUrls } from '../utils/linkUtils';
 import { isTransitActiveNow, getTransitProgressPercent, getTransitEtaMinutes } from '../utils/transitUtils';
 import type { Volo, Treno, Bus } from '../types/viaggio';
 import {
@@ -261,6 +261,47 @@ export const OggiTab: React.FC = () => {
                   <span className="text-[11px] text-[var(--text-secondary)] italic">{flight.note}</span>
                 )}
               </div>
+
+              {/* Flight Tracking Links */}
+              {(() => {
+                const tracking = getFlightTrackingUrls(flight.numero_volo, flight.codice_icao);
+                return (
+                  <div className="pt-2 border-t border-[var(--border-subtle)] space-y-1">
+                    <span className="text-[10px] font-bold text-[var(--text-secondary)] block">📡 Stato Volo Live:</span>
+                    <div className="grid grid-cols-3 gap-1.5 text-[10px] font-bold">
+                      <a
+                        href={tracking.flightAware}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-blue-600/10 hover:bg-blue-600/20 text-blue-600 dark:text-blue-400 border border-blue-500/30 rounded-lg py-1.5 px-1 text-center flex items-center justify-center gap-1 transition-all active:scale-95"
+                      >
+                        <span>FlightAware</span>
+                        <ExternalLink className="w-2.5 h-2.5 shrink-0" />
+                      </a>
+
+                      <a
+                        href={tracking.tripCom}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-sky-600/10 hover:bg-sky-600/20 text-sky-600 dark:text-sky-400 border border-sky-500/30 rounded-lg py-1.5 px-1 text-center flex items-center justify-center gap-1 transition-all active:scale-95"
+                      >
+                        <span>Trip.com</span>
+                        <ExternalLink className="w-2.5 h-2.5 shrink-0" />
+                      </a>
+
+                      <a
+                        href={tracking.flightradar24}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30 rounded-lg py-1.5 px-1 text-center flex items-center justify-center gap-1 transition-all active:scale-95"
+                      >
+                        <span>Flightradar24</span>
+                        <ExternalLink className="w-2.5 h-2.5 shrink-0" />
+                      </a>
+                    </div>
+                  </div>
+                );
+              })()}
             </div>
           ))}
         </div>

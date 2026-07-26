@@ -293,6 +293,28 @@ Feature: Diario Serale Collapsible & Calcolo Automatico Durate
     When viene invocata la funzione parseTransitRoute o calculateDurationStr
     Then l'app calcola automaticamente la differenza temporale e restituisce la stringa formattata (es. "2h 09m" o "16h 15m")
 ```
+
+---
+
+## Feature 13: Radar e Link per il Tracking del Volo in Tempo Reale
+
+```gherkin
+Feature: Tracking dei Voli in Tempo Reale tramite Codici IATA e ICAO
+  Come passeggero sui voli internazionali
+  Voglio accedere rapidamente allo stato live del volo tramite i tre principali servizi di tracking (FlightAware, Trip.com e Flightradar24)
+  Per monitorare ritardi, gate d'imbarco e posizione dell'aeromobile in tempo reale
+
+  Scenario: Generazione dinamica dei pulsanti di tracciamento nelle card dei voli
+    Given una card di volo (es. Volo V1 "Air China CA 940" o Volo V3 "ANA NH 864") con numero di volo IATA e codice ICAO specificati nel JSON
+    When l'utente visualizza la card del volo nel tab "Oggi" o nel tab "Viaggi (Trasporti)"
+    Then vengono mostrati tre pulsanti dedicati di tracciamento live:
+      1. FlightAware (utilizza il codice ICAO in maiuscolo, es. "https://www.flightaware.com/live/flight/CCA940")
+      2. Trip.com (utilizza il codice IATA pulito in minuscolo, es. "https://it.trip.com/flights/status-ca940")
+      3. Flightradar24 (utilizza il codice IATA pulito in minuscolo, es. "https://www.flightradar24.com/data/flights/ca940")
+    When l'utente clicca su uno dei pulsanti
+    Then il link si apre in una nuova scheda esterna per la verifica dello stato del volo
+```
+
 ```
 
 
