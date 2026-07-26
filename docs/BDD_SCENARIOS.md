@@ -304,15 +304,18 @@ Feature: Tracking dei Voli in Tempo Reale tramite Codici IATA e ICAO
   Voglio accedere rapidamente allo stato live del volo tramite i tre principali servizi di tracking (FlightAware, Trip.com e Flightradar24)
   Per monitorare ritardi, gate d'imbarco e posizione dell'aeromobile in tempo reale
 
-  Scenario: Generazione dinamica dei pulsanti di tracciamento nelle card dei voli
-    Given una card di volo (es. Volo V1 "Air China CA 940" o Volo V3 "ANA NH 864") con numero di volo IATA e codice ICAO specificati nel JSON
-    When l'utente visualizza la card del volo nel tab "Oggi" o nel tab "Viaggi (Trasporti)"
-    Then vengono mostrati tre pulsanti dedicati di tracciamento live:
-      1. FlightAware (utilizza il codice ICAO in maiuscolo, es. "https://www.flightaware.com/live/flight/CCA940")
-      2. Trip.com (utilizza il codice IATA pulito in minuscolo, es. "https://it.trip.com/flights/status-ca940")
-      3. Flightradar24 (utilizza il codice IATA pulito in minuscolo, es. "https://www.flightradar24.com/data/flights/ca940")
-    When l'utente clicca su uno dei pulsanti
-    Then il link si apre in una nuova scheda esterna per la verifica dello stato del volo
+  Scenario: Interfaccia pulita con drawer modale su richiesta
+    Given una card di volo
+    When la pagina viene caricata nel tab "Oggi" o "Viaggi"
+    Then i tre link diretti ai radar sono nascosti di default ed è visibile la sola CTA "📡 Stato Volo Live / Radar"
+    When l'utente clicca sulla CTA
+    Then si apre il drawer modale inferiore "FlightStatusDrawer" contenente le tre opzioni di tracciamento live
+
+  Scenario: Avviso per dati volo incompleti nel JSON
+    Given un oggetto volo nel JSON privo di codice_icao o numero_volo
+    When l'utente apre il drawer del volo
+    Then il sistema mostra un box d'avviso ambra "Dati Volo Incompleti nel JSON"
+    And indica chiaramente quali campi (numero_volo, codice_icao) inserire nel file JSON per sbloccare il tracciamento
 ```
 
 ```

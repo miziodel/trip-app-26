@@ -3,7 +3,9 @@ import { Plane, Train, Hotel, Package, AlertCircle, Ticket, Globe, ExternalLink,
 import { useViaggioStore } from '../store/store';
 import { CopyableText } from '../components/ui/CopyableText';
 import { TransitCard3Col } from '../components/ui/TransitCard3Col';
-import { getMapDeepLink, getFlightTrackingUrls } from '../utils/linkUtils';
+import { FlightStatusDrawer } from '../components/ui/FlightStatusDrawer';
+import { Radio } from 'lucide-react';
+import type { Volo } from '../types/viaggio';
 
 export const TrasportiTab: React.FC = () => {
   const data = useViaggioStore((state) => state.data);
@@ -11,6 +13,7 @@ export const TrasportiTab: React.FC = () => {
 
   const [activeFilter, setActiveFilter] = useState<'Tutti' | 'Voli' | 'Treni' | 'Alloggi' | 'Biglietti'>('Tutti');
   const [hidePast, setHidePast] = useState<boolean>(false);
+  const [trackingFlight, setTrackingFlight] = useState<Volo | null>(null);
 
   if (!data) return null;
 
@@ -154,46 +157,17 @@ export const TrasportiTab: React.FC = () => {
                     </div>
                   )}
 
-                  {/* Flight Tracking Links */}
-                  {(() => {
-                    const tracking = getFlightTrackingUrls(volo.numero_volo, volo.codice_icao);
-                    return (
-                      <div className="pt-2 border-t border-[var(--border-subtle)] space-y-1.5">
-                        <span className="text-[11px] font-bold text-[var(--text-secondary)] block">📡 Radar & Stato Volo Live:</span>
-                        <div className="grid grid-cols-3 gap-1.5 text-[11px] font-bold">
-                          <a
-                            href={tracking.flightAware}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="bg-blue-600/10 hover:bg-blue-600/20 text-blue-600 dark:text-blue-400 border border-blue-500/30 rounded-xl py-2 px-1 text-center flex items-center justify-center gap-1 transition-all active:scale-95"
-                          >
-                            <span>FlightAware</span>
-                            <ExternalLink className="w-3 h-3 shrink-0" />
-                          </a>
-
-                          <a
-                            href={tracking.tripCom}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="bg-sky-600/10 hover:bg-sky-600/20 text-sky-600 dark:text-sky-400 border border-sky-500/30 rounded-xl py-2 px-1 text-center flex items-center justify-center gap-1 transition-all active:scale-95"
-                          >
-                            <span>Trip.com</span>
-                            <ExternalLink className="w-3 h-3 shrink-0" />
-                          </a>
-
-                          <a
-                            href={tracking.flightradar24}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/30 rounded-xl py-2 px-1 text-center flex items-center justify-center gap-1 transition-all active:scale-95"
-                          >
-                            <span>Flightradar24</span>
-                            <ExternalLink className="w-3 h-3 shrink-0" />
-                          </a>
-                        </div>
-                      </div>
-                    );
-                  })()}
+                  {/* Flight Tracking CTA */}
+                  <div className="pt-2 border-t border-[var(--border-subtle)]">
+                    <button
+                      type="button"
+                      onClick={() => setTrackingFlight(volo)}
+                      className="w-full bg-sky-500/10 hover:bg-sky-500/20 text-sky-600 dark:text-sky-300 border border-sky-500/30 font-bold py-2 px-3 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all active:scale-95 shadow-sm"
+                    >
+                      <Radio className="w-4 h-4 animate-pulse text-sky-500" />
+                      <span>📡 Stato Volo Live / Radar</span>
+                    </button>
+                  </div>
                 </div>
               ))
             )}
@@ -431,6 +405,13 @@ export const TrasportiTab: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Flight Status Live Drawer */}
+      <FlightStatusDrawer
+        volo={trackingFlight}
+        isOpen={!!trackingFlight}
+        onClose={() => setTrackingFlight(null)}
+      />
     </div>
   );
 };

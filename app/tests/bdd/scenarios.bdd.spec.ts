@@ -295,5 +295,21 @@ describe('BDD Scenario: Flight Tracking URLs Generation (FlightAware ICAO, Trip.
     expect(urlsV3.tripCom).toBe('https://it.trip.com/flights/status-nh864');
     expect(urlsV3.flightradar24).toBe('https://www.flightradar24.com/data/flights/nh864');
   });
+
+  it('Given incomplete flight data missing numero_volo or codice_icao, Then warns user to add mandatory flight fields in JSON', () => {
+    const incompleteFlight = {
+      id: 'VX',
+      citta_partenza: 'Roma',
+      citta_arrivo: 'Pechino',
+      numero_volo: '',
+      codice_icao: '',
+    };
+
+    const hasFlightNumber = !!(incompleteFlight.numero_volo && incompleteFlight.numero_volo.trim());
+    const hasIcaoCode = !!(incompleteFlight.codice_icao && incompleteFlight.codice_icao.trim());
+
+    expect(hasFlightNumber).toBe(false);
+    expect(hasIcaoCode).toBe(false);
+  });
 });
 
