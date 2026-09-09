@@ -5,5 +5,11 @@ viaggio-2026*.json
 !app/src/data/viaggio-sample.json
 node_modules
 dist
+# trip-replayer: artefatti locali (screenshot di debug, risultati test, backup esportati)
+trip-replayer/test-results/
+trip-replayer/diario-viaggio-*.json
+trip-replayer/test-*.png
+trip-replayer/test/test-debug-1.png
+trip-replayer/test/test-final-verify.png
 
 

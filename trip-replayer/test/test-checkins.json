@@ -1,0 +1,51 @@
+{
+  "meta": {
+    "titolo": "Test"
+  },
+  "exportDate": "2026-09-08T12:00:00Z",
+  "journals": {},
+  "checkIns": [
+    {
+      "id": "test1",
+      "giorno": 0,
+      "lat": 37.5665,
+      "lng": 126.978,
+      "luogo_nome": "Seoul Station",
+      "locationName": "Seoul Station",
+      "rating": 4,
+      "commento": "Prima tappa",
+      "timestamp": "2026-07-28T14:00:00Z",
+      "photoIds": [
+        "foto_test1_1757000000_abc123"
+      ],
+      "photos": [
+        "foto_test1_1757000000_abc123"
+      ]
+    },
+    {
+      "id": "test2",
+      "giorno": 4,
+      "lat": 35.6586,
+      "lng": 139.7454,
+      "luogo_nome": "Tokyo Tower",
+      "locationName": "Tokyo Tower",
+      "rating": 5,
+      "commento": "Incredibile vista",
+      "timestamp": "2026-08-01T18:30:00Z"
+    },
+    {
+      "id": "test3",
+      "giorno": 12,
+      "lat": 35.6676,
+      "lng": 139.6455,
+      "luogo_nome": "Gotokuji (Tempio dei Gatti)",
+      "locationName": "Gotokuji (Tempio dei Gatti)",
+      "rating": 5,
+      "commento": "I maneki-neko del tempio",
+      "timestamp": "2026-08-09T09:00:00Z"
+    }
+  ],
+  "checkInPhotos": {
+    "foto_test1_1757000000_abc123": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+  }
+}

@@ -1,0 +1,2055 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Viaggio Corea & Giappone 2026 — Rivivi</title>
+<link rel="stylesheet" href="leaflet.css" />
+<script src="leaflet.js"></script>
+<script src="pluscodes.js"></script>
+<!-- leaflet-control-geocoder v4.0.0 — BSD-2-Clause — https://github.com/perliedman/leaflet-control-geocoder -->
+<link rel="stylesheet" href="lib/geocoder/Control.Geocoder.css" />
+<script src="lib/geocoder/Control.Geocoder.js"></script>
+<style>
+  :root {
+    --bg-primary: #0f172a;
+    --bg-card: #1e293b;
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --border-subtle: #334155;
+    --amber: #f59e0b;
+    --sky: #0ea5e9;
+    --emerald: #10b981;
+    --torii: #ff6b6b;
+    --gold: #fbbf24;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; height: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    overflow: hidden;
+  }
+  .app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    max-width: 100vw;
+  }
+  /* Header */
+  .header {
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border-subtle);
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    z-index: 1000;
+  }
+  .header h1 {
+    font-size: 1.1rem;
+    margin: 0;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+  }
+  .header .sub {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-top: 0.1rem;
+  }
+  .header-controls {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  /* Buttons */
+  .btn {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .btn:hover { border-color: var(--amber); color: var(--amber); }
+  .btn-primary {
+    background: var(--amber);
+    color: #0f172a;
+    border-color: var(--amber);
+    font-weight: 700;
+  }
+  .btn-primary:hover { background: #d97706; color: #0f172a; }
+  .btn-sky { border-color: var(--sky); color: var(--sky); }
+  .btn-sky:hover { background: var(--sky); color: #0f172a; }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  input[type="file"] { display: none; }
+  select.style-select {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+    border-radius: 0.5rem;
+    padding: 0.45rem 0.5rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  select.style-select:hover { border-color: var(--amber); }
+
+  /* Main layout: sidebar + map + bottom */
+  .main {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+  /* Sidebar days */
+  .sidebar {
+    width: 240px;
+    min-width: 200px;
+    background: var(--bg-card);
+    border-right: 1px solid var(--border-subtle);
+    overflow-y: auto;
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  .sidebar-day {
+    padding: 0.35rem 0.4rem 0.35rem 0.6rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.12s;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .sidebar-day .day-info { flex: 1; min-width: 0; }
+  .sidebar-day .day-program-btn {
+    flex-shrink: 0;
+    width: 34px;
+    height: 34px;
+    border-radius: 0.5rem;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.12s;
+  }
+  .sidebar-day .day-program-btn:hover { border-color: var(--amber); color: var(--amber); }
+  .sidebar-day .day-program-btn:active { transform: scale(0.92); }
+  .sidebar-day:hover { background: rgba(255,255,255,0.05); }
+  .sidebar-day.active {
+    background: rgba(245,158,11,0.12);
+    border-color: var(--amber);
+  }
+  .sidebar-day .day-num {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .sidebar-day .day-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin: 0.1rem 0;
+    line-height: 1.2;
+  }
+  .sidebar-day .day-date {
+    font-size: 0.65rem;
+    color: var(--text-secondary);
+  }
+  .sidebar-day .checkin-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--sky);
+    margin-left: 0.25rem;
+  }
+
+  /* Map area */
+  .map-area {
+    flex: 1;
+    position: relative;
+    min-height: 280px;
+  }
+  #map { height: 100%; width: 100%; }
+
+  /* Bottom panel — area giorno potenziata */
+  .bottom-panel {
+    background: var(--bg-card);
+    border-top: 3px solid var(--amber);
+    height: 300px;
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .panel-resizer {
+    height: 9px;
+    flex-shrink: 0;
+    cursor: row-resize;
+    position: relative;
+    user-select: none;
+    background: linear-gradient(180deg, rgba(245,158,11,0.0), rgba(245,158,11,0.16));
+    touch-action: none;
+  }
+  .panel-resizer::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 46px;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--border-subtle);
+    transition: background 0.12s;
+  }
+  .panel-resizer:hover::after, .panel-resizer.dragging::after { background: var(--amber); }
+  .panel-header {
+    padding: 0.55rem 0.9rem;
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-shrink: 0;
+  }
+  .panel-day-info { min-width: 0; }
+  .panel-header h3 {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: var(--text-primary);
+  }
+  .panel-day-sub {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--sky);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .panel-day-meta {
+    font-size: 0.68rem;
+    color: var(--text-secondary);
+    margin-top: 0.15rem;
+  }
+  .panel-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .panel-scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0.6rem 0.9rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    align-items: stretch;
+  }
+  .psection-title {
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.3rem;
+    width: 100%;
+  }
+  .psection-row {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    width: 100%;
+  }
+  .add-ci-link {
+    background: none;
+    border: none;
+    color: var(--amber);
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 0.2rem;
+    padding: 0.15rem 0;
+  }
+  .add-ci-link:hover { text-decoration: underline; }
+  .add-ci-btn {
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+    background: var(--bg-primary);
+    border: 1px dashed var(--amber);
+    color: var(--amber);
+    border-radius: 6px;
+    padding: 2px 8px;
+    font-size: 0.68rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .add-ci-btn:hover { background: rgba(245,158,11,0.15); }
+  .pos-row { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+  .pos-badge { font-family: monospace; font-size: 0.75rem; }
+  .pos-badge.changed { color: var(--amber); border-color: var(--amber); }
+  .pos-paste-row { display: flex; gap: 0.4rem; margin-top: 0.4rem; }
+  .pos-paste-row input { flex: 1; }
+  .form-hint { font-size: 0.68rem; color: var(--text-muted); margin-top: 0.25rem; line-height: 1.4; }
+  /* Photo thumb */
+  .thumb {
+    width: 100px;
+    height: 100px;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    border: 1px solid var(--border-subtle);
+    cursor: pointer;
+    flex-shrink: 0;
+    background: var(--bg-primary);
+    transition: transform 0.15s;
+  }
+  .thumb:hover { transform: scale(1.05); }
+  .thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .thumb .no-photo {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    font-size: 0.7rem;
+  }
+  /* Checkin card in bottom */
+  .checkin-mini {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-subtle);
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    width: 200px;
+    flex-shrink: 0;
+    cursor: pointer;
+    transition: border-color 0.12s;
+  }
+  .checkin-mini:hover { border-color: var(--amber); }
+  .checkin-mini .ci-name {
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-bottom: 0.15rem;
+    line-height: 1.2;
+  }
+  .checkin-mini .ci-meta {
+    font-size: 0.6rem;
+    color: var(--text-secondary);
+  }
+  .checkin-mini .ci-comment {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-top: 0.2rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Modal */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    overflow-y: auto;
+  }
+  .modal-overlay.hidden { display: none; }
+  .modal {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 0.75rem;
+    max-width: 640px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  }
+  .modal-header {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    background: var(--bg-card);
+    z-index: 1;
+  }
+  .modal-header h2 { margin: 0; font-size: 1rem; font-weight: 700; }
+  .modal-body { padding: 1rem; }
+  .modal-close {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.4rem;
+    cursor: pointer;
+    padding: 0.25rem;
+    line-height: 1;
+  }
+  .modal-close:hover { color: var(--text-primary); }
+
+  .form-group { margin-bottom: 0.75rem; }
+  .form-group label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 0.25rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .form-group input, .form-group textarea, .form-group select {
+    width: 100%;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+    padding: 0.5rem 0.6rem;
+    border-radius: 0.4rem;
+    font-size: 0.85rem;
+    font-family: inherit;
+  }
+  .form-group textarea { resize: vertical; min-height: 60px; }
+  .form-group input:focus, .form-group textarea:focus {
+    outline: none;
+    border-color: var(--amber);
+  }
+  .form-row {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-end;
+  }
+  .form-row .form-group { flex: 1; }
+
+  /* Lightbox */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.9);
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    cursor: pointer;
+  }
+  .lightbox.hidden { display: none; }
+  .lightbox img {
+    max-width: 100%;
+    max-height: 90vh;
+    border-radius: 0.5rem;
+    object-fit: contain;
+  }
+  .lightbox .lb-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(255,255,255,0.15);
+    border: none;
+    color: white;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    font-size: 1.4rem;
+    cursor: pointer;
+  }
+
+  /* Coord info */
+  .coord-badge {
+    font-size: 0.7rem;
+    font-family: monospace;
+    color: var(--emerald);
+    background: rgba(16,185,129,0.1);
+    padding: 0.15rem 0.4rem;
+    border-radius: 0.3rem;
+  }
+
+  /* Empty state */
+  .empty-state {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+  }
+  .drop-zone {
+    border: 2px dashed var(--border-subtle);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    text-align: center;
+    color: var(--text-secondary);
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--bg-card);
+    border: 1px solid var(--amber);
+    color: var(--text-primary);
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.8rem;
+    z-index: 5000;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    animation: fadein 0.2s;
+  }
+  @keyframes fadein { from { opacity: 0; transform: translate(-50%, 10px); } to { opacity: 1; transform: translate(-50%, 0); } }
+
+  /* Marker custom: pin SVG grande e ad alto contrasto (nessun asset esterno) */
+  .ci-marker { background: transparent; border: none; filter: drop-shadow(0 3px 3px rgba(0,0,0,0.5)); }
+  .ci-marker .ci-pin { display: block; width: 40px; height: 48px; transition: transform 0.15s; }
+  .ci-marker:hover .ci-pin { transform: scale(1.15); transform-origin: 50% 100%; }
+  .ci-popup .leaflet-popup-content-wrapper { border-radius: 0.8rem; background: var(--bg-card); color: var(--text-primary); box-shadow: 0 10px 30px rgba(0,0,0,0.45); }
+  .ci-popup .leaflet-popup-tip { background: var(--bg-card); }
+  .ci-popup .leaflet-popup-content { margin: 12px 14px; }
+  .ci-pop { font-family: system-ui; min-width: 236px; color: var(--text-primary); }
+  .ci-pop-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.6rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.45rem; margin-bottom: 0.45rem; }
+  .ci-pop-name.popup-name { font-size: 0.98rem; font-weight: 800; line-height: 1.25; }
+  .ci-pop-stars { color: var(--amber); font-size: 0.85rem; letter-spacing: 0.05em; white-space: nowrap; margin-top: 1px; }
+  .ci-pop-stars .n { color: var(--text-muted); font-size: 0.62rem; font-weight: 700; margin-left: 0.25rem; letter-spacing: 0; }
+  .ci-pop-meta { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; font-size: 0.72rem; color: var(--text-secondary); margin-bottom: 0.35rem; }
+  .ci-pop-chip { background: rgba(245,158,11,0.12); color: var(--amber); border: 1px solid rgba(245,158,11,0.35); padding: 0.06rem 0.5rem; border-radius: 999px; font-weight: 700; font-size: 0.66rem; }
+  .ci-pop-comment { background: var(--bg-primary); border-left: 3px solid var(--amber); border-radius: 0 0.5rem 0.5rem 0; padding: 0.4rem 0.6rem; font-size: 0.78rem; color: #cbd5e1; font-style: italic; margin: 0.35rem 0; line-height: 1.4; }
+  .ci-pop-thumbs { display: flex; gap: 5px; flex-wrap: wrap; margin: 0.35rem 0; }
+  .ci-pop-thumbs img { width: 56px; height: 56px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border-subtle); }
+  .ci-pop-actions { display: flex; gap: 0.45rem; margin-top: 0.55rem; }
+  .ci-pop-gmaps { flex: 1; text-align: center; font-size: 0.74rem; font-weight: 700; color: var(--sky); border: 1px solid var(--sky); background: rgba(14,165,233,0.08); border-radius: 7px; padding: 0.35rem 0.4rem; text-decoration: none; }
+  .ci-pop-gmaps:hover { background: var(--sky); color: #0f172a; }
+  .popup-detail { flex: 1; text-align: center; margin-top: 0; background: var(--amber); color: #0f172a; border: none; border-radius: 7px; padding: 0.35rem 0.4rem; font-size: 0.74rem; font-weight: 700; cursor: pointer; }
+  .popup-detail:hover { background: #d97706; color: #0f172a; }
+
+  /* Banner "posiziona sulla mappa" (nuovo check-in da luogo del programma) */
+  .place-banner {
+    position: fixed;
+    top: 4.2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1500;
+    background: var(--bg-card);
+    border: 1px solid var(--amber);
+    color: var(--text-primary);
+    padding: 0.6rem 0.9rem;
+    border-radius: 0.6rem;
+    font-size: 0.8rem;
+    display: flex;
+    gap: 0.8rem;
+    align-items: center;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+    max-width: min(680px, calc(100vw - 2rem));
+    animation: fadein 0.2s;
+  }
+  .place-banner.hidden { display: none; }
+  .place-banner .pb-text { line-height: 1.35; }
+  .place-banner .pb-text strong { color: var(--amber); }
+
+  /* Widget di ricerca luoghi (leaflet-control-geocoder) — tema scuro */
+  .leaflet-control-geocoder {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.35);
+    overflow: hidden;
+    font-family: system-ui;
+  }
+  .leaflet-control-geocoder .leaflet-control-geocoder-icon {
+    background-color: var(--bg-card);
+    width: 34px;
+    height: 34px;
+  }
+  .leaflet-control-geocoder-expanded .leaflet-control-geocoder-form input {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    font-size: 0.85rem;
+    padding: 0.4rem 0.55rem;
+    width: 260px;
+    outline: none;
+    border: 0;
+  }
+  .leaflet-control-geocoder-expanded .leaflet-control-geocoder-form input::placeholder { color: var(--text-muted); }
+  .leaflet-control-geocoder ul.leaflet-control-geocoder-alternatives {
+    background: var(--bg-card);
+    border-top: 1px solid var(--border-subtle);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    max-height: 260px;
+    overflow-y: auto;
+  }
+  .leaflet-control-geocoder ul.leaflet-control-geocoder-alternatives li { border-bottom: 1px solid var(--border-subtle); }
+  .leaflet-control-geocoder ul.leaflet-control-geocoder-alternatives li:last-child { border-bottom: none; }
+  .leaflet-control-geocoder ul.leaflet-control-geocoder-alternatives li a,
+  .leaflet-control-geocoder ul.leaflet-control-geocoder-alternatives li .leaflet-control-geocoder-error {
+    display: block;
+    padding: 0.45rem 0.65rem;
+    color: var(--text-secondary);
+    font-size: 0.78rem;
+    line-height: 1.35;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .leaflet-control-geocoder ul.leaflet-control-geocoder-alternatives li a:hover,
+  .leaflet-control-geocoder ul.leaflet-control-geocoder-alternatives li a.leaflet-control-geocoder-selected {
+    background: rgba(245,158,11,0.12);
+    color: var(--text-primary);
+  }
+  .leaflet-control-geocoder ul.leaflet-control-geocoder-alternatives li .leaflet-control-geocoder-error { color: var(--torii); }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div>
+      <h1>🌏 Viaggio Corea & Giappone 2026</h1>
+      <div class="sub" id="headerSub">Carica i file per rivivere il viaggio</div>
+    </div>
+    <div class="header-controls">
+      <label class="btn" id="loadOrigLabel">
+        📂 Carica viaggio (.json)
+        <input type="file" id="loadOrigInput" accept=".json" />
+      </label>
+      <label class="btn" id="loadExportLabel">
+        📂 Carica backup check-in (.json)
+        <input type="file" id="loadExportInput" accept=".json" />
+      </label>
+      <button class="btn btn-primary" id="downloadBtn" disabled>
+        ⬇ Scarica backup aggiornato
+      </button>
+      <button class="btn" id="resetDataBtn" style="display:none" title="Elimina i dati salvati nel browser (file caricati e modifiche)">
+        🗑 Azzera dati
+      </button>
+      <select class="style-select" id="tileSelect" title="Stile della mappa">
+        <option value="esri">🌐 Mappa: etichette occidentali</option>
+        <option value="osm">🌐 Mappa: OSM standard</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="sidebar" id="sidebar">
+      <div class="empty-state" id="sidebarEmpty">
+        Carica un file di viaggio per vedere i giorni
+      </div>
+    </div>
+    <div class="map-area">
+      <div id="map"></div>
+    </div>
+  </div>
+
+  <div class="bottom-panel" id="bottomPanel" style="display:none">
+    <div class="panel-resizer" id="panelResizer" title="Trascina per ridimensionare · doppio click per ripristinare"></div>
+    <div class="panel-header">
+      <div class="panel-day-info">
+        <h3 id="panelTitle">Check-in e foto del giorno</h3>
+        <div class="panel-day-sub" id="panelDaySub"></div>
+        <div class="panel-day-meta" id="panelDayMeta"></div>
+      </div>
+      <div class="panel-actions">
+        <span class="coord-badge" id="panelCoord"></span>
+        <button class="btn btn-primary" id="openProgramBtn">📋 Programma giorno</button>
+      </div>
+    </div>
+    <div class="panel-scroll" id="panelScroll"></div>
+  </div>
+</div>
+
+<!-- Banner "posiziona sulla mappa" -->
+<div class="place-banner hidden" id="placeBanner">
+  <span class="pb-text" id="placeBannerText"></span>
+  <button class="btn" id="placeBannerCancel">✕ Annulla</button>
+</div>
+
+<!-- Modal giorno (programma completo) -->
+<div class="modal-overlay hidden" id="dayModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="dayModalTitle">Giorno</h2>
+      <button class="modal-close" id="dayModalClose">&times;</button>
+    </div>
+    <div class="modal-body" id="dayModalBody"></div>
+  </div>
+</div>
+
+<!-- Modal check-in detail/edit -->
+<div class="modal-overlay hidden" id="ciModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2 id="ciModalTitle">Check-in</h2>
+      <button class="modal-close" id="ciModalClose">&times;</button>
+    </div>
+    <div class="modal-body" id="ciModalBody"></div>
+  </div>
+</div>
+
+<!-- Lightbox foto -->
+<div class="lightbox hidden" id="lightbox" onclick="closeLightbox()">
+  <button class="lb-close">&times;</button>
+  <img id="lbImage" alt="Foto check-in" />
+</div>
+
+<script>
+// ─── State ────────────────────────────────────────────────────────────
+const state = {
+  // da file viaggio originale
+  meta: null,
+  itinerary: [],     // GiornoItinerario[] (giorno 0-based come nell'app)
+  alloggi: [],
+  trasporti: null,
+  emergenze: null,
+  protocolli: {},
+  frasario: [],
+
+  // da export backup — unica sorgente foto: { id → dataURL }
+  checkIns: [],       // CheckIn[]
+  photos: {},         // id → dataURL
+
+  // per tracking (giorno 0-based)
+  activeGiorno: null,
+
+  // check-in in attesa di posizionamento dalla mappa (flusso "dal programma")
+  pendingPlace: null,   // { giorno, name } | null
+
+  // riposizionamento di un check-in esistente via click sulla mappa
+  pendingEdit: null,    // checkin id | null
+
+  // coordinate correnti scelte per il form aperto (click mappa o incolla GMaps)
+  formCoords: null,     // { lat, lng } | null
+};
+
+// la UI mostra "Giorno N" 1-based (indice + 1), i dati restano 0-based
+const giornoLabel = (g) => (g === null || g === undefined ? '' : g + 1);
+
+// ─── Map ──────────────────────────────────────────────────────────────
+let appMap = null;
+let markersLayer = null;
+const markerRefs = new Map(); // checkinId → marker
+
+// provider di tile: "esri" = etichette bilingui (latino + locale), "osm" = standard
+const TILE_PROVIDERS = {
+  esri: {
+    label: 'Esri World Street Map',
+    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',
+    maxZoom: 19,
+    attribution: '&copy; Esri &mdash; source: Esri, Maxar, Earthstar Geographics',
+  },
+  osm: {
+    label: 'OpenStreetMap standard',
+    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    maxZoom: 19,
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  },
+};
+let baseLayer = null;
+function applyBaseTiles(name) {
+  if (!appMap) return;
+  const prov = TILE_PROVIDERS[name] || TILE_PROVIDERS.esri;
+  if (baseLayer) { appMap.removeLayer(baseLayer); baseLayer = null; }
+  baseLayer = L.tileLayer(prov.url, { attribution: prov.attribution, maxZoom: prov.maxZoom }).addTo(appMap);
+}
+
+// ─── Widget di ricerca luoghi (leaflet-control-geocoder + Nominatim) ───
+let searchLayer = null; // marker del risultato di ricerca (non è un check-in)
+function searchPinSvg() {
+  return '<svg viewBox="0 0 40 48" width="40" height="48" aria-hidden="true">'
+    + '<path d="M20 2C10.6 2 3 9.6 3 19c0 12.8 17 27 17 27s17-14.2 17-27C37 9.6 29.4 2 20 2z" fill="#0ea5e9" stroke="#0f172a" stroke-width="3"/>'
+    + '<circle cx="20" cy="19" r="10" fill="#0f172a"/>'
+    + '<circle cx="20" cy="19" r="5" fill="#7dd3fc"/></svg>';
+}
+function initSearchControl() {
+  if (!appMap || typeof L.Control === 'undefined' || typeof L.Control.geocoder !== 'function') return;
+  searchLayer = L.layerGroup().addTo(appMap);
+  const ctrl = L.Control.geocoder({
+    geocoder: createNominatimGeocoder(),
+    placeholder: 'Cerca un luogo… (es. Tokyo Station)',
+    errorMessage: 'Nessun luogo trovato',
+    iconLabel: 'Cerca un luogo sulla mappa',
+    defaultMarkGeocode: false, // gestiamo noi il marker del risultato
+    collapsed: true,
+  });
+  ctrl.addTo(appMap);
+  ctrl.on('markgeocode', (e) => {
+    const g = e.geocode;
+    if (!g || !g.center) return;
+    searchLayer.clearLayers();
+    const icon = L.divIcon({
+      className: 'ci-marker search-marker',
+      html: searchPinSvg(),
+      iconSize: [40, 48],
+      iconAnchor: [20, 44],
+      popupAnchor: [0, -40],
+    });
+    const mk = L.marker(g.center, { icon, title: String(g.name || 'Risultato ricerca').slice(0, 90) });
+    if (g.bbox && typeof g.bbox.isValid === 'function' && g.bbox.isValid()) {
+      appMap.fitBounds(g.bbox.pad(0.12));
+    } else {
+      appMap.setView(g.center, 15);
+    }
+    mk.addTo(searchLayer);
+  });
+}
+function clearSearchMarker() { if (searchLayer) searchLayer.clearLayers(); }
+
+/**
+ * Geocoder Nominatim "custom" (fetch): stesso endpoint del plugin ma con fetch,
+ * che permette di testarlo in modo deterministico e applica un throttle di 1s
+ * come richiesto dalla usage policy di Nominatim (niente autocomplete lato client).
+ */
+function createNominatimGeocoder() {
+  let lastRequest = 0;
+  return {
+    async geocode(query) {
+      const wait = 1000 - (Date.now() - lastRequest);
+      if (wait > 0) await new Promise((r) => setTimeout(r, wait));
+      lastRequest = Date.now();
+      const params = new URLSearchParams({
+        q: query, format: 'json', addressdetails: '1', limit: '5', 'accept-language': 'it',
+      });
+      const res = await fetch('https://nominatim.openstreetmap.org/search?' + params.toString(), {
+        headers: { Accept: 'application/json' },
+      });
+      if (!res.ok) return [];
+      const data = await res.json();
+      return (data || []).map((e) => {
+        const bbox = e.boundingbox && e.boundingbox.length === 4
+          ? L.latLngBounds([+e.boundingbox[0], +e.boundingbox[2]], [+e.boundingbox[1], +e.boundingbox[3]])
+          : null;
+        return {
+          name: e.display_name,
+          html: undefined,
+          bbox,
+          center: L.latLng(+e.lat, +e.lon),
+          properties: e,
+        };
+      });
+    },
+  };
+}
+
+function ensureMapContainerSize() {
+  const c = document.getElementById('map');
+  if (!c) return false;
+  const rect = c.getBoundingClientRect();
+  if (rect.width > 0 && rect.height > 0) return true;
+  c.style.minHeight = '300px';
+  c.style.minWidth = '300px';
+  c.style.height = '100%';
+  c.style.width = '100%';
+  return false;
+}
+
+function mapReady(cb) {
+  if (appMap) { cb(appMap, markersLayer); return; }
+  const check = () => {
+    if (appMap) { cb(appMap, markersLayer); return; }
+    setTimeout(check, 30);
+  };
+  check();
+}
+
+function initMap() {
+  if (appMap) return;
+  const container = document.getElementById('map');
+  if (!container) { setTimeout(initMap, 80); return; }
+  ensureMapContainerSize();
+  if (container.offsetWidth === 0 || container.offsetHeight === 0) {
+    setTimeout(initMap, 120);
+    return;
+  }
+  try {
+    appMap = L.map(container, { zoomControl: true, attributionControl: true }).setView([35.5, 138], 6);
+    applyBaseTiles(document.getElementById('tileSelect') && document.getElementById('tileSelect').value || 'esri');
+    markersLayer = L.layerGroup().addTo(appMap);
+    // refs live per i test e per il codice successivo
+    window.appMap = appMap;
+    window.markersLayer = markersLayer;
+    // click su mappa → nuovo check-in (solo con viaggio caricato)
+    appMap.on('click', openNewCheckinForm);
+    initSearchControl();
+    window.addEventListener('resize', () => { if (appMap) appMap.invalidateSize(); });
+    requestAnimationFrame(() => { if (appMap) appMap.invalidateSize(); });
+    setTimeout(() => { if (appMap) appMap.invalidateSize(); }, 100);
+  } catch (e) {
+    console.error('MAP INIT ERROR:', e.message);
+    if (e.message.includes('already') || e.message.includes('container')) return;
+    setTimeout(initMap, 200);
+  }
+}
+
+requestAnimationFrame(() => {
+  ensureMapContainerSize();
+  initMap();
+});
+setTimeout(() => { ensureMapContainerSize(); initMap(); }, 250);
+setTimeout(() => { ensureMapContainerSize(); initMap(); }, 600);
+
+/**
+ * Esegue cb quando la mappa è pronta (appMap non null).
+ * Utile per chiamate API Leaflet che richiedono la mappa inizializzata.
+ */
+function waitForMapAnd(cb) {
+  if (appMap) {
+    cb();
+  } else {
+    const interval = setInterval(() => {
+      if (appMap) {
+        clearInterval(interval);
+        cb();
+      }
+    }, 50);
+    // Safety: timeout dopo 5s
+    setTimeout(() => { clearInterval(interval); }, 5000);
+  }
+}
+
+function coordsOf(checkin) {
+  if (checkin.coords && typeof checkin.coords.lat === 'number' && typeof checkin.coords.lng === 'number')
+    return [checkin.coords.lat, checkin.coords.lng];
+  if (typeof checkin.lat === 'number' && typeof checkin.lng === 'number')
+    return [checkin.lat, checkin.lng];
+  return null;
+}
+
+function updateMap() {
+  if (!markersLayer) return;
+  markersLayer.clearLayers();
+  markerRefs.clear();
+  for (const ci of state.checkIns) {
+    const coords = coordsOf(ci);
+    if (!coords) continue;
+    const name = ci.luogo_nome || ci.locationName || 'Check-in';
+    const day = state.itinerary.find(g => g.giorno === ci.giorno);
+    const popupContent = buildPopupContent(ci, day);
+    const pinSvg = '<svg viewBox="0 0 40 48" width="40" height="48" aria-hidden="true">'
+      + '<path d="M20 2C10.6 2 3 9.6 3 19c0 12.8 17 27 17 27s17-14.2 17-27C37 9.6 29.4 2 20 2z" fill="#f59e0b" stroke="#0f172a" stroke-width="3"/>'
+      + '<circle cx="20" cy="19" r="10" fill="#0f172a"/>'
+      + '<circle cx="20" cy="19" r="5" fill="#fbbf24"/></svg>';
+    const icon = L.divIcon({
+      className: 'ci-marker',
+      html: `<div class="ci-pin">${pinSvg}</div>`,
+      iconSize: [40, 48],
+      iconAnchor: [20, 44],
+      popupAnchor: [0, -40],
+    });
+    const marker = L.marker(coords, { icon, riseOnHover: true, title: name })
+      .bindPopup(popupContent, { maxWidth: 300, className: 'ci-popup' });
+    marker._ciId = ci.id;
+    // il popup è l'anteprima: il pulsante "Dettagli" apre la modal piena
+    marker.on('popupopen', (ev) => {
+      const popupEl = ev.popup && ev.popup.getElement ? ev.popup.getElement() : null;
+      const btn = popupEl ? popupEl.querySelector('.popup-detail') : null;
+      if (btn) btn.onclick = () => openCheckinDetail(ci.id);
+    });
+    markersLayer.addLayer(marker);
+    markerRefs.set(ci.id, marker);
+  }
+  waitForMapAnd(() => {
+    markersLayer.addTo(appMap);
+    if (state.activeGiorno !== null) {
+      fitToDay(state.activeGiorno);
+    } else if (state.checkIns.length > 0) {
+      const group = L.featureGroup(Array.from(markerRefs.values()));
+      if (group.getLayers().length > 0) appMap.fitBounds(group.getBounds().pad(0.15));
+    }
+  });
+}
+
+function fitToDay(giorno) {
+  waitForMapAnd(() => {
+    if (!appMap) return;
+    const markers = [];
+    for (const ci of state.checkIns) {
+      if (ci.giorno !== giorno) continue;
+      const coords = coordsOf(ci);
+      if (coords) markers.push(L.marker(coords));
+    }
+    if (markers.length > 0) {
+      const group = L.featureGroup(markers);
+      appMap.fitBounds(group.getBounds().pad(0.2));
+    }
+  });
+}
+
+function buildPopupContent(ci, day) {
+  const coords = coordsOf(ci);
+  const name = ci.luogo_nome || ci.locationName || 'Luogo';
+  const time = ci.timestamp ? new Date(ci.timestamp).toLocaleString('it-IT', {
+    day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit'
+  }) : '';
+  const ratingVal = ci.rating ? parseInt(ci.rating, 10) : 0;
+  const starsHtml = ratingVal >= 1 && ratingVal <= 5
+    ? `<div class="ci-pop-stars" title="${ratingVal}/5">${'★'.repeat(ratingVal)}${'☆'.repeat(5 - ratingVal)}<span class="n">${ratingVal}/5</span></div>`
+    : '';
+  const comment = (ci.commento || ci.comment || '').trim();
+  const photoCount = (ci.photoIds || ci.photos || []).length;
+  const thumbsHtml = photoCount > 0
+    ? `<div class="ci-pop-thumbs">${
+        (ci.photoIds || ci.photos || []).slice(0, 3).map(id => {
+          const url = state.photos[id] || '';
+          if (!url) return '';
+          return `<img src="${url}" alt="foto" onerror="this.style.display='none'" />`;
+        }).join('')
+      }</div>`
+    : '';
+  const dayChip = day
+    ? `<span class="ci-pop-chip popup-day">Giorno ${giornoLabel(day.giorno)} · ${escapeHtml(day.citta)}</span>`
+    : '';
+  const gmaps = coords
+    ? `<a class="ci-pop-gmaps" href="https://www.google.com/maps?q=${coords[0]},${coords[1]}" target="_blank" rel="noopener">🗺 Maps</a>`
+    : '';
+  return `<div class="ci-pop">
+    <div class="ci-pop-head">
+      <div class="ci-pop-name popup-name">${escapeHtml(name)}</div>
+      ${starsHtml}
+    </div>
+    <div class="ci-pop-meta">
+      ${dayChip}
+      ${time ? `<span class="popup-time">🕐 ${time}</span>` : ''}
+    </div>
+    ${comment ? `<div class="ci-pop-comment">“${escapeHtml(comment.slice(0, 220))}${comment.length > 220 ? '…' : ''}”</div>` : ''}
+    ${thumbsHtml}
+    <div class="ci-pop-actions">
+      ${gmaps}
+      <button class="popup-detail">Dettagli ✏</button>
+    </div>
+  </div>`;
+}
+
+// ─── Sidebar ──────────────────────────────────────────────────────────
+document.addEventListener('click', (e) => {
+  const dayEl = e.target.closest('.sidebar-day');
+  if (dayEl) {
+    selectDay(parseInt(dayEl.dataset.giorno, 10));
+  }
+});
+
+function renderSidebar() {
+  const el = document.getElementById('sidebar');
+  let empty = document.getElementById('sidebarEmpty');
+  if (!empty) {
+    empty = document.createElement('div');
+    empty.className = 'empty-state';
+    empty.id = 'sidebarEmpty';
+    empty.textContent = 'Carica un file di viaggio per vedere i giorni';
+  }
+  if (!state.itinerary.length) {
+    el.replaceChildren(empty);
+    empty.style.display = '';
+    return;
+  }
+  empty.style.display = 'none';
+  el.innerHTML = '';
+  el.appendChild(empty);
+  for (const g of state.itinerary) {
+    const ciCount = state.checkIns.filter(c => c.giorno === g.giorno).length;
+    const div = document.createElement('div');
+    div.className = 'sidebar-day' + (state.activeGiorno === g.giorno ? ' active' : '');
+    div.dataset.giorno = g.giorno;
+    div.innerHTML = `
+      <div class="day-info">
+        <div class="day-num">GIORNO ${String(giornoLabel(g.giorno)).padStart(2, '0')}</div>
+        <div class="day-title">${escapeHtml(g.titolo)}</div>
+        <div class="day-date">${escapeHtml(g.data)} · ${escapeHtml(g.citta)}${ciCount > 0 ? `<span class="checkin-dot" title="${ciCount} check-in"></span>` : ''}</div>
+      </div>
+      <button class="day-program-btn" title="Programma giorno ${giornoLabel(g.giorno)}" aria-label="Apri programma Giorno ${giornoLabel(g.giorno)}">📋</button>
+    `;
+    const btn = div.querySelector('.day-program-btn');
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      selectDay(g.giorno);   // la riga diventa attiva
+      openDayProgram();      // e si apre subito il programma
+    });
+    el.appendChild(div);
+  }
+}
+
+/**
+ * Click su un giorno = SELEZIONA il giorno: voce attiva, fit mappa sui
+ * suoi marker, pannello sotto con card e foto. Non apre alcuna modal:
+ * il programma si apre dal pulsante dedicato "Programma giorno".
+ */
+function selectDay(giorno) {
+  state.activeGiorno = giorno;
+  clearSearchMarker();   // via il pin del risultato di ricerca quando si naviga per giorno
+  renderSidebar();
+  updateMap();
+  renderBottomPanel(giorno);
+}
+
+function openDayProgram() {
+  if (state.activeGiorno === null) return;
+  renderDayModal(state.activeGiorno);
+  document.getElementById('dayModal').classList.remove('hidden');
+}
+
+// ─── Check-in da luogo del programma ("posiziona sulla mappa") ──────────
+function startPlaceCheckin(giorno, placeName) {
+  const name = (placeName || '').trim();
+  state.pendingPlace = { giorno, name };
+  // chiude eventuali overlay per lasciare la mappa cliccabile
+  closeModal();
+  closeDayModal();
+  closeLightbox();
+  const day = state.itinerary.find(g => g.giorno === giorno);
+  const txt = name
+    ? `📍 Clicca sulla mappa per posizionare il check-in di <strong>${escapeHtml(name)}</strong> — Giorno ${giornoLabel(giorno)}${day ? ' · ' + escapeHtml(day.citta) : ''}`
+    : `📍 Clicca sulla mappa per aggiungere un check-in al Giorno ${giornoLabel(giorno)}${day ? ' · ' + escapeHtml(day.citta) : ''}`;
+  document.getElementById('placeBannerText').innerHTML = txt;
+  document.getElementById('placeBanner').classList.remove('hidden');
+}
+
+function cancelPlace() {
+  state.pendingPlace = null;
+  state.pendingEdit = null;
+  document.getElementById('placeBanner').classList.add('hidden');
+}
+
+/** Avvia il flusso "cambia posizione sulla mappa" per un check-in esistente. */
+function startEditPosition(ciId) {
+  const ci = state.checkIns.find(c => c.id === ciId);
+  if (!ci) return;
+  state.pendingEdit = ciId;
+  closeModal();
+  closeDayModal();
+  closeLightbox();
+  const name = ci.luogo_nome || ci.locationName || 'Luogo';
+  const day = state.itinerary.find(g => g.giorno === ci.giorno);
+  document.getElementById('placeBannerText').innerHTML =
+    `🗺 Clicca sulla mappa per la <strong>nuova posizione</strong> di ${escapeHtml(name)}`
+    + (day ? ` — Giorno ${giornoLabel(day.giorno)} · ${escapeHtml(day.citta)}` : '');
+  document.getElementById('placeBanner').classList.remove('hidden');
+}
+
+/** Punto di riferimento per risolvere i Plus Code corti di un giorno. */
+function referenceForGiorno(giorno) {
+  if (typeof giorno === 'number') {
+    const ci = state.checkIns.find(c => c.giorno === giorno && coordsOf(c));
+    if (ci) { const c = coordsOf(ci); return { lat: c[0], lng: c[1] }; }
+    const day = state.itinerary.find(g => g.giorno === giorno);
+    if (day) {
+      const all = (state.alloggi || []).find(a =>
+        typeof a.latitudine === 'number' && typeof a.longitudine === 'number' &&
+        String(a.citta || '').toLowerCase() === String(day.citta || '').toLowerCase());
+      if (all) return { lat: all.latitudine, lng: all.longitudine };
+    }
+  }
+  if (appMap) { const c = appMap.getCenter(); return { lat: c.lat, lng: c.lng }; }
+  return null;
+}
+
+// Città note citabili nel testo incollato (riferimento per Plus Code corti)
+var CITY_REFS = {
+  pechino: { lat: 39.9042, lng: 116.4074 }, beijing: { lat: 39.9042, lng: 116.4074 },
+  shunyi: { lat: 40.08, lng: 116.6 },
+  seoul: { lat: 37.5665, lng: 126.978 }, incheon: { lat: 37.4563, lng: 126.7052 },
+  tokyo: { lat: 35.6762, lng: 139.6503 }, osaka: { lat: 34.6937, lng: 135.5023 },
+  kyoto: { lat: 35.0116, lng: 135.7681 }, kioto: { lat: 35.0116, lng: 135.7681 },
+  kanazawa: { lat: 36.5613, lng: 136.6562 }, takayama: { lat: 36.1463, lng: 137.2522 },
+  gujo: { lat: 35.9048, lng: 136.9561 }, 'gifu': { lat: 35.4233, lng: 136.7607 },
+  roma: { lat: 41.9028, lng: 12.4964 }, milano: { lat: 45.4642, lng: 9.19 },
+  paris: { lat: 48.8566, lng: 2.3522 }, 'new york': { lat: 40.7128, lng: -74.006 },
+};
+function cityRefInText(text) {
+  const t = ' ' + String(text || '').toLowerCase() + ' ';
+  for (const key of Object.keys(CITY_REFS)) {
+    if (t.indexOf(key) !== -1) return CITY_REFS[key];
+  }
+  return null;
+}
+
+/**
+ * Legge il campo "incolla da Google Maps" del form (new|edit), risolve
+ * coordinate / Plus Code / link e fissa state.formCoords per il salvataggio.
+ */
+function applyGmapsPaste(target) {
+  const input = document.getElementById(target === 'edit' ? 'editGmaps' : 'newGmaps');
+  const text = input ? input.value : '';
+  if (!text.trim()) { toast('Incolla prima il testo da Google Maps'); return; }
+  const badge = document.getElementById(target === 'edit' ? 'editPosBadge' : 'newPosBadge');
+  const giornoSel = target === 'edit' ? 'editGiorno' : 'newGiorno';
+  const giornoEl = document.getElementById(giornoSel);
+  const giorno = giornoEl ? parseInt(giornoEl.value, 10) : state.activeGiorno;
+  const ref = cityRefInText(text) || referenceForGiorno(giorno) || referenceForGiorno(state.activeGiorno);
+  if (!window.PlusCode || typeof window.PlusCode.resolveText !== 'function') {
+    toast('Decoder Plus Code non disponibile'); return;
+  }
+  const res = window.PlusCode.resolveText(text, ref ? ref.lat : undefined, ref ? ref.lng : undefined);
+  if (!res) {
+    toast('Posizione non riconosciuta: incolla coordinate (lat, lng), un Plus Code o un link Google Maps');
+    return;
+  }
+  state.formCoords = { lat: res.lat, lng: res.lng };
+  if (badge) {
+    badge.textContent = `📍 ${res.lat.toFixed(5)}, ${res.lng.toFixed(5)}`;
+    badge.classList.add('changed');
+  }
+  const kindLabel = res.kind === 'plus-short' ? 'Plus Code corto'
+    : res.kind === 'plus' ? 'Plus Code' : 'coordinate/link';
+  toast(`Posizione da ${kindLabel}: ${res.lat.toFixed(5)}, ${res.lng.toFixed(5)}`);
+}
+
+// ─── Bottom panel ─────────────────────────────────────────────────────
+function renderBottomPanel(giorno) {
+  const panel = document.getElementById('bottomPanel');
+  const scroll = document.getElementById('panelScroll');
+  const title = document.getElementById('panelTitle');
+  const sub = document.getElementById('panelDaySub');
+  const meta = document.getElementById('panelDayMeta');
+  const coord = document.getElementById('panelCoord');
+  const day = state.itinerary.find(g => g.giorno === giorno);
+  if (!day) { panel.style.display = 'none'; return; }
+  const wasHidden = panel.style.display === 'none';
+  panel.style.display = 'flex';
+  if (wasHidden && appMap) {
+    requestAnimationFrame(() => { if (appMap) appMap.invalidateSize(); });
+    setTimeout(() => { if (appMap) appMap.invalidateSize(); }, 120);
+  }
+  // header giorno ben visibile
+  title.textContent = `Giorno ${giornoLabel(giorno)}: ${day.citta}`;
+  sub.textContent = day.titolo || '';
+  const dataTxt = day.data ? new Date(day.data + 'T00:00:00').toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) : '';
+  meta.textContent = [dataTxt, day.paese].filter(Boolean).join(' · ');
+  const dayCis = state.checkIns.filter(c => c.giorno === giorno);
+  coord.textContent = dayCis.length > 0 ? `📍 ${dayCis.length} check-in` : '📍 Nessun check-in';
+
+  scroll.innerHTML = '';
+  const mkSection = (label, rowCls) => {
+    const sec = document.createElement('div');
+    sec.style.cssText = 'display:flex;flex-wrap:wrap;align-items:baseline;width:100%;';
+    const head = document.createElement('div');
+    head.className = 'psection-title';
+    head.textContent = label;
+    sec.appendChild(head);
+    const row = document.createElement('div');
+    row.className = 'psection-row';
+    sec.appendChild(row);
+    scroll.appendChild(sec);
+    return row;
+  };
+
+  // Sezione check-in del giorno
+  const ciRow = mkSection(`📍 Check-in del giorno${dayCis.length ? ` (${dayCis.length})` : ''}`);
+  const dayPhotoIds = [];
+  for (const ci of dayCis) {
+    const card = document.createElement('div');
+    card.className = 'checkin-mini';
+    card.dataset.ciId = ci.id;
+    const name = ci.luogo_nome || ci.locationName || 'Luogo';
+    const time = ci.timestamp ? new Date(ci.timestamp).toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' }) : '';
+    const comment = (ci.commento || ci.comment || '').trim();
+    card.innerHTML = `
+      <div class="ci-name">${escapeHtml(name)}</div>
+      <div class="ci-meta">Giorno ${giornoLabel(ci.giorno)} · ${time} ${ci.rating ? '⭐' + ci.rating : ''}</div>
+      ${comment ? `<div class="ci-comment">“${escapeHtml(comment.slice(0, 80))}${comment.length > 80 ? '…' : ''}”</div>` : ''}
+    `;
+    card.addEventListener('click', () => openCheckinDetail(ci.id));
+    ciRow.appendChild(card);
+    for (const id of (ci.photoIds || ci.photos || [])) dayPhotoIds.push(id);
+  }
+  if (dayCis.length === 0) {
+    const empty = document.createElement('div');
+    empty.className = 'empty-state';
+    empty.style.cssText = 'width:100%;padding:0.4rem;color:var(--text-muted);font-size:0.8rem;text-align:left;';
+    empty.textContent = 'Nessun check-in per questo giorno.';
+    ciRow.appendChild(empty);
+    const cta = document.createElement('button');
+    cta.className = 'add-ci-link';
+    cta.textContent = '📍 Aggiungi un check-in cliccando sulla mappa (o dal programma del giorno)';
+    cta.addEventListener('click', () => { startPlaceCheckin(giorno, ''); });
+    ciRow.appendChild(cta);
+  } else {
+    const more = document.createElement('button');
+    more.className = 'add-ci-link';
+    more.textContent = '+ Aggiungi un altro check-in a questo giorno';
+    more.addEventListener('click', () => { startPlaceCheckin(giorno, ''); });
+    ciRow.appendChild(more);
+  }
+
+  // Sezione foto del giorno (dedup per id)
+  const seen = new Set();
+  const thumbs = dayPhotoIds.filter(id => state.photos[id] && !seen.has(id) && seen.add(id));
+  if (thumbs.length) {
+    const phRow = mkSection(`📷 Foto del giorno (${thumbs.length})`);
+    for (const id of thumbs) {
+      const url = state.photos[id];
+      const t = document.createElement('div');
+      t.className = 'thumb';
+      const img = document.createElement('img');
+      img.src = url;
+      img.alt = 'foto';
+      img.onerror = () => { t.textContent = '📷'; t.style.color = 'var(--text-muted)'; t.onclick = null; };
+      t.appendChild(img);
+      t.onclick = () => openLightbox(url);
+      phRow.appendChild(t);
+    }
+  }
+}
+
+// ─── Day modal (programma completo) ────────────────────────────────────
+function renderDayModal(giorno) {
+  const day = state.itinerary.find(g => g.giorno === giorno);
+  if (!day) return;
+  document.getElementById('dayModalTitle').textContent = `Giorno ${giornoLabel(giorno)}: ${day.titolo}`;
+  const body = document.getElementById('dayModalBody');
+
+  const orariHtml = day.tabella_oraria && day.tabella_oraria.length
+    ? day.tabella_oraria.map(a => `
+      <div class="orario-entry" style="display:flex;gap:0.5rem;align-items:flex-start;padding:0.35rem 0;border-bottom:1px solid var(--border-subtle);">
+        <div style="min-width:52px;font-family:monospace;font-weight:700;color:var(--sky);font-size:0.8rem;">${escapeHtml(a.ora)}</div>
+        <div style="flex:1;">
+          <div style="font-weight:600;font-size:0.8rem;">${escapeHtml(a.attivita)}</div>
+          ${a.dettagli ? `<div style="font-size:0.75rem;color:var(--text-secondary);margin-top:0.1rem;">${escapeHtml(a.dettagli)}</div>` : ''}
+          ${a.maps_query ? `<div style="font-size:0.65rem;color:var(--text-muted);margin-top:0.15rem;">📍 ${escapeHtml(a.maps_query)}</div>` : ''}
+        </div>
+        <button class="add-ci-btn" data-giorno="${giorno}" data-place="${escapeHtml(a.attivita)}" title="Aggiungi un check-in per questo luogo">📍 Check-in</button>
+      </div>
+    `).join('')
+    : '<div style="color:var(--text-muted);font-size:0.75rem;padding:0.3rem 0;">Nessun orario pianificato</div>';
+
+  const todoHtml = day.todo_list && day.todo_list.length
+    ? day.todo_list.map(t => `
+      <div class="todo-entry" style="display:flex;gap:0.5rem;align-items:flex-start;padding:0.35rem 0;border-bottom:1px solid var(--border-subtle);">
+        <div style="min-width:18px;height:18px;border-radius:3px;background:${t.fatto ? 'var(--emerald)' : 'var(--border-subtle)'};display:flex;align-items:center;justify-content:center;font-size:0.6rem;color:${t.fatto ? '#fff' : 'var(--text-muted)'};margin-top:2px;">
+          ${t.fatto ? '✓' : ''}
+        </div>
+        <div style="flex:1;font-size:0.75rem;${t.fatto ? 'color:var(--text-muted);text-decoration:line-through;' : ''}">${escapeHtml(t.testo)}</div>
+      </div>
+    `).join('')
+    : '<div style="color:var(--text-muted);font-size:0.75rem;padding:0.3rem 0;">Nessun todo per questo giorno</div>';
+
+  const focusHtml = day.focus_culinario
+    ? `<div style="background:var(--bg-primary);border-radius:6px;padding:0.5rem 0.75rem;margin:0.5rem 0;font-size:0.8rem;color:var(--gold);border-left:3px solid var(--gold);">🍽 <strong>Focus culinario:</strong> ${escapeHtml(day.focus_culinario)}</div>`
+    : '';
+
+  body.innerHTML = `
+    <div style="margin-bottom:0.5rem;display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap;">
+      <div>
+        <div style="font-size:0.66rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;">${escapeHtml(day.data)} · ${escapeHtml(day.citta)}${day.paese ? ', ' + escapeHtml(day.paese) : ''}</div>
+        ${day.fase ? `<div style="font-size:0.78rem;color:var(--text-secondary);margin-top:0.15rem;">${escapeHtml(day.fase)}</div>` : ''}
+      </div>
+      <button class="btn btn-primary" style="font-size:0.75rem;padding:0.35rem 0.6rem;" data-day-add="${giorno}">📍 Aggiungi check-in al giorno</button>
+    </div>
+    ${focusHtml}
+    <div style="margin-top:0.75rem;border-top:1px solid var(--border-subtle);padding-top:0.5rem;">
+      <div style="font-size:0.7rem;font-weight:700;color:var(--sky);margin-bottom:0.3rem;text-transform:uppercase;letter-spacing:0.04em;">Orario</div>
+      ${orariHtml}
+    </div>
+    <div style="margin-top:0.5rem;border-top:1px solid var(--border-subtle);padding-top:0.5rem;">
+      <div style="font-size:0.7rem;font-weight:700;color:var(--amber);margin-bottom:0.3rem;text-transform:uppercase;letter-spacing:0.04em;">To-Do</div>
+      ${todoHtml}
+    </div>
+  `;
+  // check-in da luogo del programma: chiude il programma e chiede un click sulla mappa
+  body.querySelectorAll('.add-ci-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      startPlaceCheckin(parseInt(btn.dataset.giorno, 10), btn.dataset.place || '');
+    });
+  });
+  const dayAddBtn = body.querySelector('[data-day-add]');
+  if (dayAddBtn) {
+    dayAddBtn.addEventListener('click', () => {
+      startPlaceCheckin(parseInt(dayAddBtn.dataset.dayAdd, 10), '');
+    });
+  }
+}
+
+function closeDayModal() {
+  document.getElementById('dayModal').classList.add('hidden');
+}
+
+// ─── Lightbox ──────────────────────────────────────────────────────────
+function openLightbox(url) {
+  document.getElementById('lbImage').src = url;
+  document.getElementById('lightbox').classList.remove('hidden');
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.add('hidden');
+}
+
+// ─── Checkin detail/edit modal ─────────────────────────────────────────
+function openCheckinDetail(ciId) {
+  const ci = state.checkIns.find(c => c.id === ciId);
+  if (!ci) return;
+  const overlay = document.getElementById('ciModal');
+  const name = ci.luogo_nome || ci.locationName || 'Luogo';
+  document.getElementById('ciModalTitle').textContent = 'Check-in: ' + name;
+  const day = state.itinerary.find(g => g.giorno === ci.giorno);
+  const body = document.getElementById('ciModalBody');
+  const coords = coordsOf(ci);
+
+  const photosHtml = (ci.photoIds || ci.photos || []).length
+    ? `<div style="display:flex;gap:6px;flex-wrap:wrap;margin:0.5rem 0;">${
+        (ci.photoIds || ci.photos || []).map(id => {
+          const url = state.photos[id] || '';
+          if (!url) return '';
+          return `<div class="ci-photo" data-url="${escapeHtml(url)}" style="position:relative;width:90px;height:90px;border-radius:6px;overflow:hidden;border:1px solid #334155;cursor:pointer;">
+            <img src="${url}" style="width:100%;height:100%;object-fit:cover;border-radius:6px;" class="photo-thumb" />
+          </div>`;
+        }).join('')
+      }</div>`
+    : '<div style="color:#64748b;font-size:0.75rem;margin:0.5rem 0;">Nessuna foto</div>';
+
+  const comment = (ci.commento || ci.comment || '').trim();
+  body.innerHTML = `
+    <div style="background:var(--bg-primary);border-radius:6px;padding:0.5rem 0.75rem;margin-bottom:0.75rem;display:flex;justify-content:space-between;align-items:center;">
+      <div style="font-weight:700;">${escapeHtml(name)}</div>
+      ${ci.rating ? `<div style="color:#f59e0b;font-size:0.85rem;">⭐ ${ci.rating}/5</div>` : ''}
+    </div>
+    <div style="font-size:0.75rem;color:#94a3b8;margin-bottom:0.5rem;display:flex;gap:0.75rem;flex-wrap:wrap;">
+      <span>Giorno ${giornoLabel(ci.giorno)}${day ? ' · ' + escapeHtml(day.citta) : ''}</span>
+      <span>🕐 ${ci.timestamp ? new Date(ci.timestamp).toLocaleString('it-IT') : '—'}</span>
+      ${coords ? `<span>📍 ${coords[0].toFixed(5)}, ${coords[1].toFixed(5)}</span>` : ''}
+    </div>
+    ${photosHtml}
+    ${comment ? `<div style="background:var(--bg-primary);border-radius:6px;padding:0.5rem 0.75rem;font-style:italic;color:#cbd5e1;font-size:0.85rem;margin:0.5rem 0;border-left:3px solid #f59e0b;">“${escapeHtml(comment)}”</div>` : ''}
+    ${coords ? `<div style="margin-top:0.5rem;"><a href="https://www.google.com/maps?q=${coords[0]},${coords[1]}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:0.3rem;padding:0.3rem 0.6rem;background:var(--sky);color:#fff;border-radius:4px;font-size:0.75rem;font-weight:600;text-decoration:none;">🗺 Apri su Google Maps</a></div>` : ''}
+    <div style="display:flex;gap:0.5rem;margin-top:0.9rem;border-top:1px solid var(--border-subtle);padding-top:0.75rem;">
+      <button class="btn" onclick="closeModal()">Chiudi</button>
+      <button class="btn btn-sky" onclick="openEditCheckin('${ci.id}')">✏ Modifica</button>
+      <button class="btn" style="border-color:var(--torii);color:var(--torii);" onclick="deleteCheckin('${ci.id}')">🗑 Elimina</button>
+    </div>
+  `;
+  overlay.classList.remove('hidden');
+  // foto → lightbox
+  body.querySelectorAll('.ci-photo').forEach((el) => {
+    el.addEventListener('click', () => openLightbox(el.dataset.url));
+  });
+}
+
+function openEditCheckin(ciId) {
+  const ci = state.checkIns.find(c => c.id === ciId);
+  if (!ci) return;
+  const overlay = document.getElementById('ciModal');
+  const body = document.getElementById('ciModalBody');
+  const oldPhotos = (ci.photoIds || ci.photos || []).map(id => ({ id, url: state.photos[id] })).filter(p => p.url);
+  const curCoords = coordsOf(ci);
+  const chosenCoords = state.formCoords; // eventuale nuova posizione scelta (mappa/incolla)
+  const posLabel = chosenCoords
+    ? chosenCoords.lat.toFixed(5) + ', ' + chosenCoords.lng.toFixed(5) + ' — nuova posizione'
+    : (curCoords ? curCoords[0].toFixed(5) + ', ' + curCoords[1].toFixed(5) : 'non impostata');
+  body.innerHTML = `
+    <h3 style="font-size:0.9rem;font-weight:700;margin-bottom:0.75rem;">Modifica Check-in</h3>
+    <div class="form-group">
+      <label>Nome del luogo</label>
+      <input type="text" id="editName" value="${escapeHtml(ci.luogo_nome || ci.locationName || '')}" />
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Giorno</label>
+        <select id="editGiorno">
+          ${state.itinerary.map(g => `<option value="${g.giorno}" ${g.giorno === ci.giorno ? 'selected' : ''}>Giorno ${giornoLabel(g.giorno)}: ${escapeHtml(g.citta)}</option>`).join('')}
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Rating</label>
+        <select id="editRating">
+          ${[1, 2, 3, 4, 5].map(n => `<option value="${n}" ${n === ci.rating ? 'selected' : ''}>${n}/5 ${'⭐'.repeat(n)}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Posizione geografica</label>
+      <div class="pos-row">
+        <span class="coord-badge pos-badge ${chosenCoords ? 'changed' : ''}" id="editPosBadge">📍 ${posLabel}</span>
+        <button class="btn btn-sky" type="button" onclick="startEditPosition('${ci.id}')">🗺 Cambia cliccando sulla mappa</button>
+      </div>
+      <div class="pos-paste-row">
+        <input type="text" id="editGmaps" placeholder="Oppure incolla: coordinate, Plus Code o link Google Maps" />
+        <button class="btn" type="button" onclick="applyGmapsPaste('edit')">Applica</button>
+      </div>
+      <div class="form-hint">Es. <em>39.9042, 116.4074</em> · <em>8Q3X3JH3+W6X</em> · un link “@40.08,116.6”. I Plus Code corti (es. <em>3JH3+W6X, Shunyi District, Beijing</em>) si risolvono con la città citata nel testo.</div>
+    </div>
+    <div class="form-group">
+      <label>Commento</label>
+      <textarea id="editComment" rows="3">${escapeHtml(ci.commento || ci.comment || '')}</textarea>
+    </div>
+    <div class="form-group">
+      <label>Foto (max 3 — sostituiscono le esistenti)</label>
+      <input type="file" id="editPhotos" accept="image/*" multiple />
+      <div id="editPhotoPreviews" style="display:flex;gap:4px;flex-wrap:wrap;margin-top:4px;">
+        ${oldPhotos.map(p => `<img src="${p.url}" style="width:40px;height:40px;border-radius:4px;object-fit:cover;border:1px solid #334155;" />`).join('')}
+      </div>
+    </div>
+    <div style="display:flex;gap:0.5rem;margin-top:0.5rem;">
+      <button class="btn" onclick="closeModal()">Annulla</button>
+      <button class="btn btn-primary" onclick="saveCheckinEdit('${ciId}')">💾 Salva modifiche</button>
+    </div>
+  `;
+  document.getElementById('editPhotos').onchange = (e) => {
+    const files = Array.from(e.target.files).slice(0, 3);
+    const previews = document.getElementById('editPhotoPreviews');
+    previews.innerHTML = '';
+    files.forEach(file => {
+      const url = URL.createObjectURL(file);
+      previews.innerHTML += `<img src="${url}" style="width:40px;height:40px;border-radius:4px;object-fit:cover;border:1px solid #334155;" />`;
+    });
+  };
+  overlay.classList.remove('hidden');
+}
+
+function saveCheckinEdit(ciId) {
+  const name = document.getElementById('editName').value.trim();
+  const giorno = parseInt(document.getElementById('editGiorno').value, 10);
+  const rating = parseInt(document.getElementById('editRating').value, 10);
+  const comment = document.getElementById('editComment').value.trim();
+  const files = Array.from(document.getElementById('editPhotos').files).slice(0, 3);
+  if (!name) { toast('Nome del luogo è obbligatorio'); return; }
+
+  const idx = state.checkIns.findIndex(c => c.id === ciId);
+  if (idx === -1) return;
+  const existing = state.checkIns[idx];
+  // coordinate effettive: quelle scelte (click mappa o incolla GMaps), altrimenti attuali
+  let effLat = existing.lat, effLng = existing.lng;
+  const curC = coordsOf(existing);
+  if (curC) { effLat = curC[0]; effLng = curC[1]; }
+  if (state.formCoords) { effLat = state.formCoords.lat; effLng = state.formCoords.lng; }
+  const newPhotos = {};
+  let loaded = 0;
+  const finish = () => {
+    const oldIds = (existing.photoIds || existing.photos || []);
+    state.checkIns[idx] = {
+      ...existing,
+      luogo_nome: name,
+      locationName: name,
+      giorno,
+      rating,
+      lat: effLat,
+      lng: effLng,
+      coords: { lat: effLat, lng: effLng },
+      commento: comment || undefined,
+      comment: comment || undefined,
+      photoIds: Object.keys(newPhotos).length ? Object.keys(newPhotos) : (files.length ? [] : oldIds),
+      photos: Object.keys(newPhotos).length ? Object.keys(newPhotos) : (files.length ? [] : oldIds),
+    };
+    Object.assign(state.photos, newPhotos);
+    pruneOrphanPhotos();
+    state.formCoords = null;
+    updateMap();
+    renderSidebar();
+    if (state.activeGiorno !== null && state.itinerary.find(g => g.giorno === state.activeGiorno)) {
+      renderBottomPanel(state.activeGiorno);
+    }
+    persistSession();
+    closeModal();
+    toast('Check-in modificato ✓');
+  };
+  if (files.length === 0) { finish(); return; }
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      newPhotos[`photo_${Date.now()}_${loaded}_${Math.random().toString(36).slice(2, 6)}`] = e.target.result;
+      loaded++;
+      if (loaded >= files.length) finish();
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function deleteCheckin(ciId) {
+  if (!confirm('Eliminare questo check-in (incluse le foto)?')) return;
+  state.checkIns = state.checkIns.filter(c => c.id !== ciId);
+  pruneOrphanPhotos();
+  updateMap();
+  renderSidebar();
+  if (state.activeGiorno !== null) renderBottomPanel(state.activeGiorno);
+  persistSession();
+  closeModal();
+  toast('Check-in eliminato');
+}
+
+/** Rimuove dalla mappa foto gli id non più referenziati da nessun check-in. */
+function pruneOrphanPhotos() {
+  for (const id of Object.keys(state.photos)) {
+    if (!state.checkIns.some(c => (c.photoIds || c.photos || []).includes(id))) {
+      delete state.photos[id];
+    }
+  }
+}
+
+function closeModal() {
+  state.formCoords = null;
+  document.getElementById('ciModal').classList.add('hidden');
+}
+
+// ─── Map click → check-in (nuovo o riposizionamento) ───────────────────
+function openNewCheckinForm(e) {
+  // flusso "cambia posizione": riapre la modifica del check-in con le nuove coordinate
+  if (state.pendingEdit) {
+    const ciId = state.pendingEdit;
+    const ci = state.checkIns.find(c => c.id === ciId);
+    cancelPlace();
+    if (!ci) return;
+    state.formCoords = { lat: e.latlng.lat, lng: e.latlng.lng };
+    openEditCheckin(ciId);
+    return;
+  }
+  if (!state.itinerary.length || !state.meta) {
+    toast('Carica prima un file di viaggio');
+    return;
+  }
+  // flusso "check-in dal programma": consuma il luogo in attesa di posizionamento
+  const pending = state.pendingPlace;
+  if (pending) cancelPlace();
+  const prefillGiorno = pending ? pending.giorno : state.activeGiorno;
+  const prefillName = pending ? pending.name : '';
+
+  const { lat, lng } = e.latlng;
+  state.formCoords = { lat, lng };
+  const overlay = document.getElementById('ciModal');
+  document.getElementById('ciModalTitle').textContent = 'Nuovo check-in';
+  const daySelect = state.itinerary.map(g =>
+    `<option value="${g.giorno}" ${g.giorno === prefillGiorno ? 'selected' : ''}>Giorno ${giornoLabel(g.giorno)}: ${escapeHtml(g.citta)}</option>`
+  ).join('');
+  document.getElementById('ciModalBody').innerHTML = `
+    <h3 style="font-size:0.9rem;font-weight:700;margin-bottom:0.5rem;">Nuovo check-in</h3>
+    <div class="form-group">
+      <label>Posizione geografica</label>
+      <div class="pos-row">
+        <span class="coord-badge pos-badge" id="newPosBadge">📍 ${lat.toFixed(5)}, ${lng.toFixed(5)}</span>
+        <span class="form-hint" style="margin-top:0;">(definita dal click sulla mappa)</span>
+      </div>
+      <div class="pos-paste-row">
+        <input type="text" id="newGmaps" placeholder="Oppure incolla: coordinate, Plus Code o link Google Maps" />
+        <button class="btn" type="button" onclick="applyGmapsPaste('new')">Applica</button>
+      </div>
+      <div class="form-hint">Es. <em>39.9042, 116.4074</em> · <em>8Q3X3JH3+W6X</em> · un link “@40.08,116.6”. I Plus Code corti (es. <em>3JH3+W6X, Beijing</em>) si risolvono con la città citata nel testo.</div>
+    </div>
+    <div class="form-group">
+      <label>Nome del luogo *</label>
+      <input type="text" id="newName" placeholder="es. Shibuya Crossing" value="${escapeHtml(prefillName)}" />
+    </div>
+    <div class="form-group">
+      <label>Giorno</label>
+      <select id="newGiorno">${daySelect}</select>
+    </div>
+    <div class="form-group">
+      <label>Rating</label>
+      <select id="newRating">
+        <option value="5">5/5 ⭐⭐⭐⭐⭐</option>
+        <option value="4">4/5 ⭐⭐⭐⭐</option>
+        <option value="3">3/5 ⭐⭐⭐</option>
+        <option value="2">2/5 ⭐⭐</option>
+        <option value="1">1/5 ⭐</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Commento</label>
+      <textarea id="newComment" rows="2" placeholder="Il tuo ricordo..."></textarea>
+    </div>
+    <div class="form-group">
+      <label>Foto (max 3)</label>
+      <input type="file" id="newPhotos" accept="image/*" multiple />
+      <div id="newPhotoPreviews" style="display:flex;gap:4px;flex-wrap:wrap;margin-top:4px;"></div>
+    </div>
+    <div style="display:flex;gap:0.5rem;margin-top:0.5rem;">
+      <button class="btn" onclick="closeModal()">Annulla</button>
+      <button class="btn btn-primary" onclick="saveNewCheckin(${lat.toFixed(6)},${lng.toFixed(6)})">📍 Registra</button>
+    </div>
+  `;
+  document.getElementById('newPhotos').onchange = (e) => {
+    const files = Array.from(e.target.files).slice(0, 3);
+    const pv = document.getElementById('newPhotoPreviews');
+    pv.innerHTML = '';
+    files.forEach(f => {
+      const img = document.createElement('img');
+      img.src = URL.createObjectURL(f);
+      img.style.cssText = 'width:40px;height:40px;border-radius:4px;object-fit:cover;border:1px solid #334155;';
+      pv.appendChild(img);
+    });
+  };
+  overlay.classList.remove('hidden');
+}
+
+function saveNewCheckin(lat, lng) {
+  const name = document.getElementById('newName').value.trim();
+  const giorno = parseInt(document.getElementById('newGiorno').value, 10);
+  const rating = parseInt(document.getElementById('newRating').value, 10);
+  const comment = document.getElementById('newComment').value.trim();
+  if (!name) { toast('Nome del luogo è obbligatorio'); return; }
+  // coordinate effettive: quelle scelte (click mappa o incolla GMaps)
+  if (state.formCoords) { lat = state.formCoords.lat; lng = state.formCoords.lng; }
+  const files = Array.from(document.getElementById('newPhotos').files).slice(0, 3);
+
+  const newPhotos = {};
+  let loaded = 0;
+  const finish = () => {
+    const id = 'checkin_' + Date.now() + '_' + Math.random().toString(36).slice(2, 9);
+    const photoIds = Object.keys(newPhotos);
+    const checkin = {
+      id,
+      giorno,
+      timestamp: Date.now(),
+      lat,
+      lng,
+      coords: { lat, lng },
+      luogo_nome: name,
+      locationName: name,
+      rating,
+      commento: comment || undefined,
+      comment: comment || undefined,
+      photoIds,
+      photos: photoIds,
+    };
+    state.checkIns.push(checkin);
+    Object.assign(state.photos, newPhotos);
+    state.formCoords = null;
+    updateMap();
+    renderSidebar();
+    if (state.activeGiorno !== null && state.itinerary.find(g => g.giorno === state.activeGiorno)) {
+      renderBottomPanel(state.activeGiorno);
+    }
+    persistSession();
+    closeModal();
+    toast('Nuovo check-in registrato ✓');
+  };
+  if (files.length === 0) { finish(); return; }
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      newPhotos[`photo_${Date.now()}_${loaded}_${Math.random().toString(36).slice(2, 6)}`] = e.target.result;
+      loaded++;
+      if (loaded >= files.length) finish();
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+// ─── Caricamento file ──────────────────────────────────────────────────
+function loadViaggioFile(json) {
+  const d = json;
+  if (!d.meta || !d.itinerario) {
+    toast('File non valido: manca meta o itinerario');
+    return;
+  }
+  state.meta = d.meta;
+  state.itinerary = d.itinerario || [];
+  state.alloggi = d.alloggi || [];
+  state.trasporti = d.trasporti || null;
+  state.emergenze = d.emergenze || null;
+  state.protocolli = d.protocolli || {};
+  state.frasario = d.frasario || [];
+
+  document.getElementById('headerSub').textContent = `${d.meta.titolo} · ${state.itinerary.length} giorni · ${state.alloggi.length} alloggi`;
+
+  if (!state.itinerary.length) {
+    state.activeGiorno = null;
+    renderSidebar();
+    updateMap();
+  } else {
+    // se il giorno attivo non esiste più nel nuovo itinerario → primo giorno
+    if (state.activeGiorno === null || !state.itinerary.find(g => g.giorno === state.activeGiorno)) {
+      state.activeGiorno = state.itinerary[0].giorno;
+    }
+    renderSidebar();
+    updateMap();
+    renderBottomPanel(state.activeGiorno);
+  }
+  persistSession();
+  document.getElementById('downloadBtn').disabled = false;
+  toast(`Viaggio caricato: ${d.meta.titolo}`);
+}
+
+function loadExportFile(json) {
+  const d = json;
+  if (!d.checkIns) {
+    toast('Export non valido: manca checkIns');
+    return;
+  }
+  const existingIds = new Set(state.checkIns.map(c => c.id));
+  let added = 0;
+  for (const ci of d.checkIns) {
+    if (existingIds.has(ci.id)) continue;
+    state.checkIns.push(ci);
+    added++;
+  }
+  if (d.checkInPhotos) {
+    for (const [id, url] of Object.entries(d.checkInPhotos)) {
+      if (!state.photos[id]) state.photos[id] = url;
+    }
+  }
+  updateMap();
+  renderSidebar();
+  if (state.activeGiorno !== null && state.itinerary.find(g => g.giorno === state.activeGiorno)) {
+    renderBottomPanel(state.activeGiorno);
+  }
+  if (!state.itinerary.length) {
+    toast(`Backup caricato: ${d.checkIns.length} check-in. Carica anche il file viaggio per vedere i giorni.`);
+  } else {
+    toast(`Backup caricato: ${d.checkIns.length} check-in (${added} nuovi)`);
+  }
+  persistSession();
+}
+
+function downloadBackup() {
+  const backup = {
+    meta: state.meta,
+    exportDate: new Date().toISOString(),
+    journals: {},
+    checkIns: state.checkIns,
+    checkInPhotos: state.photos,
+  };
+  const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `diario-viaggio-2026-${Date.now()}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  toast('Backup scaricato ✓');
+}
+
+// ─── Persistenza sessione (IndexedDB): i file restano nel browser ──────
+const IDB_NAME = 'trip-replayer-store';
+function idbOpen() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(IDB_NAME, 1);
+    req.onupgradeneeded = () => {
+      const db = req.result;
+      if (!db.objectStoreNames.contains('files')) db.createObjectStore('files');
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+async function idbPut(key, val) {
+  try {
+    const db = await idbOpen();
+    await new Promise((res, rej) => {
+      const tx = db.transaction('files', 'readwrite');
+      tx.objectStore('files').put(val, key);
+      tx.oncomplete = res;
+      tx.onerror = () => rej(tx.error);
+    });
+    db.close();
+  } catch (e) { /* quota/blocco: la sessione continua in memoria */ }
+}
+async function idbGet(key) {
+  try {
+    const db = await idbOpen();
+    const out = await new Promise((res, rej) => {
+      const tx = db.transaction('files', 'readonly');
+      const rq = tx.objectStore('files').get(key);
+      rq.onsuccess = () => res(rq.result);
+      rq.onerror = () => rej(rq.error);
+    });
+    db.close();
+    return out || null;
+  } catch (e) { return null; }
+}
+async function idbDel(key) {
+  try {
+    const db = await idbOpen();
+    await new Promise((res, rej) => {
+      const tx = db.transaction('files', 'readwrite');
+      tx.objectStore('files').delete(key);
+      tx.oncomplete = res;
+      tx.onerror = () => rej(tx.error);
+    });
+    db.close();
+  } catch (e) { /* ignore */ }
+}
+
+let persistTimer = null;
+function persistSession() {
+  const resetBtn = document.getElementById('resetDataBtn');
+  if (resetBtn) resetBtn.style.display = '';
+  if (persistTimer) clearTimeout(persistTimer);
+  persistTimer = setTimeout(async () => {
+    const jobs = [];
+    if (state.meta) {
+      const viaggio = {
+        meta: state.meta, itinerario: state.itinerary, alloggi: state.alloggi,
+        trasporti: state.trasporti, emergenze: state.emergenze,
+        protocolli: state.protocolli, frasario: state.frasario,
+      };
+      jobs.push(idbPut('viaggio', { savedAt: Date.now(), data: viaggio }));
+    }
+    const backup = {
+      meta: state.meta || null, exportDate: new Date().toISOString(), journals: {},
+      checkIns: state.checkIns, checkInPhotos: state.photos,
+    };
+    jobs.push(idbPut('backup', { savedAt: Date.now(), data: backup }));
+    await Promise.all(jobs);
+  }, 250);
+}
+
+async function restoreSession() {
+  const [v, b] = await Promise.all([idbGet('viaggio'), idbGet('backup')]);
+  let restored = 0;
+  if (v && v.data && v.data.meta && Array.isArray(v.data.itinerario)) {
+    loadViaggioFile(v.data);
+    restored++;
+  }
+  if (b && b.data && Array.isArray(b.data.checkIns) && b.data.checkIns.length > 0) {
+    loadExportFile(b.data);
+    restored++;
+  }
+  if (restored > 0) {
+    document.getElementById('resetDataBtn').style.display = '';
+    toast('Ripristinati i dati salvati in precedenza nel browser');
+  }
+}
+
+async function resetAllData() {
+  if (!confirm('Eliminare i dati salvati nel browser (file caricati e modifiche)?')) return;
+  await Promise.all([idbDel('viaggio'), idbDel('backup')]);
+  location.reload();
+}
+
+// ─── Helpers ──────────────────────────────────────────────────────────
+function escapeHtml(s) {
+  return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+function toast(msg) {
+  const existing = document.querySelector('.toast');
+  if (existing) existing.remove();
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2500);
+}
+
+// ─── Wire up (top-level: si esegue sempre, nessun listener in DOMContentLoaded) ──
+const loadOrigInput = document.getElementById('loadOrigInput');
+const loadExportInput = document.getElementById('loadExportInput');
+if (loadOrigInput) {
+  loadOrigInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const json = JSON.parse(ev.target.result);
+        loadViaggioFile(json);
+      } catch (err) {
+        toast('Errore: file JSON non valido');
+      }
+    };
+    reader.onerror = () => toast('Errore: impossibile leggere il file');
+    reader.readAsText(file);
+  });
+}
+if (loadExportInput) {
+  loadExportInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const json = JSON.parse(ev.target.result);
+        loadExportFile(json);
+      } catch (err) {
+        toast('Errore: file JSON non valido');
+      }
+    };
+    reader.onerror = () => toast('Errore: impossibile leggere il file');
+    reader.readAsText(file);
+  });
+}
+
+document.getElementById('downloadBtn').onclick = downloadBackup;
+document.getElementById('openProgramBtn').onclick = openDayProgram;
+document.getElementById('placeBannerCancel').onclick = cancelPlace;
+document.getElementById('resetDataBtn').onclick = resetAllData;
+const tileSelect = document.getElementById('tileSelect');
+if (tileSelect) {
+  tileSelect.addEventListener('change', () => { if (appMap) applyBaseTiles(tileSelect.value); });
+}
+
+// Ridimensionamento del pannello giorno (trascina · doppio click = default)
+(function initPanelResizer() {
+  const handle = document.getElementById('panelResizer');
+  const panel = document.getElementById('bottomPanel');
+  if (!handle || !panel) return;
+  let dragging = false;
+  let startY = 0;
+  let startH = 0;
+  handle.addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    dragging = true;
+    startY = e.clientY;
+    startH = panel.getBoundingClientRect().height;
+    handle.classList.add('dragging');
+    try { handle.setPointerCapture(e.pointerId); } catch (err) { /* noop */ }
+  });
+  handle.addEventListener('pointermove', (e) => {
+    if (!dragging) return;
+    const maxH = Math.round(window.innerHeight * 0.72);
+    const h = Math.min(maxH, Math.max(140, startH + (startY - e.clientY)));
+    panel.style.height = h + 'px';
+  });
+  const stopDrag = () => {
+    if (!dragging) return;
+    dragging = false;
+    handle.classList.remove('dragging');
+    if (appMap) appMap.invalidateSize();
+  };
+  handle.addEventListener('pointerup', stopDrag);
+  handle.addEventListener('pointercancel', stopDrag);
+  handle.addEventListener('dblclick', () => {
+    panel.style.height = '';
+    if (appMap) appMap.invalidateSize();
+  });
+})();
+
+// Ripristino dei dati caricati in precedenza (IndexedDB)
+let sessionRestored = false;
+function bootRestore() {
+  if (sessionRestored) return;
+  sessionRestored = true;
+  restoreSession().then(() => { if (appMap) appMap.invalidateSize(); });
+}
+waitForMapAnd(bootRestore);
+
+document.getElementById('ciModalClose').onclick = closeModal;
+document.getElementById('ciModal').onclick = (e) => {
+  if (e.target === e.currentTarget) closeModal();
+};
+document.getElementById('dayModalClose').onclick = closeDayModal;
+document.getElementById('dayModal').onclick = (e) => {
+  if (e.target === e.currentTarget) closeDayModal();
+};
+
+// tasto ESC
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    cancelPlace();
+    closeModal();
+    closeLightbox();
+    closeDayModal();
+  }
+});
+
+console.log('Viaggio Rivivi pronto. Carica il file viaggio (.json) e il backup check-in (.json).');
+</script>
+</body>
+</html>
